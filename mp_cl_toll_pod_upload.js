@@ -2,7 +2,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-11-15T07:34:50+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2021-11-15T13:56:19+11:00
+ * @Last modified time: 2021-11-18T09:06:08+11:00
  */
 
 var imageToText = null;
@@ -13,6 +13,12 @@ $(window).load(function() {
   $(".se-pre-con").fadeOut("slow");
 });
 
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope) {
+
+});
+
+
 function showAlert(message) {
   $('#alert').html('<button type="button" class="close">&times;</button>' +
     message);
@@ -22,6 +28,30 @@ function showAlert(message) {
   // $(window).scrollTop($('#alert').offset().top);
 }
 
+$(document).on('change', '.input', function(e) {
+
+  pdffile = document.getElementsByClassName("input");
+
+  console.log(pdffile);
+  pdffile_url = URL.createObjectURL(pdffile[0].files[0]);
+  $('#viewer').show();
+  $('#viewer').attr('src', pdffile_url);
+});
+
+function readURL(input) {
+
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+      $('#output').attr('src', e.target.result);
+    }
+
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+
 function pageInit() {
 
   $("#NS_MENU_ID0-item0").css("background-color", "#CFE0CE");
@@ -29,7 +59,10 @@ function pageInit() {
   $("#body").css("background-color", "#CFE0CE");
 
   var scf_upload = document.getElementsByClassName('input');
+  console.log('scf_upload' + scf_upload)
   var scf_upload_field = document.getElementsByClassName('uir-field');
+  $('.uir-field-wrapper').attr("style", "padding-left:15%;");
+  $('.uir-field-wrapper').attr("style", "padding-left:15%;");
   $('#upload_file_1_fs_lbl_uir_label').attr("style", "padding-left:15%;");
 
   for (var i = 0; i < scf_upload.length; i++) {
@@ -42,7 +75,22 @@ function pageInit() {
 
   $('#alert').hide();
 
-  setTimeout(function(){ $('#alert_success').hide(); }, 3000);
+  if (nlapiGetFieldValue('custpage_tollpodid') != 0) {
+    setTimeout(function() {
+      $('#alert_success').hide();
+    }, 3000);
+  }
+
+  $('input:file').change(function() {
+    console.log(1234);
+    pdffile = document.getElementsByClassName("input:file");
+
+    console.log(pdffile);
+    pdffile_url = URL.createObjectURL($('input[name="upload_file_1"]')[0].files[
+      0]);
+    $('#viewer').show();
+    $('#viewer').attr('src', pdffile_url);
+  });
 }
 
 function validate(status) {
@@ -80,12 +128,9 @@ function validate(status) {
   return return_value;
 }
 
-function getImageToTextJSON(){
+function getImageToTextJSON() {
   var formData = new FormData();
   var api = '1iDJ8l2AP/M9iWmwAfOwdQ==ZA4Kr8vimsruo2vG'
-  formData.append('image', $('input[name="upload_file_1"]') [0].files[0]);
-
-  $(".se-pre-con").show();
 
   $.ajax({
     method: 'POST',
@@ -114,24 +159,26 @@ function getImageToTextJSON(){
 function saveRecord() {
   var result = validate();
 
+
   console.log(result)
 
   if (result == true) {
+    $(".se-pre-con").show();
     var location = $('.location').val();
     var zee = $('#zee').val();
 
-    console.log(imageProcessed)
-    console.log(JSON.stringify(imageToText))
-
-    if(imageProcessed == true){
-      console.log('inside processed section')
-      nlapiSetFieldValue('custpage_operator', zee)
-      nlapiSetFieldValue('custpage_location', location)
-      nlapiSetFieldValue('custpage_json', JSON.stringify(imageToText))
-      return true;
-    } else {
-      getImageToTextJSON();
-    }
+    // console.log(imageProcessed)
+    // console.log(JSON.stringify(imageToText))
+    //
+    // if(imageProcessed == true){
+    //   console.log('inside processed section')
+    nlapiSetFieldValue('custpage_operator', zee)
+    nlapiSetFieldValue('custpage_location', location)
+      // nlapiSetFieldValue('custpage_json', JSON.stringify(imageToText))
+    return true;
+    // } else {
+    //   getImageToTextJSON();
+    // }
 
   }
 }
