@@ -2,7 +2,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-11-15T07:34:50+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2021-11-18T09:06:08+11:00
+ * @Last modified time: 2021-11-23T14:22:30+11:00
  */
 
 var imageToText = null;
@@ -130,6 +130,7 @@ function validate(status) {
 
 function getImageToTextJSON() {
   var formData = new FormData();
+  formData.append('image', $('#YOUR_IMAGE_FILE')[0].files[0]);
   var api = '1iDJ8l2AP/M9iWmwAfOwdQ==ZA4Kr8vimsruo2vG'
 
   $.ajax({
