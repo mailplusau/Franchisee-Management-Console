@@ -4,9 +4,10 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-11-02T08:24:43+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2021-11-23T16:02:09+11:00
+ * @Last modified time: 2021-11-29T10:58:49+11:00
  */
 
+var sample_toll_pod_form = [324]
 
 define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
     'N/error', 'N/url', 'N/format', 'N/currentRecord'
@@ -61,6 +62,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       for (var i = 0; i < place.address_components.length; i++) {
 
+        console.log(place.address_components[i])
+
         if (place.address_components[i].types[0] == 'street_number' || place.address_components[
             i].types[0] == 'route') {
           addressComponent += place.address_components[i]['short_name'] + " ";
@@ -88,48 +91,92 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       $('.loading_section').addClass('hide');
 
 
-      // (".imageToText").click(function() {
-      //   var formInternalID = $(this).attr("data-id");
-      //   console.log(formInternalID)
-      //   var fileObj = file.load({
-      //     id: formInternalID
-      //   });
-      //
-      //   var formData = new FormData();
-      //   formData.append('image', fileObj);
-      //   var api = '1iDJ8l2AP/M9iWmwAfOwdQ==ZA4Kr8vimsruo2vG'
-      //
-      //   $.ajax({
-      //     method: 'POST',
-      //     headers: {
-      //       'X-Api-Key': '1iDJ8l2AP/M9iWmwAfOwdQ==ZA4Kr8vimsruo2vG'
-      //     },
-      //     url: 'https://api.api-ninjas.com/v1/imagetotext',
-      //     data: formData,
-      //     enctype: 'multipart/form-data',
-      //     processData: false,
-      //     contentType: false,
-      //     success: function(result) {
-      //       console.log(result);
-      //       imageToText = result;
-      //       imageProcessed = true;
-      //       console.log(imageToText)
-      //       console.log(JSON.stringify(imageToText))
-      //     },
-      //     error: function ajaxError(jqXHR, textStatus, errorThrown) {
-      //       alert(jqXHR.responseText);
-      //     }
-      //   });
-
       $(document).on('focus', '#address2', function(event) {
         // alert('onfocus')
         initAutocomplete();
       });
 
+      $("#createForm").click(function() {
+        var tollPODInternalID = $('#tollPODInternalID').val()
+        var fileName = $('#file_name').val()
+        var operatorName = $('#operatorname').val()
+        var podLocations = $('#podlocations').val()
+        var uploadDate = $('#uploaddate').val()
+        var uploadTime = $('#uploadtime').val()
+        var receiverName = $('#receiver_name').val()
+        var address1 = $('#address1').val()
+        var streetNameNumber = $('#address2').val()
+        var suburb = $('#city').val()
+        var state = $('#state').val()
+        var postcode = $('#postcode').val()
+        var connote = $('#connote').val()
+
+        console.log(streetNameNumber)
+
+        var finalAddress = address1 + '\n' + streetNameNumber;
+        var dateSplit = uploadDate.split('/');
+        var dd = dateSplit[0]
+        var mm = dateSplit[1]
+        var yyyy = dateSplit[2]
+
+        var timeSplit = uploadTime.split(':')
+        var ampm = timeSplit[1].split(' ');
+
+        var hours;
+
+        if(ampm[1] == 'PM'){
+          hours = timeSplit[0] + 12
+        } else {
+          hours = timeSplit[0]
+        }
+
+        var minutes = ampm[0]
+
+        var tollPODRecord = record.load({
+          type: 'customrecord_toll_pod',
+          id: tollPODInternalID
+        });
+
+        tollPODRecord.setValue({
+          fieldId: 'custrecord_connote_no',
+          value: connote
+        })
+        tollPODRecord.setValue({
+          fieldId: 'custrecord_receiver_address1',
+          value: finalAddress
+        })
+        tollPODRecord.setValue({
+          fieldId: 'custrecord_receiver_city',
+          value: suburb
+        })
+        tollPODRecord.setValue({
+          fieldId: 'custrecordreceiver_zip',
+          value: postcode
+        })
+        tollPODRecord.setValue({
+          fieldId: 'custrecord_receiver_fullname',
+          value: receiverName
+        })
+
+        tollPODRecord.save({
+            ignoreMandatoryFields: true
+        });
+
+        var url = baseURL +
+          '/app/site/hosting/scriptlet.nl?script=1394&deploy=1'
+        window.location.href = url;
+      });
+
     }
 
 
-    function saveRecord() {}
+    function saveRecord() {
+      console.log('inside save record');
+
+
+      return true;
+
+    }
 
 
     function formatDate(testDate) {

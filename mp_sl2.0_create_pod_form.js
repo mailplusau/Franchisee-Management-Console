@@ -5,7 +5,7 @@
  * @Date:   2021-11-01T09:59:04+11:00
  * Module Description: Page that lists customres that are commencing today or have not been onboarded.
  * @Last modified by:   ankithravindran
- * @Last modified time: 2021-11-23T16:44:13+11:00
+ * @Last modified time: 2021-11-24T14:31:17+11:00
  */
 
 
@@ -36,6 +36,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           id: tollPODInternalID
         });
 
+        var fileName = tollPODRecord.getText({
+          fieldId: 'name'
+        })
+        fileNameSplit = fileName.split('.');
+        fileName = fileNameSplit[0]
+        fileName = fileName.replace(" ", "_")
         var operatorName = tollPODRecord.getText({
           fieldId: 'custrecord_toll_pod_upload_operator'
         })
@@ -61,6 +67,15 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var inlineHtml =
           '<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA92XGDo8rx11izPYT7z2L-YPMMJ6Ih1s0&libraries=places"></script><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css"><script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&c=1048144&h=9ee6accfd476c9cae718&_xt=.css"/><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&c=1048144&h=ef2cda20731d146b5e98&_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&c=1048144&h=a0ef6ac4e28f91203dfe&_xt=.css"><script src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"><script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/drilldown.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/export-data.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script><style>.mandatory{color:red;} .body{background-color: #CFE0CE !important;} @-webkit-keyframes animatetop {from {top:-300px; opacity:0} to {top:0; opacity:1}}@keyframes animatetop {from {top:-300px; opacity:0}to {top:0; opacity:1}}</style>';
 
+
+
+        form.addField({
+          id: 'custpage_internalid',
+          type: ui.FieldType.TEXT,
+          label: 'Operator'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        })
         form.addField({
           id: 'custpage_operator',
           type: ui.FieldType.TEXT,
@@ -69,14 +84,35 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           displayType: ui.FieldDisplayType.HIDDEN
         })
         form.addField({
-          id: 'custpage_date',
+          id: 'custpage_date_dd',
           type: ui.FieldType.TEXT,
           label: 'Date Upload'
         }).updateDisplayType({
           displayType: ui.FieldDisplayType.HIDDEN
         })
         form.addField({
-          id: 'custpage_time',
+          id: 'custpage_date_mm',
+          type: ui.FieldType.TEXT,
+          label: 'Date Upload'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        })
+        form.addField({
+          id: 'custpage_date_yyyy',
+          type: ui.FieldType.TEXT,
+          label: 'Date Upload'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        })
+        form.addField({
+          id: 'custpage_time_hours',
+          type: ui.FieldType.TEXT,
+          label: 'Upload Time'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        })
+        form.addField({
+          id: 'custpage_time_minutes',
           type: ui.FieldType.TEXT,
           label: 'Upload Time'
         }).updateDisplayType({
@@ -131,8 +167,19 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         //Loading Section that gets displayed when the page is being loaded
         inlineHtml += loadingSection();
         inlineHtml += '<div id="container"></div>'
-        inlineHtml += tollPODCreateForm(operatorName, uploadDate, uploadTime,
+        inlineHtml += tollPODCreateForm(tollPODInternalID, fileName, operatorName, uploadDate,
+          uploadTime,
           podLocations, uploadedLabel);
+
+        form.addSubmitButton({
+          label: 'CREATE PDF FORM'
+        })
+
+        // form.addSubmitButton({
+        //   id: 'submit_search',
+        //   label: 'Submit Search',
+        //   functionName: 'addFilters()'
+        // });
 
 
         form.addField({
@@ -151,7 +198,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       }
     }
 
-    function tollPODCreateForm(operatorName, uploadDate, uploadTime,
+    function tollPODCreateForm(tollPODInternalID, fileName, operatorName, uploadDate, uploadTime,
       podLocations, uploadedLabel) {
 
       var inlineHtml2 =
@@ -168,7 +215,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
       inlineHtml2 +=
         '<div class="col-xs-3 operatorname"><div class="input-group"><span class="input-group-addon" id="operatorname_text">OPERATOR</span><input type="text" id="operatorname" class="form-control operatorname" value="' +
-        operatorName + '" readonly/></div></div>';
+        operatorName + '" readonly/><input type="text" id="tollPODInternalID" class="form-control tollPODInternalID" value="' +
+        tollPODInternalID + '" style="display: none;"/></div></div>';
 
       inlineHtml2 +=
         '<div class="col-xs-3 podlocations"><div class="input-group"><span class="input-group-addon" id="podlocations_text">POD Locations</span><input type="text" id="podlocations" class="form-control podlocations" value="' +
@@ -202,6 +250,14 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         '<div class="col-xs-6 heading4"><h4><span class="label label-default col-xs-12">UPLOADED LABEL</span></h4></div>';
       inlineHtml2 += '</div>';
       inlineHtml2 += '</div>';
+      inlineHtml2 += '<div class="form-group container row_file_name ">'
+      inlineHtml2 += '<div class="row">';
+
+      inlineHtml2 +=
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">FILE NAME</span><input id="file_name" class="form-control file_name" value="' +
+        fileName + '" /></div></div>';
+      inlineHtml2 += '</div>';
+      inlineHtml2 += '</div>';
       inlineHtml2 += '<img id="viewer" src="' +
         fileRecord.url + '" style="width: 100%; height: 100%;"/></div>';
       inlineHtml2 += '<div class="col-xs-6 fillForm">';
@@ -217,23 +273,30 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
       inlineHtml2 +=
         '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">RECEIVER NAME</span><input id="receiver_name" class="form-control receiver_name" /></div></div>';
-        inlineHtml2 += '</div>';
-        inlineHtml2 += '</div>';
+      inlineHtml2 += '</div>';
+      inlineHtml2 += '</div>';
 
-        inlineHtml2 += '<div class="form-group container row_address2 ">'
-        inlineHtml2 += '<div class="row">';
+      inlineHtml2 += '<div class="form-group container row_address1 ">'
+      inlineHtml2 += '<div class="row">';
+      inlineHtml2 +=
+        '<div class="col-xs-6 address1_section"><div class="input-group"><span class="input-group-addon">UNIT/LEVEL/SUIT</span><input id="address1" class="form-control address1" /></div></div>';
+      inlineHtml2 += '</div>';
+      inlineHtml2 += '</div>';
+
+      inlineHtml2 += '<div class="form-group container row_address2 ">'
+      inlineHtml2 += '<div class="row">';
       inlineHtml2 +=
         '<div class="col-xs-6 address2_section"><div class="input-group"><span class="input-group-addon">STREET NO. & NAME</span><input id="address2" class="form-control address2" /></div></div>';
-        inlineHtml2 += '</div>';
-        inlineHtml2 += '</div>';
-        inlineHtml2 += '<div class="form-group container ">'
-        inlineHtml2 += '<div class="row">';
+      inlineHtml2 += '</div>';
+      inlineHtml2 += '</div>';
+      inlineHtml2 += '<div class="form-group container ">'
+      inlineHtml2 += '<div class="row">';
       inlineHtml2 +=
         '<div class="col-xs-6"><div class="input-group"><span class="input-group-addon">CITY</span><input id="city" readonly class="form-control city" /></div></div>';
-        inlineHtml2 += '</div>';
-        inlineHtml2 += '</div>';
-        inlineHtml2 += '<div class="form-group container ">'
-        inlineHtml2 += '<div class="row">';
+      inlineHtml2 += '</div>';
+      inlineHtml2 += '</div>';
+      inlineHtml2 += '<div class="form-group container ">'
+      inlineHtml2 += '<div class="row">';
       inlineHtml2 +=
         '<div class="col-xs-3"><div class="input-group"><span class="input-group-addon">STATE</span><input id="state" readonly class="form-control state" /></div></div>';
 
@@ -246,6 +309,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml2 += '<div class="row">';
       inlineHtml2 +=
         '<div class="col-xs-6 connote_section"><div class="input-group"><span class="input-group-addon">CONNOTE</span><input id="connote"  class="form-control connote" /></div></div>';
+      inlineHtml2 += '</div>';
+      inlineHtml2 += '</div>';
+      inlineHtml2 += '<div class="form-group container ">'
+      inlineHtml2 += '<div class="row">';
+      inlineHtml2 +=
+        '<div class="col-xs-6 reviewaddress"><input type="button" value="CREATE" class="form-control btn btn-primary" id="createForm" /></div>';
       inlineHtml2 += '</div>';
       inlineHtml2 += '</div>';
       inlineHtml2 += '</div>';
