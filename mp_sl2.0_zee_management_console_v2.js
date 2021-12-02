@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-11-15T07:25:50+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2021-12-01T08:43:41+11:00
+ * @Last modified time: 2021-12-02T15:46:56+11:00
  */
 
 define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
@@ -32,6 +32,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     var franchiseeSendlePrimaryLocations = '';
     var franchiseeSendleSecondaryLocations = '';
 
+    var color_array = ['blue', 'red', 'green', 'orange', 'black'];
+
     function onRequest(context) {
       var baseURL = 'https://system.na2.netsuite.com';
       if (runtime.EnvType == "SANDBOX") {
@@ -52,7 +54,39 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         //INITIALIZATION OF JQUERY AND BOOTSTRAP
 
         var inlineHtml =
-          '<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA92XGDo8rx11izPYT7z2L-YPMMJ6Ih1s0&libraries=places"></script><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><link type="text/css" rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css"><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&amp;c=1048144&amp;h=9ee6accfd476c9cae718&amp;_xt=.css"><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&amp;c=1048144&amp;h=ef2cda20731d146b5e98&amp;_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&amp;c=1048144&amp;h=a0ef6ac4e28f91203dfe&amp;_xt=.css"><script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script><script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-resource.min.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&amp;c=1048144&amp;h=a0ef6ac4e28f91203dfe&amp;_xt=.css"><style>.mandatory{color:red;}.clearfix:after {clear: both;content: "";display: block;height: 0;}.wrapper {vertical-align: middle;}.nav {margin-top: 40px;}.pull-right {float: right;}a, a:active {color: #212121;text-decoration: none;}a:hover {color: #999;}.arrow-steps .step {font-size: 14px;text-align: center;color: #fff;cursor: default;margin: 0 3px;padding: 10px 10px 10px 30px;float: left;position: relative;background-color: #379e8f;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none; transition: background-color 0.2s ease;}.arrow-steps .step:after,.arrow-steps .step:before {content: " ";position: absolute;top: 0;right: -17px;width: 0;height: 40px;border-top: 19px solid transparent;border-bottom: 17px solid transparent;border-left: 17px solid #379e8f;	z-index: 2;transition: border-color 0.2s ease;}.arrow-steps .step:before {right: auto;left: 0;border-left: 17px solid #fff;	z-index: 0;}.arrow-steps .step:first-child:before {border: none;}.arrow-steps .step:first-child {border-top-left-radius: 4px;border-bottom-left-radius: 4px;}.arrow-steps .step span {position: relative;}.arrow-steps .step span:before {opacity: 0;content: "✔";position: absolute;top: -2px;left: -20px;color: #06ac77;}.arrow-steps .step.done span:before {opacity: 1;-webkit-transition: opacity 0.3s ease 0.5s;-moz-transition: opacity 0.3s ease 0.5s;-ms-transition: opacity 0.3s ease 0.5s;transition: opacity 0.3s ease 0.5s;}.arrow-steps .step.current {color: #103d39;font-weight: bold;background-color: #fbea51;}.arrow-steps .step.current:after {border-left: 17px solid #fbea51;	}.nav > li.active > a, .nav > li.active > a:focus, .nav > li.active > a:hover { background-color: #379E8F; color: #fff }.nav > li > a, .nav > li > a:focus, .nav > li > a:hover { margin-left: 5px; margin-right: 5px; border: 2px solid #379E8F; color: #379E8F; }</style>';
+          '<meta name="viewport" content="width=device-width, initial-scale=1.0"><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><script src="//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js"></script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA92XGDo8rx11izPYT7z2L-YPMMJ6Ih1s0&libraries=places"></script><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA92XGDo8rx11izPYT7z2L-YPMMJ6Ih1s0&callback=initMap&libraries=places"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/OverlappingMarkerSpiderfier/1.0.3/oms.min.js"></script></script><link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" /><script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script><link type="text/css" rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css"><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&amp;c=1048144&amp;h=9ee6accfd476c9cae718&amp;_xt=.css"><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&amp;c=1048144&amp;h=ef2cda20731d146b5e98&amp;_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&amp;c=1048144&amp;h=a0ef6ac4e28f91203dfe&amp;_xt=.css"><script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script><script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-resource.min.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&amp;c=1048144&amp;h=a0ef6ac4e28f91203dfe&amp;_xt=.css"><style>.mandatory{color:red;}.clearfix:after {clear: both;content: "";display: block;height: 0;}.wrapper {vertical-align: middle;}.nav {margin-top: 40px;}.pull-right {float: right;}a, a:active {color: #212121;text-decoration: none;}a:hover {color: #999;}.arrow-steps .step {font-size: 14px;text-align: center;color: #fff;cursor: default;margin: 0 3px;padding: 10px 10px 10px 30px;float: left;position: relative;background-color: #379e8f;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none; transition: background-color 0.2s ease;}.arrow-steps .step:after,.arrow-steps .step:before {content: " ";position: absolute;top: 0;right: -17px;width: 0;height: 40px;border-top: 19px solid transparent;border-bottom: 17px solid transparent;border-left: 17px solid #379e8f;	z-index: 2;transition: border-color 0.2s ease;}.arrow-steps .step:before {right: auto;left: 0;border-left: 17px solid #fff;	z-index: 0;}.arrow-steps .step:first-child:before {border: none;}.arrow-steps .step:first-child {border-top-left-radius: 4px;border-bottom-left-radius: 4px;}.arrow-steps .step span {position: relative;}.arrow-steps .step span:before {opacity: 0;content: "✔";position: absolute;top: -2px;left: -20px;color: #06ac77;}.arrow-steps .step.done span:before {opacity: 1;-webkit-transition: opacity 0.3s ease 0.5s;-moz-transition: opacity 0.3s ease 0.5s;-ms-transition: opacity 0.3s ease 0.5s;transition: opacity 0.3s ease 0.5s;}.arrow-steps .step.current {color: #103d39;font-weight: bold;background-color: #fbea51;}.arrow-steps .step.current:after {border-left: 17px solid #fbea51;	}.nav > li.active > a, .nav > li.active > a:focus, .nav > li.active > a:hover { background-color: #379E8F; color: #fff }.nav > li > a, .nav > li > a:focus, .nav > li > a:hover { margin-left: 5px; margin-right: 5px; border: 2px solid #379E8F; color: #379E8F; }</style>';
+
+
+        var day = getDay();
+        if (day == 0 || day == 6) {
+          day = 1; //Monday
+        }
+
+        form.addField({
+          id: 'custpage_zee',
+          type: ui.FieldType.TEXT,
+          label: 'Zee'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        }).defaultValue = zee;
+
+        form.addField({
+          id: 'custpage_name',
+          type: ui.FieldType.TEXT,
+          label: 'Zee'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        }).defaultValue = franchiseeName;
+
+        form.addField({
+          id: 'custpage_day',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        }).defaultValue = day;
+
+
 
         inlineHtml +=
           '<div class="se-pre-con"></div><div ng-app="myApp" ng-controller="myCtrl">';
@@ -61,60 +95,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml += progressBar()
         inlineHtml += line()
         inlineHtml += spacing()
-          // inlineHtml += mainButtons(role)
+
 
         inlineHtml += selectFranchiseeSection(zee)
         inlineHtml += spacing()
 
-        // Tabs headers
-        inlineHtml +=
-          '<div>'
-        inlineHtml +=
-          '<div style="width: 95%; margin:auto; margin-bottom: 30px"><ul class="nav nav-tabs nav-justified main-tabs-sections " style="margin:0%;border-bottom-color: #fbea50 !important;border-bottom-width: 5px !important;border-bottom-style: solid;">';
-        inlineHtml +=
-          '<li role="presentation" class="active"><a data-toggle="tab" href="#zeeDetails"><b>DETAILS</b></a></li>';
-        inlineHtml +=
-          '<li role="presentation" class=""><a data-toggle="tab" href="#operatorDetails"><b>OPERATOR & FLEET DETAILS</b></a></li>';
-        inlineHtml +=
-          '<li role="presentation" class=""><a data-toggle="tab" href="#zeeAgreements"><b>AGREEMENTS</b></a></li>';
-        inlineHtml +=
-          '<li role="presentation" class=""><a data-toggle="tab" href="#tollMPEX"><b>PICKUP & LODGEMENT LOCATIONS</b></a></li>';
-        inlineHtml +=
-          '<li role="presentation" class=""><a data-toggle="tab" href="#breachDetails"><b>BREACH & TERMINATION DETAILS</b></a></li>';
-        inlineHtml += '</ul></div>';
-
-        inlineHtml += '<div class="tab-content">';
-        inlineHtml +=
-          '<div role="tabpanel" class="tab-pane active" id="zeeDetails">';
-        inlineHtml += franchiseeMainDetails(zee)
-        inlineHtml += franchiseeNextOfKin()
-        inlineHtml += '</div>';
-
-        inlineHtml +=
-          '<div role="tabpanel" class="tab-pane " id="zeeAgreements">';
-        inlineHtml += franchiseeAgreements(zee)
-        inlineHtml += '</div>';
-
-        inlineHtml +=
-          '<div role="tabpanel" class="tab-pane " id="operatorDetails">';
-        inlineHtml += franchiseeOperatorDetails(zee)
-        inlineHtml += franchiseeFleetDetails(zee)
-        inlineHtml += '</div>';
-
-
-        inlineHtml += '<div role="tabpanel" class="tab-pane " id="tollMPEX">';
-        inlineHtml += franchiseeTOLLMPEX()
-        inlineHtml += franchiseeAdhoc()
-        inlineHtml += '</div>';
-
-        inlineHtml +=
-          '<div role="tabpanel" class="tab-pane " id="breachDetails">';
-        inlineHtml += franchiseeBreachDetails()
-        inlineHtml += franchiseeTerminationDetails()
-        inlineHtml += '</div>';
-
-
-        inlineHtml += '</div></div>';
+        inlineHtml += tabSection(role)
 
         inlineHtml += spacing()
         inlineHtml += line()
@@ -159,7 +145,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         '<div class="form-group progress_section">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="container"> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span> Step 1</span> </div><div class="step"> <span>FRANCHISEE OPERATIONS TRAINING</span> </div><div class="step"> <span>FRANCHISEE NETSUITE TRAINING</span> </div><div class="step"> <span> FRANCHISEE AGREEMENT</span> </div><div class="step current"> <span>UPDATE FRANCHISEE DETAILS</span> </div></div>';
+        '<div class="container"> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>SETUP</span> </div><div class="step"> <span>OPERATIONS TRAINING</span> </div><div class="step"> <span><span class="glyphicon glyphicon-ok" style="color: #fff"></span>IT TRAINING</span> </div><div class="step"> <span>AGREEMENTS SIGNED & UPLOADED</span> </div><div class="step"> <span>NETSUITE DATA ADMIN</span> </div><div class="step current"> <span>UPDATE/EDIT DETAILS</span> </div></div>';
       // inlineHtml += '<div class="nav clearfix"><a href="#" class="prev">Previous</a><a href="#" class="next pull-right">Next</a></div></div></div>'
       inlineHtml += '</div></div>'
       inlineHtml += '</div>';
@@ -187,6 +173,61 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
 
       return inlineHtml
+    }
+
+
+    function tabSection(zee) {
+      // Tabs headers
+      var inlineHtml =
+        '<div>'
+      inlineHtml +=
+        '<div style="width: 95%; margin:auto; margin-bottom: 30px"><ul class="nav nav-tabs nav-justified main-tabs-sections " style="margin:0%;border-bottom-color: #fbea50 !important;border-bottom-width: 5px !important;border-bottom-style: solid;">';
+      inlineHtml +=
+        '<li role="presentation" class="active"><a data-toggle="tab" href="#zeeDetails"><b>MAINDETAILS</b></a></li>';
+      inlineHtml +=
+        '<li role="presentation" class=""><a data-toggle="tab" href="#operatorDetails"><b>OPERATION DETAILS</b></a></li>';
+      inlineHtml +=
+        '<li role="presentation" class=""><a data-toggle="tab" href="#zeeAgreements"><b>AGREEMENTS</b></a></li>';
+      inlineHtml +=
+        '<li role="presentation" class=""><a data-toggle="tab" href="#tollMPEX"><b>PICKUP & LODGEMENT LOCATIONS</b></a></li>';
+      inlineHtml +=
+        '<li role="presentation" class=""><a data-toggle="tab" href="#breachDetails"><b>BREACH & TERMINATION DETAILS</b></a></li>';
+      inlineHtml += '</ul></div>';
+
+      inlineHtml += '<div class="tab-content">';
+      inlineHtml +=
+        '<div role="tabpanel" class="tab-pane active" id="zeeDetails">';
+      inlineHtml += franchiseeMainDetails(zee)
+      inlineHtml += franchiseeNextOfKin()
+      inlineHtml += '</div>';
+
+      inlineHtml +=
+        '<div role="tabpanel" class="tab-pane " id="zeeAgreements">';
+      inlineHtml += franchiseeAgreements(zee)
+      inlineHtml += '</div>';
+
+      inlineHtml +=
+        '<div role="tabpanel" class="tab-pane " id="operatorDetails">';
+      inlineHtml += franchiseeOperatorDetails(zee)
+      inlineHtml += franchiseeFleetDetails(zee)
+      inlineHtml += '</div>';
+
+
+      inlineHtml += '<div role="tabpanel" class="tab-pane " id="tollMPEX">';
+      inlineHtml += franchiseeTOLLMPEX()
+      inlineHtml += franchiseeAdhoc()
+      inlineHtml += '</div>';
+
+      inlineHtml +=
+        '<div role="tabpanel" class="tab-pane " id="breachDetails">';
+      inlineHtml += franchiseeBreachDetails()
+      inlineHtml += franchiseeTerminationDetails()
+      inlineHtml += '</div>';
+
+
+      inlineHtml += '</div></div>';
+
+      return inlineHtml;
     }
 
     function selectFranchiseeSection(zee) {
@@ -371,7 +412,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '<div class="form-group container row_address1 ">'
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="col-xs-6 address1_section"><div class="input-group"><span class="input-group-addon">UNIT/LEVEL/SUIT</span><input id="address1" class="form-control address1" /></div></div>';
+        '<div class="col-xs-6 address1_section"><div class="input-group"><span class="input-group-addon">UNIT/LEVEL/SUITE</span><input id="address1" class="form-control address1" /></div></div>';
       inlineHtml +=
         '<div class="col-xs-6 address2_section"><div class="input-group"><span class="input-group-addon">STREET NO. & NAME</span><input id="address2" class="form-control address2" /></div></div>';
       inlineHtml += '</div>';
@@ -686,6 +727,37 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
+      var directionsPanel_html = '';
+      var print_section = '';
+      //show the directionsPanel only if one zee selected
+      directionsPanel_html +=
+        '<div class="col-sm-6 " id="directionsPanel" style="height:500px; overflow:auto"></div>';
+      print_section +=
+        '</br><div class="row print_section hide"><div class="col-xs-10"></div><div class="col-xs-2"><input type="button" class="btn btn-info" id="printDirections" value="PRINT DIRECTIONS" style="width: 100%;"/></div></div></div>';
+      inlineHtml += '</br>';
+      inlineHtml +=
+        '<div class="container map_section "><div class="row">';
+      inlineHtml +=
+        '<div class="col-sm-12" id="map" style="height: 500px"><div id="loader"><img src="https://1048144.app.netsuite.com/core/media/media.nl?id=2089999&c=1048144&h=e0aef405c22b65dfe546" alt="loader" /></div></div>';
+      inlineHtml += '<div id="legend">';
+      inlineHtml +=
+        '<div class="hide legend_icons" style="background-color: rgb(255, 255, 255);box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;border-radius: 2px;left: 0px;margin-left: 5px;padding: 3px;"><div><svg height="23" width="32"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke="black" fill="#575756"/></svg><span style="font-family: sans-serif;">Non Customer Location</span></div><div><svg height="23" width="32"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke="black" fill="#008675"/></svg><span style="font-family: sans-serif;">Customer Location</span></div>';
+      for (i = 0; i < 1; i++) {
+        inlineHtml +=
+          '<div><svg height="15" width="32"><line x1="2" y1="10" x2="25" y2="10" style="stroke:' +
+          color_array[i] +
+          ';stroke-width:2" /></svg><span style="font-family: sans-serif;">' +
+          franchiseeName + '</span></div>';
+      }
+      inlineHtml += '</div>';
+      inlineHtml +=
+        '<div style="background-color: rgb(255, 255, 255);box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;border-radius: 2px;left: 0px;margin-left: 5px;padding: 3px;"><input class="form-control" type="textarea" placeholder="Territory" id="zee_territory"/></div>';
+      inlineHtml += '</div>';
+
+      // inlineHtml += directionsPanel_html;
+      inlineHtml += '</div>';
+      inlineHtml += print_section;
+
       inlineHtml += franchiseeServiceNetwork();
 
       inlineHtml +=
@@ -912,6 +984,16 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '</div></div></div>';
 
       return inlineHtml;
+    }
+
+    function getDay() {
+      var date = new Date();
+      if (date.getHours() > 6) {
+        date.setDate(date.getDate() + 1);
+      }
+      var day = date.getDay();
+
+      return day;
     }
 
 
