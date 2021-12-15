@@ -4,13 +4,13 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-11-15T07:25:50+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2021-12-02T15:46:56+11:00
+ * @Last modified time: 2021-12-16T08:31:29+11:00
  */
 
 define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
-    'N/http', 'N/log', 'N/redirect'
+    'N/http', 'N/log', 'N/redirect', 'N/format'
   ],
-  function(ui, email, runtime, search, record, http, log, redirect) {
+  function(ui, email, runtime, search, record, http, log, redirect, format) {
     var role = 0;
     var userId = 0;
     var zee = 0;
@@ -20,16 +20,21 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     var mainContactFName = '';
     var mainContactLName = '';
     var mainContactMobile = '';
+    var franchiseeTypeOfOwner = '';
     var primaryEmail = '';
     var personalEmail = '';
     var dob = '';
     var vaccinationStatus = '';
+    var franchiseeNextOfKinName = '';
+    var franchiseeNextOfKinMobile = '';
+    var franchiseeNextOfKinRelationship = '';
     var franchiseeABN = '';
     var franchiseeAddress = '';
     var franchiseeTOLLAccountNumber = '';
     var franchiseeTOLLPickupDX = '';
     var franchiseeTOLLLodgementDX = '';
     var franchiseeSendlePrimaryLocations = '';
+    var franchiseeLastMileLocations = '';
     var franchiseeSendleSecondaryLocations = '';
 
     var color_array = ['blue', 'red', 'green', 'orange', 'black'];
@@ -40,21 +45,30 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         baseURL = 'https://system.sandbox.netsuite.com';
       }
       userId = runtime.getCurrentUser().id;
-
       role = runtime.getCurrentUser().role;
 
       if (context.request.method === 'GET') {
 
         zee = context.request.parameters.zee;
 
-        var form = ui.createForm({
-          title: 'Franchisee Management Console'
-        });
+        if (role == 1000) {
+          zee = userId;
+          var form = ui.createForm({
+            title: 'Franchisee Management Console'
+          });
+        } else {
+          var form = ui.createForm({
+            title: 'Franchisee Sales & Management'
+          });
+        }
 
         //INITIALIZATION OF JQUERY AND BOOTSTRAP
-
         var inlineHtml =
-          '<meta name="viewport" content="width=device-width, initial-scale=1.0"><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><script src="//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js"></script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA92XGDo8rx11izPYT7z2L-YPMMJ6Ih1s0&libraries=places"></script><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA92XGDo8rx11izPYT7z2L-YPMMJ6Ih1s0&callback=initMap&libraries=places"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/OverlappingMarkerSpiderfier/1.0.3/oms.min.js"></script></script><link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" /><script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script><link type="text/css" rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css"><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&amp;c=1048144&amp;h=9ee6accfd476c9cae718&amp;_xt=.css"><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&amp;c=1048144&amp;h=ef2cda20731d146b5e98&amp;_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&amp;c=1048144&amp;h=a0ef6ac4e28f91203dfe&amp;_xt=.css"><script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script><script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-resource.min.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&amp;c=1048144&amp;h=a0ef6ac4e28f91203dfe&amp;_xt=.css"><style>.mandatory{color:red;}.clearfix:after {clear: both;content: "";display: block;height: 0;}.wrapper {vertical-align: middle;}.nav {margin-top: 40px;}.pull-right {float: right;}a, a:active {color: #212121;text-decoration: none;}a:hover {color: #999;}.arrow-steps .step {font-size: 14px;text-align: center;color: #fff;cursor: default;margin: 0 3px;padding: 10px 10px 10px 30px;float: left;position: relative;background-color: #379e8f;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none; transition: background-color 0.2s ease;}.arrow-steps .step:after,.arrow-steps .step:before {content: " ";position: absolute;top: 0;right: -17px;width: 0;height: 40px;border-top: 19px solid transparent;border-bottom: 17px solid transparent;border-left: 17px solid #379e8f;	z-index: 2;transition: border-color 0.2s ease;}.arrow-steps .step:before {right: auto;left: 0;border-left: 17px solid #fff;	z-index: 0;}.arrow-steps .step:first-child:before {border: none;}.arrow-steps .step:first-child {border-top-left-radius: 4px;border-bottom-left-radius: 4px;}.arrow-steps .step span {position: relative;}.arrow-steps .step span:before {opacity: 0;content: "✔";position: absolute;top: -2px;left: -20px;color: #06ac77;}.arrow-steps .step.done span:before {opacity: 1;-webkit-transition: opacity 0.3s ease 0.5s;-moz-transition: opacity 0.3s ease 0.5s;-ms-transition: opacity 0.3s ease 0.5s;transition: opacity 0.3s ease 0.5s;}.arrow-steps .step.current {color: #103d39;font-weight: bold;background-color: #fbea51;}.arrow-steps .step.current:after {border-left: 17px solid #fbea51;	}.nav > li.active > a, .nav > li.active > a:focus, .nav > li.active > a:hover { background-color: #379E8F; color: #fff }.nav > li > a, .nav > li > a:focus, .nav > li > a:hover { margin-left: 5px; margin-right: 5px; border: 2px solid #379E8F; color: #379E8F; }</style>';
+          '<meta name="viewport" content="width=device-width, initial-scale=1.0"><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><script src="//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js"></script><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA92XGDo8rx11izPYT7z2L-YPMMJ6Ih1s0&callback=initMap&libraries=places"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/OverlappingMarkerSpiderfier/1.0.3/oms.min.js"></script></script><link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" /><script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script><link type="text/css" rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css"><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&amp;c=1048144&amp;h=9ee6accfd476c9cae718&amp;_xt=.css"><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&amp;c=1048144&amp;h=ef2cda20731d146b5e98&amp;_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&amp;c=1048144&amp;h=a0ef6ac4e28f91203dfe&amp;_xt=.css"><script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script><script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-resource.min.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&amp;c=1048144&amp;h=a0ef6ac4e28f91203dfe&amp;_xt=.css"><style>.mandatory{color:red;}.clearfix:after {clear: both;content: "";display: block;height: 0;}.wrapper {vertical-align: middle;}.nav {margin-top: 40px;}.pull-right {float: right;}a, a:active {color: #212121;text-decoration: none;}a:hover {color: #999;}.arrow-steps .step {font-size: 14px;text-align: center;color: #fff;cursor: default;margin: 0 3px;padding: 10px 10px 10px 30px;float: left;position: relative;background-color: #379e8f;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none; transition: background-color 0.2s ease;}.arrow-steps .step:after,.arrow-steps .step:before {content: " ";position: absolute;top: 0;right: -17px;width: 0;height: 40px;border-top: 19px solid transparent;border-bottom: 17px solid transparent;border-left: 17px solid #379e8f;	z-index: 2;transition: border-color 0.2s ease;}.arrow-steps .step:before {right: auto;left: 0;border-left: 17px solid #fff;	z-index: 0;}.arrow-steps .step:first-child:before {border: none;}.arrow-steps .step:first-child {border-top-left-radius: 4px;border-bottom-left-radius: 4px;}.arrow-steps .step span {position: relative;}.arrow-steps .step span:before {opacity: 0;content: "✔";position: absolute;top: -2px;left: -20px;color: #06ac77;}.arrow-steps .step.done span:before {opacity: 1;-webkit-transition: opacity 0.3s ease 0.5s;-moz-transition: opacity 0.3s ease 0.5s;-ms-transition: opacity 0.3s ease 0.5s;transition: opacity 0.3s ease 0.5s;}.arrow-steps .step.current {color: #103d39;font-weight: bold;background-color: #fbea51;}.arrow-steps .step.current:after {border-left: 17px solid #fbea51;	}.nav > li.active > a, .nav > li.active > a:focus, .nav > li.active > a:hover { background-color: #379E8F; color: #fff }.nav > li > a, .nav > li > a:focus, .nav > li > a:hover { margin-left: 5px; margin-right: 5px; border: 2px solid #379E8F; color: #379E8F; }</style>';
+
+        //ERROR SECTION
+        inlineHtml +=
+          '<div class="container" style="padding-top: 3%;"><div id="alert" class="alert alert-danger fade in"></div></div>';
 
 
         var day = getDay();
@@ -62,6 +76,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           day = 1; //Monday
         }
 
+        //HIDDEN FIELDS
         form.addField({
           id: 'custpage_zee',
           type: ui.FieldType.TEXT,
@@ -86,25 +101,157 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           displayType: ui.FieldDisplayType.HIDDEN
         }).defaultValue = day;
 
+        //HIDDEN FIELDS TO STORE VALUE TO BE SAVED ON THE FRANCHISE RECORD
+        form.addField({
+          id: 'custpage_maincontact',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        }).defaultValue = mainContact;
 
+        form.addField({
+          id: 'custpage_mobilenumber',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        }).defaultValue = mainContactMobile;
+
+        form.addField({
+          id: 'custpage_typeofowner',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        }).defaultValue = franchiseeTypeOfOwner;
+
+        form.addField({
+          id: 'custpage_personalemail',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        }).defaultValue = primaryEmail;
+
+        form.addField({
+          id: 'custpage_dob',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        }).defaultValue = dob;
+
+        form.addField({
+          id: 'custpage_vaccinationstatus',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        }).defaultValue = vaccinationStatus;
+
+        form.addField({
+          id: 'custpage_nextofkinname',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        }).defaultValue = franchiseeNextOfKinName;
+
+        form.addField({
+          id: 'custpage_nextofkinmobile',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        }).defaultValue = franchiseeNextOfKinMobile;
+
+        form.addField({
+          id: 'custpage_nextofkinrelationship',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        }).defaultValue = franchiseeNextOfKinRelationship;
+
+        form.addField({
+          id: 'custpage_addressids',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_address1',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_address2',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_suburb',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_state',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_postcode',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
 
         inlineHtml +=
           '<div class="se-pre-con"></div><div ng-app="myApp" ng-controller="myCtrl">';
 
         inlineHtml += spacing()
-        inlineHtml += progressBar()
-        inlineHtml += line()
-        inlineHtml += spacing()
+        if (role != 1000) {
+          inlineHtml += progressBar()
+          inlineHtml += line()
+          inlineHtml += spacing()
+          inlineHtml += selectFranchiseeSection(zee)
+          inlineHtml += spacing()
+        }
 
+        if (zee != 0 && !isNullorEmpty(zee)) {
+          //NetSuite Search: APP - Operator Load
+          var searchOperators = search.load({
+            id: 'customsearch_app_operator_load',
+            type: 'customrecord_operator'
+          });
 
-        inlineHtml += selectFranchiseeSection(zee)
-        inlineHtml += spacing()
+          if (!isNullorEmpty(zee)) {
+            searchOperators.filters.push(search.createFilter({
+              name: 'internalid',
+              join: 'CUSTRECORD_OPERATOR_FRANCHISEE2',
+              operator: search.Operator.IS,
+              values: zee
+            }));
+          }
 
-        inlineHtml += tabSection(role)
+          var resultSetOperators = searchOperators.run();
 
-        inlineHtml += spacing()
-        inlineHtml += line()
-        inlineHtml += mainButtons(role)
+          inlineHtml += tabSection(zee, role, resultSetOperators)
+          inlineHtml += spacing()
+          inlineHtml += line()
+          inlineHtml += mainButtons(role)
+        }
 
 
         form.addField({
@@ -115,14 +262,129 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           layoutType: ui.FieldLayoutType.STARTROW
         }).defaultValue = inlineHtml;
 
+        form.addSubmitButton({
+          label: 'SAVE'
+        });
+
         form.clientScriptFileId = 5334734
         context.response.writePage(form);
 
       } else {
+        var zeeId = parseInt(context.request.parameters.custpage_zee);
+        var franchiseeMainContact = context.request.parameters.custpage_maincontact;
+        var franchiseeMobileNumber = context.request.parameters.custpage_mobilenumber;
+        var franchiseeTypeOfOwner = context.request.parameters.custpage_typeofowner;
+        var franchiseePersonalEmail = context.request.parameters.custpage_personalemail;
+        var FranchiseeDOB = context.request.parameters.custpage_dob;
+        var franchiseeVaccinationStatus = context.request.parameters.custpage_vaccinationstatus;
+        var franchiseeNextOfKinName = context.request.parameters.custpage_nextofkinname;
+        var franchiseeNextOfKinMobile = context.request.parameters.custpage_nextofkinmobile;
+        var franchiseeNextOfKinRelationship = context.request.parameters.custpage_nextofkinrelationship;
+
+        log.debug({
+          title: "zeeId",
+          details: zeeId
+        });
+        log.debug({
+          title: "franchiseeMainContact",
+          details: franchiseeMainContact
+        });
+        log.debug({
+          title: "franchiseeMobileNumber",
+          details: franchiseeMobileNumber
+        });
+        log.debug({
+          title: "franchiseeTypeOfOwner",
+          details: franchiseeTypeOfOwner
+        });
+        log.debug({
+          title: "franchiseePersonalEmail",
+          details: franchiseePersonalEmail
+        });
+        log.debug({
+          title: "FranchiseeDOB",
+          details: FranchiseeDOB
+        });
+        log.debug({
+          title: "franchiseeVaccinationStatus",
+          details: franchiseeVaccinationStatus
+        });
+        log.debug({
+          title: "franchiseeNextOfKinName",
+          details: franchiseeNextOfKinName
+        });
+        log.debug({
+          title: "franchiseeNextOfKinMobile",
+          details: franchiseeNextOfKinMobile
+        });
+        log.debug({
+          title: "franchiseeNextOfKinRelationship",
+          details: franchiseeNextOfKinRelationship
+        });
+
+        log.debug({
+          title: "dateISOToNetsuite",
+          details: dateISOToNetsuite(FranchiseeDOB)
+        });
+
+
+
+        var zeeRecord = record.load({
+          type: record.Type.PARTNER,
+          id: zeeId
+        });
+
+        zeeRecord.setValue({
+          fieldId: 'custentity3',
+          value: franchiseeMainContact
+        })
+        zeeRecord.setValue({
+          fieldId: 'custentity2',
+          value: franchiseeMobileNumber
+        })
+        zeeRecord.setValue({
+          fieldId: 'custentity_type_of_owner',
+          value: franchiseeTypeOfOwner
+        })
+        zeeRecord.setValue({
+            fieldId: 'custentity_personal_email_address',
+            value: franchiseePersonalEmail
+          })
+          // zeeRecord.setValue({
+          //   fieldId: 'custentity_zee_dob',
+          //   value: dateISOToNetsuite(newDOB)
+          // })
+        zeeRecord.setValue({
+          fieldId: 'custentity_vacc_status',
+          value: franchiseeVaccinationStatus
+        })
+        zeeRecord.setValue({
+          fieldId: 'custentity_kin_name',
+          value: franchiseeNextOfKinName
+        })
+        zeeRecord.setValue({
+          fieldId: 'custentity_kin_mobile',
+          value: franchiseeNextOfKinMobile
+        })
+        zeeRecord.setValue({
+          fieldId: 'custentity_kin_relationship',
+          value: franchiseeNextOfKinRelationship
+        })
+
+        zeeRecord.save({
+          ignoreMandatoryFields: true
+        });
 
       }
     }
 
+
+    /*
+     * PURPOSE : ADDS SPACING
+     *  PARAMS :
+     * RETURNS : INLINEHTML
+     *   NOTES :
+     */
     function spacing() {
       var inlineHtml =
         '<div class="form-group spacing_section">';
@@ -133,6 +395,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       return inlineHtml;
     }
 
+
+    /*
+     * PURPOSE : ADDS HORIZONTAL LINE TO DIVIDE SECTIONS
+     *  PARAMS :
+     * RETURNS : INLINEHTML
+     *   NOTES :
+     */
     function line() {
       var inlineHtml =
         '<hr style="height:5px; width:100%; border-width:0; color:red; background-color:#fff">'
@@ -140,12 +409,19 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       return inlineHtml
     }
 
+
+    /*
+     * PURPOSE : PROGRESS BAR AT THE TOP OF THE PAGE TO SHOW AT WHAT STAGE THE FRANCHISE SALES & MANAGEMENT WORKFLOW IS AT. ONLY SEEN TO THE HEADOFFICE USERS NOT AVAILABLE TO THE FRANCHISEES
+     *  PARAMS :
+     * RETURNS :  INLINEHTML
+     *   NOTES :
+     */
     function progressBar() {
       var inlineHtml =
         '<div class="form-group progress_section">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="container"> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>SETUP</span> </div><div class="step"> <span>OPERATIONS TRAINING</span> </div><div class="step"> <span><span class="glyphicon glyphicon-ok" style="color: #fff"></span>IT TRAINING</span> </div><div class="step"> <span>AGREEMENTS SIGNED & UPLOADED</span> </div><div class="step"> <span>NETSUITE DATA ADMIN</span> </div><div class="step current"> <span>UPDATE/EDIT DETAILS</span> </div></div>';
+        '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>SALES PROCESS</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATIONS & INTERVIEW</span> </div><div class="step"> <span>SETTLEMENT</span> </div><div class="step"> <span><span class="glyphicon glyphicon-ok" style="color: #fff"></span>TRAINING</span> </div><div class="step"> <span>FRANCHISE AGREEMENTS</span> </div><div class="step"> <span>NETSUITE SETUP</span> </div><div class="step"> <span>ONBOARDING</span> </div><div class="step current"> <span>UPDATE/EDIT DETAILS</span> </div></div>';
       // inlineHtml += '<div class="nav clearfix"><a href="#" class="prev">Previous</a><a href="#" class="next pull-right">Next</a></div></div></div>'
       inlineHtml += '</div></div>'
       inlineHtml += '</div>';
@@ -154,46 +430,81 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       return inlineHtml
     }
 
+    /*
+     * PURPOSE : BUTTONS SECTION AT THE END OF THE PAGE.
+     *  PARAMS : USER ROLE
+     * RETURNS : INLINEHTML
+     *   NOTES :
+     */
     function mainButtons(role) {
 
-      var inlineHtml =
-        '<div class="form-group container company_name_section">';
-      inlineHtml += '<div class="row">';
-      inlineHtml +=
-        '<div class="col-xs-3 heading1"><input type="button" value="Send Email" class="form-control btn btn-primary" id="sendEmail" /></div>'
-      inlineHtml +=
-        '<div class="col-xs-3 heading1"><input type="button" value="Send SMS" class="form-control btn btn-primary" id="sendSMS" /></div>'
-      inlineHtml +=
-        '<div class="col-xs-3 heading1"><input type="button" value="Breach Notice" class="form-control btn btn-warning" id="breachNotice" /></div>'
-      inlineHtml +=
-        '<div class="col-xs-3 heading1"><input type="button" value="Termination" class="form-control btn btn-danger" id="breachNotice" /></div>'
-      inlineHtml += '</div>';
-      inlineHtml += '</div>';
+      var inlineHtml = ''
 
-
-
+      if (role != 1000) {
+        inlineHtml +=
+          '<div class="form-group container zee_available_buttons_section">';
+        inlineHtml += '<div class="row">';
+        inlineHtml +=
+          '<div class="col-xs-6 updateDetails"><input type="button" value="UPDATE DETAILS" class="form-control btn btn-primary" id="updateDetails" /></div>'
+        inlineHtml +=
+          '<div class="col-xs-6 listForSale"><input type="button" value="LIST FOR SALE" class="form-control btn btn-success" id="listForSale" /></div>'
+        inlineHtml += '</div>';
+        inlineHtml += '</div>';
+        inlineHtml +=
+          '<div class="form-group container zee_admin_section">';
+        inlineHtml += '<div class="row">';
+        inlineHtml +=
+          '<div class="col-xs-3 sendEmail"><input type="button" value="Send Email" class="form-control btn btn-primary" id="sendEmail" /></div>'
+        inlineHtml +=
+          '<div class="col-xs-3 sendSMS"><input type="button" value="Send SMS" class="form-control btn btn-primary" id="sendSMS" /></div>'
+        inlineHtml +=
+          '<div class="col-xs-3 breachNotice"><input type="button" value="Breach Notice" class="form-control btn btn-warning" id="breachNotice" /></div>'
+        inlineHtml +=
+          '<div class="col-xs-3 termination"><input type="button" value="Termination" class="form-control btn btn-danger" id="termination" /></div>'
+        inlineHtml += '</div>';
+        inlineHtml += '</div>';
+      } else {
+        inlineHtml +=
+          '<div class="form-group container zee_available_buttons_section">';
+        inlineHtml += '<div class="row">';
+        inlineHtml +=
+          '<div class="col-xs-6 updateDetails"><input type="button" value="UPDATE DETAILS" class="form-control btn btn-primary" id="updateDetails" /></div>'
+        inlineHtml +=
+          '<div class="col-xs-6 listForSale"><input type="button" value="LIST FOR SALE" class="form-control btn btn-success" id="listForSale" /></div>'
+        inlineHtml += '</div>';
+        inlineHtml += '</div>';
+      }
       return inlineHtml
     }
 
 
-    function tabSection(zee) {
-      // Tabs headers
+    /*
+     * PURPOSE : CREATES THE TAB SECTION FOR THE PAGE
+     *  PARAMS : ZEE ID, USER ROLE & OPERATOR SEARCH RESULT
+     * RETURNS : INLINEHTML
+     *   NOTES :
+     */
+    function tabSection(zee, role, resultSetOperators) {
+      //TAB HEADERS
       var inlineHtml =
         '<div>'
       inlineHtml +=
         '<div style="width: 95%; margin:auto; margin-bottom: 30px"><ul class="nav nav-tabs nav-justified main-tabs-sections " style="margin:0%;border-bottom-color: #fbea50 !important;border-bottom-width: 5px !important;border-bottom-style: solid;">';
       inlineHtml +=
-        '<li role="presentation" class="active"><a data-toggle="tab" href="#zeeDetails"><b>MAINDETAILS</b></a></li>';
+        '<li role="presentation" class="active"><a data-toggle="tab" href="#zeeDetails"><b>MAIN DETAILS</b></a></li>';
       inlineHtml +=
         '<li role="presentation" class=""><a data-toggle="tab" href="#operatorDetails"><b>OPERATION DETAILS</b></a></li>';
       inlineHtml +=
-        '<li role="presentation" class=""><a data-toggle="tab" href="#zeeAgreements"><b>AGREEMENTS</b></a></li>';
-      inlineHtml +=
         '<li role="presentation" class=""><a data-toggle="tab" href="#tollMPEX"><b>PICKUP & LODGEMENT LOCATIONS</b></a></li>';
       inlineHtml +=
-        '<li role="presentation" class=""><a data-toggle="tab" href="#breachDetails"><b>BREACH & TERMINATION DETAILS</b></a></li>';
+        '<li role="presentation" class=""><a data-toggle="tab" href="#zeeAgreements"><b>AGREEMENTS</b></a></li>';
+      if (role != 1000) {
+        inlineHtml +=
+          '<li role="presentation" class=""><a data-toggle="tab" href="#breachDetails"><b>BREACH & TERMINATION DETAILS</b></a></li>';
+      }
       inlineHtml += '</ul></div>';
 
+      //TAB CONTENT
       inlineHtml += '<div class="tab-content">';
       inlineHtml +=
         '<div role="tabpanel" class="tab-pane active" id="zeeDetails">';
@@ -203,33 +514,41 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
       inlineHtml +=
         '<div role="tabpanel" class="tab-pane " id="zeeAgreements">';
-      inlineHtml += franchiseeAgreements(zee)
+      inlineHtml += franchiseeAgreements(zee, role)
       inlineHtml += '</div>';
 
       inlineHtml +=
         '<div role="tabpanel" class="tab-pane " id="operatorDetails">';
-      inlineHtml += franchiseeOperatorDetails(zee)
-      inlineHtml += franchiseeFleetDetails(zee)
+      inlineHtml += franchiseeOperatorDetails(zee, resultSetOperators)
+      inlineHtml += franchiseeFleetDetails(zee, resultSetOperators)
       inlineHtml += '</div>';
-
 
       inlineHtml += '<div role="tabpanel" class="tab-pane " id="tollMPEX">';
       inlineHtml += franchiseeTOLLMPEX()
       inlineHtml += franchiseeAdhoc()
       inlineHtml += '</div>';
 
-      inlineHtml +=
-        '<div role="tabpanel" class="tab-pane " id="breachDetails">';
-      inlineHtml += franchiseeBreachDetails()
-      inlineHtml += franchiseeTerminationDetails()
-      inlineHtml += '</div>';
-
+      //BREACH NOTICE & TERMINATION ONLY SEEN BY HEAD OFFICE USERS
+      if (role != 1000) {
+        inlineHtml +=
+          '<div role="tabpanel" class="tab-pane " id="breachDetails">';
+        inlineHtml += franchiseeBreachDetails()
+        inlineHtml += franchiseeTerminationDetails()
+        inlineHtml += '</div>';
+      }
 
       inlineHtml += '</div></div>';
 
       return inlineHtml;
     }
 
+
+    /*
+     * PURPOSE : SELECT FRANCHISEE TO UPDATE. ONLY AVAILABLE FOR HEADOFFICE USERS
+     *  PARAMS : ZEE ID
+     * RETURNS : INLINEHTML
+     *   NOTES :
+     */
     function selectFranchiseeSection(zee) {
       var inlineHtml =
         '<div class="form-group container zee_section">';
@@ -288,6 +607,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       return inlineHtml;
     }
 
+    /*
+     * PURPOSE : FRANCHISE MAIN DETAILS TAB
+     *  PARAMS : ZEE ID
+     * RETURNS : INLINEHTML
+     *   NOTES :
+     */
     function franchiseeMainDetails(zee) {
 
       //NetSuite Search: Zee Management Console - Franchisees
@@ -332,11 +657,42 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           'custentity_toll_lodge_dx_no');
         franchiseeSendlePrimaryLocations = searchResultZees.getText(
           'custentity_sendle_hubbed_locations');
+        franchiseeLastMileLocations = searchResultZees.getText(
+          'custentity_lastmile_suburb');
         franchiseeSendleSecondaryLocations = searchResultZees.getText(
           'custentity_sendle_hubbed_location_sec');
+        franchiseeTypeOfOwner = searchResultZees.getValue(
+          'custentity_type_of_owner');
+        vaccinationStatus = searchResultZees.getValue(
+          'custentity_vacc_status');
+        dob = searchResultZees.getValue(
+          'custentity_zee_dob');
+        personalEmail = searchResultZees.getValue(
+          'custentity_personal_email_address');
+        franchiseeNextOfKinMobile = searchResultZees.getValue(
+          'custentity_kin_mobile');
+        franchiseeNextOfKinName = searchResultZees.getValue(
+          'custentity_kin_name');
+        franchiseeNextOfKinRelationship = searchResultZees.getValue(
+          'custentity_kin_relationship');
 
         return true;
       });
+
+      //NetSuite Search: SALESP - Addresses
+      var searched_addresses = search.load({
+        id: 'customsearch_salesp_address',
+        type: 'customer'
+      });
+
+      searched_addresses.filters.push(search.createFilter({
+        name: 'internalid',
+        operator: search.Operator.ANYOF,
+        values: zee
+      }));
+
+      resultSetAddresses = searched_addresses.run();
+
       var inlineHtml =
         '<div class="form-group container">';
       inlineHtml += '<div class="row">';
@@ -348,17 +704,17 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '<div class="form-group container">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="col-xs-12 name_section"><div class="input-group"><span class="input-group-addon">FRANCHISE NAME</span><input id="file_name" class="form-control mainContact" value="' +
+        '<div class="col-xs-12 name_section"><div class="input-group"><span class="input-group-addon">FRANCHISE NAME</span><input id="franchiseeName" class="form-control franchiseeName" value="' +
         franchiseeName + '" readonly/></div></div>';
       inlineHtml += '</div>';
       inlineHtml += '</div>';
       inlineHtml += '<div class="form-group container">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">MAIN CONTACT</span><input id="file_name" class="form-control mainContact" value="' +
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">MAIN CONTACT</span><input id="mainContact" class="form-control mainContact" value="' +
         mainContact + '" /></div></div>';
       inlineHtml +=
-        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">MOBILE NUMBER <span class="mandatory">*</span></span><input id="file_name" class="form-control mainContact" value="' +
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">MOBILE NUMBER <span class="mandatory">*</span></span><input id="mainContactMobile" class="form-control mainContact" value="' +
         mainContactMobile + '" /></div></div>';
 
       inlineHtml += '</div>';
@@ -367,10 +723,24 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '<div class="form-group container">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="col-xs-6 zee"><div class="input-group"><span class="input-group-addon" id="zee_text">TYPE OF OWNER <span class="mandatory">*</span></span><select id="zee" class="form-control zee" ><option value=0></option><option value=1>COMPANY OWNED</option><option value=2>INVESTOR</option><option value=3>Owner / Operator</option>';
+        '<div class="col-xs-6 zee"><div class="input-group"><span class="input-group-addon" id="zee_text">TYPE OF OWNER <span class="mandatory">*</span></span><select id="franchiseeTypeOfOwner" class="form-control franchiseeTypeOfOwner" >';
+      if (franchiseeTypeOfOwner == 0 || isNullorEmpty(franchiseeTypeOfOwner)) {
+        inlineHtml +=
+          '<option value=0></option><option value=1>COMPANY OWNED</option><option value=2>INVESTOR</option><option value=3>Owner / Operator</option>';
+      } else if (franchiseeTypeOfOwner == 1) {
+        inlineHtml +=
+          '<option value=0></option><option value=1 selected>COMPANY OWNED</option><option value=2>INVESTOR</option><option value=3>Owner / Operator</option>';
+      } else if (franchiseeTypeOfOwner == 2) {
+        inlineHtml +=
+          '<option value=0></option><option value=1>COMPANY OWNED</option><option value=2 selected>INVESTOR</option><option value=3>Owner / Operator</option>';
+      } else if (franchiseeTypeOfOwner == 3) {
+        inlineHtml +=
+          '<option value=0></option><option value=1>COMPANY OWNED</option><option value=2>INVESTOR</option><option value=3 selected>Owner / Operator</option>';
+      }
+
       inlineHtml += '</select></div></div>';
       inlineHtml +=
-        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">ABN</span><input id="file_name" class="form-control mainContact" value="' +
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">ABN</span><input id="franchiseeABN" class="form-control franchiseeABN" readonly value="' +
         franchiseeABN + '" /></div></div>';
       inlineHtml += '</div>';
       inlineHtml += '</div>';
@@ -379,10 +749,10 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '<div class="form-group container">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">PRIMARY EMAIL</span><input id="file_name" class="form-control mainContact" value="' +
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">PRIMARY EMAIL</span><input id="primaryEmail" class="form-control primaryEmail" value="' +
         primaryEmail + '" readonly/></div></div>';
       inlineHtml +=
-        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">PERSONAL EMAIL <span class="mandatory">*</span></span><input id="file_name" class="form-control mainContact" value="' +
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">PERSONAL EMAIL <span class="mandatory">*</span></span><input id="personalEmail" class="form-control personalEmail" value="' +
         personalEmail + '" /></div></div>';
       inlineHtml += '</div>';
       inlineHtml += '</div>';
@@ -391,15 +761,24 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         '<div class="form-group container company_name_section">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">DATE OF BIRTH <span class="mandatory">*</span></span><input id="file_name" type="date" class="form-control mainContact" value="" /></div></div>';
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">DATE OF BIRTH <span class="mandatory">*</span></span><input id="dob" type="date" class="form-control dob" value="' +
+        dob + '" /></div></div>';
       inlineHtml +=
-        '<div class="col-xs-6 zee"><div class="input-group"><span class="input-group-addon" id="zee_text">VACCINATION STATUS <span class="mandatory">*</span></span><select id="zee" class="form-control zee" ><option value=0></option><option value=1>YES</option><option value=2>NO</option>';
+        '<div class="col-xs-6 zee"><div class="input-group"><span class="input-group-addon" id="zee_text">VACCINATION STATUS <span class="mandatory">*</span></span><select id="vaccinationStatus" class="form-control vaccinationStatus" >';
+      if (vaccinationStatus == 1) {
+        inlineHtml +=
+          '<option value=0></option><option value=1 selected>YES</option><option value=2>NO</option>';
+      } else if (vaccinationStatus == 2) {
+        inlineHtml +=
+          '<option value=0></option><option value=1>YES</option><option value=2 selected>NO</option>';
+      } else {
+        inlineHtml +=
+          '<option value=0 selected></option><option value=1>YES</option><option value=2>NO</option>';
+      }
+
       inlineHtml += '</select></div></div>';
       inlineHtml += '</div>';
       inlineHtml += '</div>';
-      //
-      //
-
 
       inlineHtml +=
         '<div class="form-group container">';
@@ -409,17 +788,19 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
-      inlineHtml += '<div class="form-group container row_address1 ">'
+      //HIDDEN SECTION TO ADD/EDIT ADDRESS DETAILS
+      inlineHtml += '<div class="form-group container row_address1 hide">'
       inlineHtml += '<div class="row">';
+      inlineHtml += '<input id="internalid" value="" type="hidden"/>'
       inlineHtml +=
         '<div class="col-xs-6 address1_section"><div class="input-group"><span class="input-group-addon">UNIT/LEVEL/SUITE</span><input id="address1" class="form-control address1" /></div></div>';
       inlineHtml +=
-        '<div class="col-xs-6 address2_section"><div class="input-group"><span class="input-group-addon">STREET NO. & NAME</span><input id="address2" class="form-control address2" /></div></div>';
+        '<div class="col-xs-6 address2_section"><div class="input-group"><span class="input-group-addon">STREET NO. & NAME <span class="mandatory">*</span></span><input id="address2" class="form-control address2" /></div></div>';
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
-
-      inlineHtml += '<div class="form-group container ">'
+      inlineHtml +=
+        '<div class="form-group container city_state_postcode hide">'
       inlineHtml += '<div class="row">';
       inlineHtml +=
         '<div class="col-xs-6"><div class="input-group"><span class="input-group-addon">CITY</span><input id="city" readonly class="form-control city" /></div></div>';
@@ -431,20 +812,33 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
-
-      inlineHtml += '<div class="form-group container">';
-      inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="col-xs-12 name_section"><div class="input-group"><span class="input-group-addon">ADDRESS</span><textarea id="file_name" class="form-control mainContact" style="height:100px;" readonly>' +
-        franchiseeAddress + '</textarea></div></div>';
+        '<div class="form-group container saveaddress_section hide">';
+      inlineHtml += '<div class="row">';
+      inlineHtml += '<div class="col-xs-2 "></div>';
+      inlineHtml +=
+        '<div class="col-xs-4 reviewaddress"><input type="button" value="SAVE ADDRESSES" class="form-control btn btn-success"  id="saveAddress" /></div>';
+      inlineHtml +=
+        '<div class="col-xs-4 cancel"><input type="button" value="CANCEL" class="form-control btn btn-secondary"  id="cancel" /></div>';
+      inlineHtml += '<div class="col-xs-2 "></div>';
+
       inlineHtml += '</div>';
       inlineHtml += '</div>';
+
+      //ADDRESS TABLE
+      inlineHtml += addressContactsSection(resultSetAddresses);
 
       return inlineHtml
 
     }
 
-    function franchiseeAgreements(zee) {
+    /*
+     * PURPOSE : LIST OF FRANCHISEE AGREEMENTS RELATED TO THE ZEE
+     *  PARAMS : ZEE ID & USER ROLE
+     * RETURNS : INLINEHTML
+     *   NOTES :
+     */
+    function franchiseeAgreements(zee, role) {
 
       //NetSuite Search: Zee Agreement - Search
       var searchZeeAgreements = search.load({
@@ -481,7 +875,10 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml +=
         '<thead style="color: white;background-color: #379E8F;font-weight: bold;">';
       inlineHtml += '<tr class="text-center">';
-      inlineHtml += '<td>LINK</td>'
+      //ABILITY TO ADD/EDIT ONLY FOR HEADOFFICE USERS
+      if (role != 1000) {
+        inlineHtml += '<td>LINK</td>'
+      }
       inlineHtml += '<td>NS ID</td>'
       inlineHtml += '<td>NAME</td>'
       inlineHtml += '<td>COMMENCEMENT DATE</td>'
@@ -515,12 +912,15 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         1182
 
         inlineHtml += '<tr>'
-        inlineHtml +=
-          '<td><button class="form-control btn btn-xs btn-primary glyphicon glyphicon-pencil" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
-          zeeAgreementID +
-          '" class="editOperator" style="cursor: pointer !important;color: white;"></a></button> <button class="form-control btn btn-xs btn-danger glyphicon glyphicon-trash" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
-          zeeAgreementID +
-          '" class="deleteOperator" style="cursor: pointer !important;color: white;"></a></button></td>'
+          //SHOW EDIT/DELETE LINKS TO ONLY HEADOFFICE USERS
+        if (role != 1000) {
+          inlineHtml +=
+            '<td><button class="form-control btn btn-xs btn-primary glyphicon glyphicon-pencil" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
+            zeeAgreementID +
+            '" class="editOperator" style="cursor: pointer !important;color: white;"></a></button> <button class="form-control btn btn-xs btn-danger glyphicon glyphicon-trash" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
+            zeeAgreementID +
+            '" class="deleteOperator" style="cursor: pointer !important;color: white;"></a></button></td>'
+        }
         inlineHtml += '<td>' + zeeAgreementID + '</td>'
         inlineHtml +=
           '<td><b><a href="https://1048144.app.netsuite.com/app/common/custom/custrecordentry.nl?rectype=384&id=' +
@@ -532,8 +932,6 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml += '<td>' + zeeAgreementDeed + '</td>'
         inlineHtml += '<td>' + zeeAgreementStatus + '</td>'
         inlineHtml += '</tr>';
-
-
         return true;
       });
 
@@ -541,12 +939,21 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
-      inlineHtml += franchiseeNewAgreement()
+      //ABILITY TO CREATE NEW AGREEMENT TO ONLY HEADOFFICE USERS
+      if (role != 1000) {
+        inlineHtml += franchiseeNewAgreement()
+      }
 
       return inlineHtml;
     }
 
 
+    /*
+     * PURPOSE : TOLL MPEX RELATED DATA.
+     *  PARAMS :
+     * RETURNS : INLINEHTML
+     *   NOTES :
+     */
     function franchiseeTOLLMPEX() {
       var inlineHtml =
         '<div class="form-group container">';
@@ -559,17 +966,17 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '<div class="form-group container">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">TOLL Account Number</span><input id="file_name" class="form-control mainContact" value="' +
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">TOLL Account Number</span><input id="franchiseeTOLLAccountNumber" class="form-control franchiseeTOLLAccountNumber" value="' +
         franchiseeTOLLAccountNumber + '" readonly/></div></div>';
       inlineHtml += '</div>';
       inlineHtml += '</div>';
       inlineHtml += '<div class="form-group container">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">TOLL Pickup DX <span class="mandatory">*</span></span><input id="file_name" class="form-control mainContact" value="' +
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">TOLL Pickup DX </span><input id="franchiseeTOLLPickupDX" class="form-control franchiseeTOLLPickupDX" readonly value="' +
         franchiseeTOLLPickupDX + '" /></div></div>';
       inlineHtml +=
-        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">TOLL Lodgement DX <span class="mandatory">*</span></span><input id="file_name" class="form-control mainContact" value="' +
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">TOLL Lodgement DX </span><input id="franchiseeTOLLLodgementDX" class="form-control franchiseeTOLLLodgementDX" readonly value="' +
         franchiseeTOLLLodgementDX + '" /></div></div>';
       inlineHtml += '</div>';
       inlineHtml += '</div>';
@@ -577,6 +984,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       return inlineHtml;
     }
 
+
+    /*
+     * PURPOSE : FRANCHISE NEXT OF KIN DETAILS
+     *  PARAMS :
+     * RETURNS : INLINEHTML
+     *   NOTES :
+     */
     function franchiseeNextOfKin() {
       var inlineHtml =
         '<div class="form-group container">';
@@ -589,21 +1003,183 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '<div class="form-group container">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="col-xs-3 name_section"><div class="input-group"><span class="input-group-addon">FIRST NAME <span class="mandatory">*</span></span><input id="kinFirstName" type="text" class="form-control kinFirstName" value="" /></div></div>';
+        '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">NAME <span class="mandatory">*</span></span><input id="franchiseeNextOfKinName" type="text" class="form-control franchiseeNextOfKinName" value="' +
+        franchiseeNextOfKinName + '" /></div></div>';
       inlineHtml +=
-        '<div class="col-xs-3 name_section"><div class="input-group"><span class="input-group-addon">LAST NAME <span class="mandatory">*</span></span><input id="kinLastName" class="form-control kinLastName" value="" /></div></div>';
+        '<div class="col-xs-3 name_section"><div class="input-group"><span class="input-group-addon">MOBILE NUMBER <span class="mandatory">*</span></span><input id="franchiseeNextOfKinMobile" class="form-control franchiseeNextOfKinMobile" value="' +
+        franchiseeNextOfKinMobile + '" /></div></div>';
       inlineHtml +=
-        '<div class="col-xs-3 name_section"><div class="input-group"><span class="input-group-addon">MOBILE NUMBER <span class="mandatory">*</span></span><input id="kinMobile" class="form-control kinMobile" value="" /></div></div>';
-      inlineHtml +=
-        '<div class="col-xs-3 zee"><div class="input-group"><span class="input-group-addon" id="zee_text">RELATIONSHIP <span class="mandatory">*</span></span><select id="zee" class="form-control zee" ><option value=0></option>';
+        '<div class="col-xs-5 zee"><div class="input-group"><span class="input-group-addon" id="zee_text">RELATIONSHIP <span class="mandatory">*</span></span><select id="franchiseeNextOfKinRelationship" class="form-control franchiseeNextOfKinRelationship" ><option value=0></option>';
+      /*
+        Brother	  5
+        Daughter	7
+        Father	  1
+        Friend	  9
+        Mother	  2
+        Other	    10
+        Partner	  4
+        Sister	  8
+        Son	      6
+        Spouse	  3
+       */
+      switch (franchiseeNextOfKinRelationship) {
+        case 5:
+          inlineHtml += '<option value=0></option>';
+          inlineHtml += '<option value=5 selected>Brother</option>';
+          inlineHtml += '<option value=7>Daughter</option>';
+          inlineHtml += '<option value=1>Father</option>';
+          inlineHtml += '<option value=9>Friend</option>';
+          inlineHtml += '<option value=2>Mother</option>';
+          inlineHtml += '<option value=4>Partner</option>';
+          inlineHtml += '<option value=8>Sister</option>';
+          inlineHtml += '<option value=6>Son</option>';
+          inlineHtml += '<option value=3>Spouse</option>';
+          inlineHtml += '<option value=10>Other</option>';
+          break;
+        case 7:
+          inlineHtml += '<option value=0></option>';
+          inlineHtml += '<option value=5>Brother</option>';
+          inlineHtml += '<option value=7 selected>Daughter</option>';
+          inlineHtml += '<option value=1>Father</option>';
+          inlineHtml += '<option value=9>Friend</option>';
+          inlineHtml += '<option value=2>Mother</option>';
+          inlineHtml += '<option value=4>Partner</option>';
+          inlineHtml += '<option value=8>Sister</option>';
+          inlineHtml += '<option value=6>Son</option>';
+          inlineHtml += '<option value=3>Spouse</option>';
+          inlineHtml += '<option value=10>Other</option>';
+          break;
+        case 1:
+          inlineHtml += '<option value=0></option>';
+          inlineHtml += '<option value=5>Brother</option>';
+          inlineHtml += '<option value=7>Daughter</option>';
+          inlineHtml += '<option value=1 selected>Father</option>';
+          inlineHtml += '<option value=9>Friend</option>';
+          inlineHtml += '<option value=2>Mother</option>';
+          inlineHtml += '<option value=4>Partner</option>';
+          inlineHtml += '<option value=8>Sister</option>';
+          inlineHtml += '<option value=6>Son</option>';
+          inlineHtml += '<option value=3>Spouse</option>';
+          inlineHtml += '<option value=10>Other</option>';
+          break;
+        case 9:
+          inlineHtml += '<option value=0></option>';
+          inlineHtml += '<option value=5>Brother</option>';
+          inlineHtml += '<option value=7>Daughter</option>';
+          inlineHtml += '<option value=1>Father</option>';
+          inlineHtml += '<option value=9 selected>Friend</option>';
+          inlineHtml += '<option value=2>Mother</option>';
+          inlineHtml += '<option value=4>Partner</option>';
+          inlineHtml += '<option value=8>Sister</option>';
+          inlineHtml += '<option value=6>Son</option>';
+          inlineHtml += '<option value=3>Spouse</option>';
+          inlineHtml += '<option value=10>Other</option>';
+          break;
+        case 2:
+          inlineHtml += '<option value=0></option>';
+          inlineHtml += '<option value=5>Brother</option>';
+          inlineHtml += '<option value=7>Daughter</option>';
+          inlineHtml += '<option value=1>Father</option>';
+          inlineHtml += '<option value=9>Friend</option>';
+          inlineHtml += '<option value=2 selected>Mother</option>';
+          inlineHtml += '<option value=4>Partner</option>';
+          inlineHtml += '<option value=8>Sister</option>';
+          inlineHtml += '<option value=6>Son</option>';
+          inlineHtml += '<option value=3>Spouse</option>';
+          inlineHtml += '<option value=10>Other</option>';
+          break;
+        case 10:
+          inlineHtml += '<option value=0></option>';
+          inlineHtml += '<option value=5>Brother</option>';
+          inlineHtml += '<option value=7>Daughter</option>';
+          inlineHtml += '<option value=1>Father</option>';
+          inlineHtml += '<option value=9>Friend</option>';
+          inlineHtml += '<option value=2>Mother</option>';
+          inlineHtml += '<option value=4>Partner</option>';
+          inlineHtml += '<option value=8>Sister</option>';
+          inlineHtml += '<option value=6>Son</option>';
+          inlineHtml += '<option value=3>Spouse</option>';
+          inlineHtml += '<option value=10 selected>Other</option>';
+          break;
+        case 4:
+          inlineHtml += '<option value=0></option>';
+          inlineHtml += '<option value=5>Brother</option>';
+          inlineHtml += '<option value=7>Daughter</option>';
+          inlineHtml += '<option value=1>Father</option>';
+          inlineHtml += '<option value=9>Friend</option>';
+          inlineHtml += '<option value=2>Mother</option>';
+          inlineHtml += '<option value=4 selected>Partner</option>';
+          inlineHtml += '<option value=8>Sister</option>';
+          inlineHtml += '<option value=6>Son</option>';
+          inlineHtml += '<option value=3>Spouse</option>';
+          inlineHtml += '<option value=10>Other</option>';
+          break;
+        case 8:
+          inlineHtml += '<option value=0></option>';
+          inlineHtml += '<option value=5>Brother</option>';
+          inlineHtml += '<option value=7>Daughter</option>';
+          inlineHtml += '<option value=1>Father</option>';
+          inlineHtml += '<option value=9>Friend</option>';
+          inlineHtml += '<option value=2>Mother</option>';
+          inlineHtml += '<option value=4>Partner</option>';
+          inlineHtml += '<option value=8 selected>Sister</option>';
+          inlineHtml += '<option value=6>Son</option>';
+          inlineHtml += '<option value=3>Spouse</option>';
+          inlineHtml += '<option value=10>Other</option>';
+          break;
+        case 6:
+          inlineHtml += '<option value=0></option>';
+          inlineHtml += '<option value=5>Brother</option>';
+          inlineHtml += '<option value=7>Daughter</option>';
+          inlineHtml += '<option value=1>Father</option>';
+          inlineHtml += '<option value=9>Friend</option>';
+          inlineHtml += '<option value=2>Mother</option>';
+          inlineHtml += '<option value=4>Partner</option>';
+          inlineHtml += '<option value=8>Sister</option>';
+          inlineHtml += '<option value=6 selected>Son</option>';
+          inlineHtml += '<option value=3>Spouse</option>';
+          inlineHtml += '<option value=10>Other</option>';
+          break;
+        case 3:
+          inlineHtml += '<option value=0></option>';
+          inlineHtml += '<option value=5>Brother</option>';
+          inlineHtml += '<option value=7>Daughter</option>';
+          inlineHtml += '<option value=1>Father</option>';
+          inlineHtml += '<option value=9>Friend</option>';
+          inlineHtml += '<option value=2>Mother</option>';
+          inlineHtml += '<option value=4>Partner</option>';
+          inlineHtml += '<option value=8>Sister</option>';
+          inlineHtml += '<option value=6>Son</option>';
+          inlineHtml += '<option value=3 selected>Spouse</option>';
+          inlineHtml += '<option value=10>Other</option>';
+          break;
+        default:
+          inlineHtml += '<option value=0 selected></option>';
+          inlineHtml += '<option value=5>Brother</option>';
+          inlineHtml += '<option value=7>Daughter</option>';
+          inlineHtml += '<option value=1>Father</option>';
+          inlineHtml += '<option value=9>Friend</option>';
+          inlineHtml += '<option value=2>Mother</option>';
+          inlineHtml += '<option value=4>Partner</option>';
+          inlineHtml += '<option value=8>Sister</option>';
+          inlineHtml += '<option value=6>Son</option>';
+          inlineHtml += '<option value=3>Spouse</option>';
+          inlineHtml += '<option value=10>Other</option>';
+          break;
+      }
       inlineHtml += '</select></div></div>';
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
-
       return inlineHtml;
     }
 
+    /*
+     * PURPOSE : FRANCHISEE FIRST & LAST MILE DETAILS
+     *  PARAMS :
+     * RETURNS : INLINEHTML
+     *   NOTES :
+     */
     function franchiseeAdhoc() {
       var inlineHtml =
         '<div class="form-group container">';
@@ -616,17 +1192,38 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '<div class="form-group container">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">Sendle Primary Location</span><input id="file_name" class="form-control mainContact" value="' +
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">First Mile Primary Location</span><input id="franchiseeSendlePrimaryLocations" class="form-control franchiseeSendlePrimaryLocations" value="' +
         franchiseeSendlePrimaryLocations + '" readonly/></div></div>';
       inlineHtml +=
-        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">Sendle Secondary Location</span><input id="file_name" class="form-control mainContact" value="' +
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">First Mile Secondary Location</span><input id="franchiseeSendleSecondaryLocations" class="form-control franchiseeSendleSecondaryLocations" value="' +
         franchiseeSendleSecondaryLocations + '" readonly/></div></div>';
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
+      //ABILITY TO ADD/EDIT FIRST MILE SUBURBS
+      inlineHtml += franchiseeAddEditFirstMile()
+
+      inlineHtml += '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-12 name_section"><div class="input-group"><span class="input-group-addon">Last Mile Primary Location</span><input id="franchiseeLastMileLocations" class="form-control franchiseeLastMileLocations" value="' +
+        franchiseeLastMileLocations + '" readonly/></div></div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      //BUTTON TO ADD/EDIT LAST MILE SUBURBS
+      inlineHtml += franchiseeAddEditLastMile()
+
       return inlineHtml;
     }
 
+
+    /*
+     * PURPOSE : BUTTON TO REDIRECT PAGE TO FRANCHISE SERVICE NETWORK
+     *  PARAMS :
+     * RETURNS : INLINEHTML
+     *   NOTES :
+     */
     function franchiseeServiceNetwork() {
       var inlineHtml =
         '<div class="form-group container company_name_section">';
@@ -643,6 +1240,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       return inlineHtml
     }
 
+    /*
+     * PURPOSE : BUTTON TO REDIRECT PAGE TO CREATION OF NEW AGREEMENT
+     *  PARAMS :
+     * RETURNS : INLINEHTML
+     *   NOTES :
+     */
     function franchiseeNewAgreement() {
 
       var inlineHtml =
@@ -660,6 +1263,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       return inlineHtml
     }
 
+    /*
+     * PURPOSE : BUTTON TO ADD NEW OPERATOR TO THE TABLE
+     *  PARAMS :
+     * RETURNS : INLINEHTML
+     *   NOTES :
+     */
     function franchiseeAddOperator() {
       var inlineHtml =
         '<div class="form-group container company_name_section">';
@@ -676,6 +1285,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       return inlineHtml
     }
 
+    /*
+     * PURPOSE : BUTTON TO ADD NEW VEHICLE TO THE TABLE
+     *  PARAMS :
+     * RETURNS : INLINEHTML
+     *   NOTES :
+     */
     function franchiseeAddFleet() {
       var inlineHtml =
         '<div class="form-group container company_name_section">';
@@ -692,24 +1307,58 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       return inlineHtml
     }
 
-    function franchiseeOperatorDetails(zee) {
 
-      //NetSuite Search: APP - Operator Load
-      var searchOperators = search.load({
-        id: 'customsearch_app_operator_load',
-        type: 'customrecord_operator'
-      });
+    /*
+     * PURPOSE : BUTTON TO REDIRECT PAGE TO FIRST MILE SUBURB SELECTION
+     *  PARAMS :
+     * RETURNS : INLINEHTML
+     *   NOTES :
+     */
+    function franchiseeAddEditFirstMile() {
+      var inlineHtml =
+        '<div class="form-group container company_name_section">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-3 heading1"></div>'
+      inlineHtml +=
+        '<div class="col-xs-6 heading1"><input type="button" value="Add/Edit First-Mile Suburbs" class="form-control btn btn-primary" id="firstMile" style="background-color: #287587;"/></div>'
+      inlineHtml +=
+        '<div class="col-xs-3 heading1"></div>'
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
 
-      if (!isNullorEmpty(zee)) {
-        searchOperators.filters.push(search.createFilter({
-          name: 'internalid',
-          join: 'CUSTRECORD_OPERATOR_FRANCHISEE2',
-          operator: search.Operator.IS,
-          values: zee
-        }));
-      }
+      return inlineHtml
+    }
 
-      var resultSetOperators = searchOperators.run();
+    /*
+     * PURPOSE : BUTTON TO REDIRECT PAGE TO LAST MILE SUBURB SELECTION
+     *  PARAMS :
+     * RETURNS : INLINEHTML
+     *   NOTES :
+     */
+    function franchiseeAddEditLastMile() {
+      var inlineHtml =
+        '<div class="form-group container company_name_section">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-3 heading1"></div>'
+      inlineHtml +=
+        '<div class="col-xs-6 heading1"><input type="button" value="Add/Edit Last-Mile Suburbs" class="form-control btn btn-primary" id="lastMile" style="background-color: #287587;"/></div>'
+      inlineHtml +=
+        '<div class="col-xs-3 heading1"></div>'
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      return inlineHtml
+    }
+
+    /*
+     * PURPOSE : Autogenerates function contract comments
+     *  PARAMS : functio -
+     * RETURNS :  -
+     *   NOTES :
+     */
+    function franchiseeOperatorDetails(zee, resultSetOperators) {
 
       var operatorID = '';
       var operatorName = '';
@@ -718,6 +1367,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       var operatorEmploymentType = '';
       var operatorRole = '';
       var operatorMobileDev = '';
+      var operatorDDS = '';
+      var operatorPrimaryOperator = '';
 
       var inlineHtml =
         '<div class="form-group container">';
@@ -769,7 +1420,90 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '</div>';
 
       inlineHtml +=
-        '<div class="form-group container">';
+        '<div class="form-group container row_operator_details hide">'
+      inlineHtml += '<div class="row">';
+      inlineHtml += '<input id="operatorInternalId" value="" type="hidden"/>'
+      inlineHtml +=
+        '<div class="col-xs-3 operatorName_section"><div class="input-group"><span class="input-group-addon">Name <span class="mandatory">*</span></span><input id="operatorName" class="form-control operatorName" /></div></div>';
+      inlineHtml +=
+        '<div class="col-xs-3 operatorEmail_section"><div class="input-group"><span class="input-group-addon">EMAIL <span class="mandatory">*</span></span><input id="operatorEmail" class="form-control operatorEmail" /></div></div>';
+      inlineHtml +=
+        '<div class="col-xs-3 operatorMobile_section"><div class="input-group"><span class="input-group-addon">MOBILE NO. <span class="mandatory">*</span></span><input id="operatorMobile" class="form-control operatorMobile" /></div></div>';
+      inlineHtml +=
+        '<div class="col-xs-3"><div class="input-group"><span class="input-group-addon">MOBILE DEV </span><select id="operatorMobileDev" class="form-control operatorMobileDev" >';
+      /*
+        iOS	1
+        Android	2
+	       Other	5
+         */
+      inlineHtml +=
+        '<option value=0></option><option value=1>iOS</option><option value=2>Android</option><option value=5>Other</option>';
+      inlineHtml += '</select></div></div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+
+      inlineHtml +=
+        '<div class="form-group container operatorRole hide">'
+      inlineHtml += '<div class="row">';
+      /*
+        Driver	               2
+        Trolley/ Foot Courier	 3
+        Franchisee	           5
+       */
+      inlineHtml +=
+        '<div class="col-xs-3"><div class="input-group"><span class="input-group-addon">ROLE <span class="mandatory">*</span></span><select id="operatorRole" class="form-control operatorRole" >';
+      inlineHtml +=
+        '<option value=0></option><option value=2>Driver</option><option value=3>Trolley/ Foot Courier</option><option value=5>Franchisee</option>';
+      inlineHtml += '</select></div></div>';
+
+      /*
+        Employee	       1
+        Contractor	     2
+        Franchise Owner	 4
+       */
+
+      inlineHtml +=
+        '<div class="col-xs-3"><div class="input-group"><span class="input-group-addon">EMPLOYEMENT TYPE <span class="mandatory">*</span></span><select id="operatorEmploymentType" class="form-control operatorEmploymentType" >';
+      inlineHtml +=
+        '<option value=0></option><option value=1>Employee</option><option value=2>Contractor</option><option value=4>Franchise Owner</option>';
+      inlineHtml += '</select></div></div>';
+
+      /*
+        Yes	       1
+        No	       2
+       */
+      inlineHtml +=
+        '<div class="col-xs-3"><div class="input-group"><span class="input-group-addon">PRIMARY OPERATOR <span class="mandatory">*</span></span><select id="operatorPrimaryOperator" class="form-control operatorPrimaryOperator" >';
+      inlineHtml +=
+        '<option value=0></option><option value=1>Yes</option><option value=2>No</option>';
+      inlineHtml += '</select></div></div>';
+
+      inlineHtml +=
+        '<div class="col-xs-3"><div class="input-group"><span class="input-group-addon">CONTINGENCY DRIVER <span class="mandatory">*</span></span><select id="operatorContingency" class="form-control operatorContingency" >';
+      inlineHtml +=
+        '<option value=0></option><option value=1>Yes</option><option value=2>No</option>';
+      inlineHtml += '</select></div></div>';
+
+
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      inlineHtml +=
+        '<div class="form-group container saveoperator_section hide">';
+      inlineHtml += '<div class="row">';
+      inlineHtml += '<div class="col-xs-2 "></div>';
+      inlineHtml +=
+        '<div class="col-xs-4 reviewaddress"><input type="button" value="SAVE OPERATOR" class="form-control btn btn-success"  id="saveOperator" /></div>';
+      inlineHtml +=
+        '<div class="col-xs-4 cancel"><input type="button" value="CANCEL" class="form-control btn btn-secondary"  id="cancel" /></div>';
+      inlineHtml += '<div class="col-xs-2 "></div>';
+
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      inlineHtml +=
+        '<div class="form-group container" style="width: 100% !important;">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
         '<style>table#operatorTable {color: #103D39 !important; font-size: 12px;text-align: center;border: none;}.dataTables_wrapper {font-size: 14px;}table#operatorTable th{text-align: center;} .bolded{font-weight: bold;}</style>';
@@ -779,12 +1513,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         '<thead style="color: white;background-color: #379E8F;font-weight: bold;">';
       inlineHtml += '<tr class="text-center">';
       inlineHtml += '<td>LINK</td>'
-      inlineHtml += '<td>NS ID</td>'
       inlineHtml += '<td>NAME</td>'
-      inlineHtml += '<td>EMAIL</td>'
+      inlineHtml += '<td class="col-xs-2">EMAIL</td>'
       inlineHtml += '<td>PHONE</td>'
       inlineHtml += '<td>ROLE</td>'
       inlineHtml += '<td>EMPLOYMENT TYPE</td>'
+      inlineHtml += '<td>CONTINGENCY DRIVER</td>'
+      inlineHtml += '<td>PRIMARY DRIVER</td>'
       inlineHtml += '<td>MOBILE DEVICE</td>'
       inlineHtml += '</tr>';
       inlineHtml += '</thead>';
@@ -802,25 +1537,53 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           'custrecord_operator_email');
         operatorEmploymentType = searchResultOperators.getText(
           'custrecord_operator_employment');
+        var operatorEmploymentTypeID = searchResultOperators.getValue(
+          'custrecord_operator_employment');
         operatorRole = searchResultOperators.getText(
+          'custrecord_operator_role');
+        var operatorRoleID = searchResultOperators.getValue(
           'custrecord_operator_role');
         operatorMobileDev = searchResultOperators.getText(
           'custrecord_operator_mobdev_platform');
+        var operatorMobileDevID = searchResultOperators.getValue(
+          'custrecord_operator_mobdev_platform');
+        operatorDDS = searchResultOperators.getText(
+          'custrecord_dds_operator');
+        var operatorDDSID = searchResultOperators.getValue(
+          'custrecord_dds_operator');
+        operatorPrimaryOperator = searchResultOperators.getText(
+          'custrecord_primary_operator');
+        var operatorPrimaryOperatorID = searchResultOperators.getValue(
+          'custrecord_primary_operator');
 
         inlineHtml += '<tr>'
         inlineHtml +=
-          '<td><button class="form-control btn btn-xs btn-primary glyphicon glyphicon-pencil" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
+          '<td><a data-id="' +
           operatorID +
-          '" class="editOperator" style="cursor: pointer !important;color: white;"></a></button> <button class="form-control btn btn-xs btn-danger glyphicon glyphicon-trash" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
+          '" class="btn btn-md btn-primary editOperator" >EDIT</a> <a data-id="' +
           operatorID +
-          '" class="deleteOperator" style="cursor: pointer !important;color: white;"></a></button></td>'
-        inlineHtml += '<td>' + operatorID + '</td>'
-        inlineHtml += '<td>' + operatorName + '</td>'
-        inlineHtml += '<td>' + operatorEmail + '</td>'
-        inlineHtml += '<td>' + operatorPhone + '</td>'
-        inlineHtml += '<td>' + operatorRole + '</td>'
-        inlineHtml += '<td>' + operatorEmploymentType + '</td>'
-        inlineHtml += '<td>' + operatorMobileDev + '</td>'
+          '" class="btn btn-md btn-danger deleteOperator" >DELETE</a></td>'
+        inlineHtml += '<td><input value="' + operatorName +
+          '" readonly class="form-control operatorNameTable" /></td>'
+        inlineHtml += '<td><input value="' + operatorEmail +
+          '" readonly class="form-control operatorEmailTable" /></td>'
+        inlineHtml += '<td><input value="' + operatorPhone +
+          '" readonly class="form-control operatorPhoneTable" /></td>'
+        inlineHtml += '<td><input value="' + operatorRole +
+          '" readonly class="form-control operatorRoleTable" /><input id="operatorRoleID" class="operatorRoleID" value="' +
+          operatorRoleID + '" type="hidden"/></td>'
+        inlineHtml += '<td><input value="' + operatorEmploymentType +
+          '" readonly class="form-control operatorEmploymentTypeTable"/><input id="operatorEmploymentTypeID" class="operatorEmploymentTypeID" value="' +
+          operatorEmploymentTypeID + '" type="hidden"/></td>'
+        inlineHtml += '<td><input value="' + operatorDDS +
+          '" readonly class="form-control operatorDDSTable" /><input id="operatorDDSID" class="operatorDDSID" value="' +
+          operatorDDSID + '" type="hidden"/></td>'
+        inlineHtml += '<td><input value="' + operatorPrimaryOperator +
+          '" readonly class="form-control operatorPrimaryOperatorTable" /><input id="operatorPrimaryOperatorID" class="operatorPrimaryOperatorID" value="' +
+          operatorPrimaryOperatorID + '" type="hidden"/></td>'
+        inlineHtml += '<td><input value="' + operatorMobileDev +
+          '" readonly class="form-control operatorMobileDevTable" /><input id="operatorMobileDevID" class="operatorMobileDevID" value="' +
+          operatorMobileDevID + '" type="hidden"/></td>'
         inlineHtml += '</tr>';
 
 
@@ -836,7 +1599,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       return inlineHtml;
     }
 
-    function franchiseeFleetDetails(zee) {
+    function franchiseeFleetDetails(zee, resultSetOperators) {
 
       //NetSuite Search: Franchisee - Operator Vehicle Details
       var searchZeeVehicles = search.load({
@@ -865,23 +1628,104 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '</div>';
 
       inlineHtml +=
-        '<div class="form-group container">';
+        '<div class="form-group container row_fleet_details hide">'
+      inlineHtml += '<div class="row">';
+      inlineHtml += '<input id="vehicleInternalId" value="" type="hidden"/>'
+      inlineHtml +=
+        '<div class="col-xs-6 vehicleRego_section"><div class="input-group"><span class="input-group-addon">REGISTRATION <span class="mandatory">*</span></span><input id="vehicleRegistration" class="form-control vehicleRegistration" /></div></div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      inlineHtml +=
+        '<div class="form-group container row_fleet_details2 hide">'
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<style>table#operatorTable {color: #103D39 !important; font-size: 12px;text-align: center;border: none;}.dataTables_wrapper {font-size: 14px;}table#operatorTable th{text-align: center;} .bolded{font-weight: bold;}</style>';
+        '<div class="col-xs-3 operatorEmail_section"><div class="input-group"><span class="input-group-addon">MODEL <span class="mandatory">*</span></span><input id="vehicleModel" class="form-control vehicleModel" /></div></div>';
       inlineHtml +=
-        '<table id="operatorTable" class="table table-responsive table-striped operatorTable tablesorter" style="width: 100%;border: 1px solid #103d39;">';
+        '<div class="col-xs-3 operatorMobile_section"><div class="input-group"><span class="input-group-addon">MAKE<span class="mandatory">*</span></span><input id="vehicleMake" class="form-control vehicleMake" /></div></div>';
+      inlineHtml +=
+        '<div class="col-xs-3 operatorMobile_section"><div class="input-group"><span class="input-group-addon">COLOR <span class="mandatory">*</span></span><input id="vehicleColor" class="form-control vehicleColor" /></div></div>';
+      inlineHtml +=
+        '<div class="col-xs-3 operatorMobile_section"><div class="input-group"><span class="input-group-addon">YEAR <span class="mandatory">*</span></span><input id="vehicleYear" class="form-control vehicleYear" /></div></div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+
+      inlineHtml +=
+        '<div class="form-group container row_fleet_details3 hide">'
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-3"><div class="input-group"><span class="input-group-addon">SIGNAGE <span class="mandatory">*</span></span><select id="vehicleSignage" class="form-control vehicleSignage" >';
+      inlineHtml +=
+        '<option value=0></option><option value=1>Yes</option><option value=2>No</option>';
+      inlineHtml += '</select></div></div>';
+      inlineHtml +=
+        '<div class="col-xs-3"><div class="input-group"><span class="input-group-addon">CARGO CAGE <span class="mandatory">*</span></span><select id="vehicleCargoCage" class="form-control vehicleCargoCage" >';
+      inlineHtml +=
+        '<option value=0></option><option value=1>Yes</option><option value=2>No</option>';
+      inlineHtml += '</select></div></div>';
+
+      /*
+        Employee	       1
+        Contractor	     2
+        Franchise Owner	 4
+       */
+
+      inlineHtml +=
+        '<div class="col-xs-3"><div class="input-group"><span class="input-group-addon">ONWER <span class="mandatory">*</span></span><select id="vehicleOwner" class="form-control vehicleOwner" >';
+      inlineHtml +=
+        '<option value=0></option><option value=2>Driver</option><option value=3>Trolley/ Foot Courier</option><option value=5>Franchisee</option>';
+      inlineHtml += '</select></div></div>';
+
+      inlineHtml +=
+        '<div class="col-xs-3"><div class="input-group"><span class="input-group-addon">OPERATOR <span class="mandatory">*</span></span><select id="vehicleOperator" class="form-control vehicleOperator" ><option value=0></option>';
+
+      resultSetOperators.each(function(searchResultOperators) {
+
+        operatorID = searchResultOperators.getValue('internalid');
+        operatorName = searchResultOperators.getValue('name');
+
+        inlineHtml +=
+          '<option value=' + operatorID + '>' + operatorName +
+          '</option>';
+
+        return true;
+      });
+      inlineHtml += '</select></div></div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      inlineHtml +=
+        '<div class="form-group container savefleet_section hide">';
+      inlineHtml += '<div class="row">';
+      inlineHtml += '<div class="col-xs-2 "></div>';
+      inlineHtml +=
+        '<div class="col-xs-4 reviewaddress"><input type="button" value="SAVE FLEET" class="form-control btn btn-success"  id="saveVehicle" /></div>';
+      inlineHtml +=
+        '<div class="col-xs-4 cancel"><input type="button" value="CANCEL" class="form-control btn btn-secondary"  id="cancel" /></div>';
+      inlineHtml += '<div class="col-xs-2 "></div>';
+
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      inlineHtml +=
+        '<div class="form-group container" style="width: 100% !important;">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<style>table#fleetTable {color: #103D39 !important; font-size: 12px;text-align: center;border: none;}.dataTables_wrapper {font-size: 14px;}table#fleetTable th{text-align: center;} .bolded{font-weight: bold;}</style>';
+      inlineHtml +=
+        '<table id="fleetTable" class="table table-responsive table-striped fleetTable tablesorter" style="width: 100%;border: 1px solid #103d39;">';
       inlineHtml +=
         '<thead style="color: white;background-color: #379E8F;font-weight: bold;">';
       inlineHtml += '<tr class="text-center">';
       inlineHtml += '<td>LINK</td>'
-      inlineHtml += '<td>NS ID</td>'
       inlineHtml += '<td>REGISTRATION</td>'
       inlineHtml += '<td>MODEL</td>'
       inlineHtml += '<td>MAKE</td>'
       inlineHtml += '<td>COLOR</td>'
       inlineHtml += '<td>YEAR</td>'
       inlineHtml += '<td>SIGNAGE</td>'
+      inlineHtml += '<td>CARGO CAGE</td>'
       inlineHtml += '<td>OWNER</td>'
       inlineHtml += '<td>OPERATOR NAME</td>'
       inlineHtml += '</tr>';
@@ -903,8 +1747,18 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           'custrecord_vehicle_colour');
         vehicleSignage = searchResultZeeVehicles.getValue(
           'custrecord_vehicle_signage');
+        vehicleOwnerID = searchResultZeeVehicles.getValue(
+          'custrecord_vehicle_owner');
         vehicleOwner = searchResultZeeVehicles.getText(
           'custrecord_vehicle_owner');
+        vehicleCargoCageID = searchResultZeeVehicles.getValue(
+          'custrecord_cargo_cage');
+        vehicleCargoCage = searchResultZeeVehicles.getText(
+          'custrecord_cargo_cage');
+        vehicleOperatorInternalID = searchResultZeeVehicles.getValue({
+          name: "internalid",
+          join: "CUSTRECORD_OPERATOR_VEHICLE"
+        });
         vehicleOperatorName = searchResultZeeVehicles.getValue({
           name: "custrecord_operator_givennames",
           join: "CUSTRECORD_OPERATOR_VEHICLE"
@@ -912,20 +1766,33 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
         inlineHtml += '<tr>'
         inlineHtml +=
-          '<td><button class="form-control btn btn-xs btn-primary glyphicon glyphicon-pencil" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
+          '<td><a data-id="' +
           vehicleID +
-          '" class="editOperator" style="cursor: pointer !important;color: white;"></a></button> <button class="form-control btn btn-xs btn-danger glyphicon glyphicon-trash" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
+          '" class=" btn btn-md btn-primary editFleet" >EDIT</a> <a data-id="' +
           vehicleID +
-          '" class="deleteOperator" style="cursor: pointer !important;color: white;"></a></button></td>'
-        inlineHtml += '<td>' + vehicleID + '</td>'
-        inlineHtml += '<td>' + vehicleRegistration + '</td>'
-        inlineHtml += '<td>' + vehicleModel + '</td>'
-        inlineHtml += '<td>' + vehicleMake + '</td>'
-        inlineHtml += '<td>' + vehicleYear + '</td>'
-        inlineHtml += '<td>' + vehicleColor + '</td>'
-        inlineHtml += '<td>' + vehicleSignage + '</td>'
-        inlineHtml += '<td>' + vehicleOwner + '</td>'
-        inlineHtml += '<td>' + vehicleOperatorName + '</td>'
+          '" class=" btn btn-md btn-danger deleteFleet" >DELETE</a></td>'
+        inlineHtml += '<td><input value="' + vehicleRegistration +
+          '" readonly class="form-control vehicleRegistrationTable"/></td>'
+        inlineHtml += '<td><input value="' + vehicleModel +
+          '" readonly class="form-control vehicleModelTable"/></td>'
+        inlineHtml += '<td><input value="' + vehicleMake +
+          '" readonly class="form-control vehicleMakeTable"/></td>'
+        inlineHtml += '<td><input value="' + vehicleColor +
+          '" readonly class="form-control vehicleColorTable"/></td>'
+        inlineHtml += '<td><input value="' + vehicleYear +
+          '" readonly class="form-control vehicleYearTable"/></td>'
+        inlineHtml += '<td><input value="' + vehicleSignage +
+          '" readonly class="form-control vehicleSignageTable"/><input id="vehicleSignageID" class="vehicleSignageID" value="' +
+          vehicleSignage + '" type="hidden"/></td>'
+        inlineHtml += '<td><input value="' + vehicleCargoCage +
+          '" readonly class="form-control vehicleCargoCageTable"/><input id="vehicleCargoCageID" class="vehicleCargoCageID" value="' +
+          vehicleCargoCageID + '" type="hidden"/></td>'
+        inlineHtml += '<td><input value="' + vehicleOwner +
+          '" readonly class="form-control vehicleOwnerTable"/><input id="vehicleOwnerID" class="vehicleOwnerID" value="' +
+          vehicleOwnerID + '" type="hidden"/></td>'
+        inlineHtml += '<td><input value="' + vehicleOperatorName +
+          '" readonly class="form-control vehicleOperatorNameTable"/><input id="vehicleOperatorID" class="vehicleOperatorID" value="' +
+          vehicleOperatorInternalID + '" type="hidden"/></td>'
         inlineHtml += '</tr>';
 
         return true;
@@ -962,6 +1829,124 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '</div>';
 
       return inlineHtml;
+    }
+
+    function addressContactsSection(resultSetAddresses) {
+
+      var inlineQty =
+        '<div class="form-group container contacts_section" style="font-size: xx-small;">';
+      inlineQty += '<div class="row">';
+      inlineQty += '<div class="col-xs-12 address_div">';
+      inlineQty +=
+        '<table border="0" cellpadding="15" id="address" class="table table-responsive table-striped address tablesorter" cellspacing="0" style="width: 100%;border: 1px solid #103d39;font-size: 12px;text-align: center;"><thead style="color: white;background-color: #379E8F;"><tr><th style="vertical-align: middle;text-align: center;">LINK</th><th style="vertical-align: middle;text-align: center;">ID</th><th style="vertical-align: middle;text-align: center;"><b>SUIT/LEVEL/UNIT </b></th><th style="vertical-align: middle;text-align: center;"><b>STREET NO. & NAME </b></th><th style="vertical-align: middle;text-align: center;"><b>SUBURB </b></th><th style="vertical-align: middle;text-align: center;"><b>STATE </b></th><th style="vertical-align: middle;text-align: center;"><b>POSTCODE </b></th></tr></thead><tbody>';
+
+      if (!isNullorEmpty(resultSetAddresses)) {
+        //console.log("addresses work");
+
+        resultSetAddresses.each(function(searchResultAddresses) {
+          var id = searchResultAddresses.getValue({
+            name: 'addressinternalid',
+            join: 'Address'
+          });
+          var addr1 = searchResultAddresses.getValue({
+            name: 'address1',
+            join: 'Address'
+          });
+          var addr2 = searchResultAddresses.getValue({
+            name: 'address2',
+            join: 'Address'
+          });
+          var city = searchResultAddresses.getValue({
+            name: 'city',
+            join: 'Address'
+          });
+          var state = searchResultAddresses.getValue({
+            name: 'state',
+            join: 'Address'
+          });
+          var zip = searchResultAddresses.getValue({
+            name: 'zipcode',
+            join: 'Address'
+          });
+          var lat = searchResultAddresses.getValue({
+            name: 'custrecord_address_lat',
+            join: 'Address'
+          });
+          var lon = searchResultAddresses.getValue({
+            name: 'custrecord_address_lon',
+            join: 'Address'
+          });
+          var default_shipping = searchResultAddresses.getValue({
+            name: 'isdefaultshipping',
+            join: 'Address'
+          });
+          var default_billing = searchResultAddresses.getValue({
+            name: 'isdefaultbilling',
+            join: 'Address'
+          });
+          var default_residential = searchResultAddresses.getValue({
+            name: 'isresidential',
+            join: 'Address'
+          });
+
+          if (isNullorEmpty(addr1) && isNullorEmpty(addr2)) {
+            var full_address = city + ', ' + state + ' - ' + zip;
+          } else if (isNullorEmpty(addr1) && !isNullorEmpty(addr2)) {
+            var full_address = addr2 + ', ' + city + ', ' + state + ' - ' +
+              zip;
+          } else if (!isNullorEmpty(addr1) && isNullorEmpty(addr2)) {
+            var full_address = addr1 + ', ' + city + ', ' + state + ' - ' +
+              zip;
+          } else {
+            var full_address = addr1 + ', ' + addr2 + ', ' + city + ', ' +
+              state + ' - ' + zip;
+          }
+
+
+          if (default_shipping == 'T') {
+            shipping_state = state;
+          }
+
+          inlineQty +=
+            '<tr><td><a data-id="' +
+            id +
+            '" class="btn btn-md btn-primary editAddress" >EDIT</a> <a data-id="' +
+            id +
+            '" class="btn btn-md btn-danger deleteAddress" >DELETE</a></td>';
+          inlineQty += '<td><input value="' + id +
+            '" readonly class="form-control id"/></td>';
+          inlineQty += '<td><input value="' + addr1 +
+            '" readonly class="form-control addr1Table"/></td>';
+          inlineQty += '<td><input value="' + addr2 +
+            '" readonly class="form-control addr2Table"/></td>';
+          inlineQty += '<td><input value="' + city +
+            '" readonly class="form-control cityTable"/></td>';
+          inlineQty += '<td><input value="' + state +
+            '" readonly class="form-control stateTable"/></td>';
+          inlineQty += '<td><input value="' + zip +
+            '" readonly class="form-control zipTable"/></td>';
+
+
+          return true;
+        });
+      }
+
+      inlineQty += '</tbody></table>';
+      inlineQty += '</div>';
+      inlineQty += '</div>';
+      inlineQty += '</div>';
+
+      inlineQty += '<div class="form-group container reviewaddress_section">';
+      inlineQty += '<div class="row">';
+      inlineQty += '<div class="col-xs-3 "></div>';
+      inlineQty +=
+        '<div class="col-xs-6 reviewaddress"><input type="button" value="ADD ADDRESSES" class="form-control btn btn-primary" style="background-color: #287587;" id="reviewaddress" /></div>';
+      inlineQty += '<div class="col-xs-3 "></div>';
+
+      inlineQty += '</div>';
+      inlineQty += '</div>';
+
+      return inlineQty;
     }
 
     function isNullorEmpty(strVal) {

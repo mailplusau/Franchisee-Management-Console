@@ -5,7 +5,7 @@
  * @Date:   2021-11-01T09:59:04+11:00
  * Module Description: Page that lists customres that are commencing today or have not been onboarded.
  * @Last modified by:   ankithravindran
- * @Last modified time: 2021-11-24T14:31:17+11:00
+ * @Last modified time: 2021-12-06T08:26:27+11:00
  */
 
 
@@ -167,7 +167,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         //Loading Section that gets displayed when the page is being loaded
         inlineHtml += loadingSection();
         inlineHtml += '<div id="container"></div>'
-        inlineHtml += tollPODCreateForm(tollPODInternalID, fileName, operatorName, uploadDate,
+        inlineHtml += tollPODCreateForm(tollPODInternalID, fileName,
+          operatorName, uploadDate,
           uploadTime,
           podLocations, uploadedLabel);
 
@@ -198,7 +199,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       }
     }
 
-    function tollPODCreateForm(tollPODInternalID, fileName, operatorName, uploadDate, uploadTime,
+    function tollPODCreateForm(tollPODInternalID, fileName, operatorName,
+      uploadDate, uploadTime,
       podLocations, uploadedLabel) {
 
       var inlineHtml2 =
@@ -215,7 +217,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
       inlineHtml2 +=
         '<div class="col-xs-3 operatorname"><div class="input-group"><span class="input-group-addon" id="operatorname_text">OPERATOR</span><input type="text" id="operatorname" class="form-control operatorname" value="' +
-        operatorName + '" readonly/><input type="text" id="tollPODInternalID" class="form-control tollPODInternalID" value="' +
+        operatorName +
+        '" readonly/><input type="text" id="tollPODInternalID" class="form-control tollPODInternalID" value="' +
         tollPODInternalID + '" style="display: none;"/></div></div>';
 
       inlineHtml2 +=
@@ -314,7 +317,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml2 += '<div class="form-group container ">'
       inlineHtml2 += '<div class="row">';
       inlineHtml2 +=
-        '<div class="col-xs-6 reviewaddress"><input type="button" value="CREATE" class="form-control btn btn-primary" id="createForm" /></div>';
+        '<div class="col-xs-3 reviewaddress"><input type="button" value="CREATE" class="form-control btn btn-primary" id="createForm" /></div>';
+      inlineHtml2 +=
+        '<div class="col-xs-3 reviewaddress"><input type="button" value="DELETE" class="form-control btn btn-danger" id="deleteForm" /></div>';
       inlineHtml2 += '</div>';
       inlineHtml2 += '</div>';
       inlineHtml2 += '</div>';

@@ -7,7 +7,7 @@
  * Description: Create TOLL Proof of Delivery Form
  *
  * @Last modified by:   ankithravindran
- * @Last modified time: 2021-11-29T10:58:47+11:00
+ * @Last modified time: 2021-12-06T08:47:33+11:00
  *
  */
 
@@ -20,7 +20,7 @@ var usageThreshold = 50;
 
 function main() {
 
-  //SEARCH: TOLL Proof of Delivery Search
+  //SEARCH: TOLL Proof of Delivery - Data Entered
   var tollPODUploads = nlapiLoadSearch('customrecord_toll_pod',
     'customsearch4432');
 

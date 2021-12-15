@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-11-02T08:24:43+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2021-11-29T10:58:49+11:00
+ * @Last modified time: 2021-12-06T12:08:37+11:00
  */
 
 var sample_toll_pod_form = [324]
@@ -124,7 +124,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
         var hours;
 
-        if(ampm[1] == 'PM'){
+        if (ampm[1] == 'PM') {
           hours = timeSplit[0] + 12
         } else {
           hours = timeSplit[0]
@@ -159,7 +159,29 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         })
 
         tollPODRecord.save({
-            ignoreMandatoryFields: true
+          ignoreMandatoryFields: true
+        });
+
+        var url = baseURL +
+          '/app/site/hosting/scriptlet.nl?script=1394&deploy=1'
+        window.location.href = url;
+      });
+
+      $("#deleteForm").click(function() {
+        var tollPODInternalID = $('#tollPODInternalID').val()
+
+        var tollPODRecord = record.load({
+          type: 'customrecord_toll_pod',
+          id: tollPODInternalID
+        });
+
+        tollPODRecord.setValue({
+          fieldId: 'isinactive',
+          value: true
+        })
+
+        tollPODRecord.save({
+          ignoreMandatoryFields: true
         });
 
         var url = baseURL +
