@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-11-15T07:25:50+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2021-12-16T08:31:29+11:00
+ * @Last modified time: 2021-12-17T06:46:17+11:00
  */
 
 define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
@@ -174,6 +174,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           displayType: ui.FieldDisplayType.HIDDEN
         }).defaultValue = franchiseeNextOfKinRelationship;
 
+        //Address Table Hidden Fields
         form.addField({
           id: 'custpage_addressids',
           type: ui.FieldType.TEXT,
@@ -211,6 +212,143 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         });
         form.addField({
           id: 'custpage_postcode',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+
+        //Operator Table Hidden Fields
+        form.addField({
+          id: 'custpage_operatorids',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_operatorname',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_operatoremail',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_operatormobile',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_operatorrole',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_operatoremploymentype',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_operatordds',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_operatorprimary',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_operatormobiledev',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+
+        //Fleet Table Hidden Details
+        form.addField({
+          id: 'custpage_fleetids',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_fleetrego',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_fleetmodel',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_fleetmake',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_fleetcolor',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_fleetyear',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_fleetsignage',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_caregocage',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_owner',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_operator',
           type: ui.FieldType.TEXT,
           label: 'Day'
         }).updateDisplayType({
@@ -281,54 +419,80 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var franchiseeNextOfKinMobile = context.request.parameters.custpage_nextofkinmobile;
         var franchiseeNextOfKinRelationship = context.request.parameters.custpage_nextofkinrelationship;
 
-        log.debug({
-          title: "zeeId",
-          details: zeeId
-        });
-        log.debug({
-          title: "franchiseeMainContact",
-          details: franchiseeMainContact
-        });
-        log.debug({
-          title: "franchiseeMobileNumber",
-          details: franchiseeMobileNumber
-        });
-        log.debug({
-          title: "franchiseeTypeOfOwner",
-          details: franchiseeTypeOfOwner
-        });
-        log.debug({
-          title: "franchiseePersonalEmail",
-          details: franchiseePersonalEmail
-        });
-        log.debug({
-          title: "FranchiseeDOB",
-          details: FranchiseeDOB
-        });
-        log.debug({
-          title: "franchiseeVaccinationStatus",
-          details: franchiseeVaccinationStatus
-        });
-        log.debug({
-          title: "franchiseeNextOfKinName",
-          details: franchiseeNextOfKinName
-        });
-        log.debug({
-          title: "franchiseeNextOfKinMobile",
-          details: franchiseeNextOfKinMobile
-        });
-        log.debug({
-          title: "franchiseeNextOfKinRelationship",
-          details: franchiseeNextOfKinRelationship
-        });
+        var addressids = context.request.parameters.custpage_addressids;
+        var address1 = context.request.parameters.custpage_address1;
+        var address2 = context.request.parameters.custpage_address2;
+        var suburb = context.request.parameters.custpage_suburb;
+        var state = context.request.parameters.custpage_state;
+        var postcode = context.request.parameters.custpage_postcode;
 
+        log.debug({
+          title: 'addressids',
+          details: addressids
+        })
+
+        var addressidsArrays = addressids.split(',');
+        var address1Arrays = address1.split(',');
+        var address2Arrays = address2.split(',');
+        var suburbArrays = suburb.split(',');
+        var stateArrays = state.split(',');
+        var postcodeArrays = postcode.split(',');
+
+        var operatorids = context.request.parameters.custpage_operatorids;
+        var operatorname = context.request.parameters.custpage_operatorname;
+        var operatoremail = context.request.parameters.custpage_operatoremail;
+        var operatormobile = context.request.parameters.custpage_operatormobile;
+        var operatorrole = context.request.parameters.custpage_operatorrole;
+        var operatoremploymentype = context.request.parameters.custpage_operatoremploymentype;
+        var operatordds = context.request.parameters.custpage_operatordds;
+        var operatorprimary = context.request.parameters.custpage_operatorprimary;
+        var operatormobiledev = context.request.parameters.custpage_operatormobiledev;
+
+        var operatoridsArrys = operatorids.split(',')
+        var operatornameArrys = operatorname.split(',')
+        var operatoremailArrys = operatoremail.split(',')
+        var operatormobileArrys = operatormobile.split(',')
+        var operatorroleArrys = operatorrole.split(',')
+        var operatoremploymentypeArrys = operatoremploymentype.split(',')
+        var operatorddsArrys = operatordds.split(',')
+        var operatorprimaryArrys = operatorprimary.split(',')
+        var operatormobiledevArrys = operatormobiledev.split(',')
+
+        var fleetids = context.request.parameters.custpage_fleetids;
+        var fleetrego = context.request.parameters.custpage_fleetrego;
+        var fleetmodel = context.request.parameters.custpage_fleetmodel;
+        var fleetmake = context.request.parameters.custpage_fleetmake;
+        var fleetcolor = context.request.parameters.custpage_fleetcolor;
+        var fleetyear = context.request.parameters.custpage_fleetyear;
+        var fleetsignage = context.request.parameters.custpage_fleetsignage;
+        var caregocage = context.request.parameters.custpage_caregocage;
+        var owner = context.request.parameters.custpage_owner;
+        var operator = context.request.parameters.custpage_operator;
+
+        var fleetidsArrys = fleetids.split(',')
+        var fleetregoArrys = fleetrego.split(',')
+        var fleetmodelArrys = fleetmodel.split(',')
+        var fleetmakeArrys = fleetmake.split(',')
+        var fleetcolorArrys = fleetcolor.split(',')
+        var fleetyearArrys = fleetyear.split(',')
+        var fleetsignageArrys = fleetsignage.split(',')
+        var caregocageArrys = caregocage.split(',')
+        var ownerArrys = owner.split(',')
+        var operatorArrys = operator.split(',')
+
+        var dobArray = FranchiseeDOB.split('-')
+        var dobString = dobArray[1] + '/' + dobArray[2] + '/' + dobArray[0]
+
+        log.debug({
+          title: "dobString",
+          details: dobString
+        });
         log.debug({
           title: "dateISOToNetsuite",
-          details: dateISOToNetsuite(FranchiseeDOB)
+          details: getDate(dobString)
         });
 
-
-
+        //Load Partner Record & Save the main details
         var zeeRecord = record.load({
           type: record.Type.PARTNER,
           id: zeeId
@@ -347,13 +511,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           value: franchiseeTypeOfOwner
         })
         zeeRecord.setValue({
-            fieldId: 'custentity_personal_email_address',
-            value: franchiseePersonalEmail
-          })
-          // zeeRecord.setValue({
-          //   fieldId: 'custentity_zee_dob',
-          //   value: dateISOToNetsuite(newDOB)
-          // })
+          fieldId: 'custentity_personal_email_address',
+          value: franchiseePersonalEmail
+        })
+        zeeRecord.setValue({
+          fieldId: 'custentity_zee_dob',
+          value: getDate(dobString)
+        })
         zeeRecord.setValue({
           fieldId: 'custentity_vacc_status',
           value: franchiseeVaccinationStatus
@@ -371,13 +535,126 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           value: franchiseeNextOfKinRelationship
         })
 
-        zeeRecord.save({
+        log.debug({
+          title: 'isDynamic',
+          details: zeeRecord.isDynamic
+        })
+
+        //ADD/UPDATE ADDRESS
+        for (var x = 0; x < addressidsArrays.length; x++) {
+          if (addressidsArrays[x] == 0) {
+            zeeRecord.insertLine({
+              sublistId: 'addressbook',
+              line: 0
+            })
+            var lineIndex = 0;
+          } else {
+            var lineIndex = zeeRecord.findSublistLineWithValue({
+              sublistId: 'addressbook',
+              fieldId: 'internalid',
+              value: addressidsArrays[x]
+            });
+            log.debug({
+              title: "lineIndex",
+              details: lineIndex
+            });
+          }
+
+          var updateAddress = zeeRecord.getSublistSubrecord({
+            sublistId: 'addressbook',
+            fieldId: 'addressbookaddress',
+            line: lineIndex
+          })
+
+          updateAddress.setValue({
+            fieldId: 'country',
+            value: 'AU'
+          });
+
+          updateAddress.setValue({
+            fieldId: 'addressee',
+            value: franchiseeMainContact
+          });
+
+          updateAddress.setValue({
+            fieldId: 'addr1',
+            value: address1Arrays[x]
+          });
+          updateAddress.setValue({
+            fieldId: 'addr2',
+            value: address2Arrays[x]
+          });
+          updateAddress.setValue({
+            fieldId: 'city',
+            value: suburbArrays[x]
+          });
+          updateAddress.setValue({
+            fieldId: 'state',
+            value: stateArrays[x]
+          });
+          updateAddress.setValue({
+            fieldId: 'zip',
+            value: postcodeArrays[x]
+          });
+          updateAddress.setValue({
+            fieldId: 'isresidential',
+            value: 'T'
+          });
+        }
+
+        var zeeRecordId = zeeRecord.save({
           ignoreMandatoryFields: true
         });
 
+        //ADD/UPDATE OPREATOR DETAILS
+        for (var y = 0; y < operatoridsArrys.length; y++) {
+          var operatorRecord = record.load({
+            type: 'customrecord_operator',
+            id: operatoridsArrys[y]
+          });
+
+          operatorRecord.setValue({
+            fieldId: 'name',
+            value: operatornameArrys
+          })
+          operatorRecord.setValue({
+            fieldId: 'custrecord_operator_email',
+            value: operatoremailArrys
+          })
+          operatorRecord.setValue({
+            fieldId: 'custrecord_operator_phone',
+            value: operatormobileArrys
+          })
+          operatorRecord.setValue({
+            fieldId: 'custrecord_operator_role',
+            value: operatorroleArrys
+          })
+          operatorRecord.setValue({
+            fieldId: 'custrecord_operator_employment',
+            value: operatoremploymentypeArrys
+          })
+          operatorRecord.setValue({
+            fieldId: 'custrecord_dds_operator',
+            value: operatorddsArrys
+          })
+          operatorRecord.setValue({
+            fieldId: 'custrecord_primary_operator',
+            value: operatorprimaryArrys
+          })
+          operatorRecord.setValue({
+            fieldId: 'custrecord_operator_mobdev_platform',
+            value: operatormobiledevArrys
+          })
+
+          operatoeRecord.save()
+        }
+
+        redirect.toSuitelet({
+          scriptId: 'customscript_sl2_zee_management_console',
+          deploymentId: 'customdeploy1',
+        });
       }
     }
-
 
     /*
      * PURPOSE : ADDS SPACING
@@ -711,11 +988,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '<div class="form-group container">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">MAIN CONTACT</span><input id="mainContact" class="form-control mainContact" value="' +
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">MAIN CONTACT</span><input id="mainContact" data-old="' +
+        mainContact + '" class="form-control mainContact" value="' +
         mainContact + '" /></div></div>';
       inlineHtml +=
         '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">MOBILE NUMBER <span class="mandatory">*</span></span><input id="mainContactMobile" class="form-control mainContact" value="' +
-        mainContactMobile + '" /></div></div>';
+        mainContactMobile + '" data-old="' + mainContactMobile +
+        '"/></div></div>';
 
       inlineHtml += '</div>';
       inlineHtml += '</div>';
@@ -723,7 +1002,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '<div class="form-group container">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="col-xs-6 zee"><div class="input-group"><span class="input-group-addon" id="zee_text">TYPE OF OWNER <span class="mandatory">*</span></span><select id="franchiseeTypeOfOwner" class="form-control franchiseeTypeOfOwner" >';
+        '<div class="col-xs-6 zee"><div class="input-group"><span class="input-group-addon" id="zee_text">TYPE OF OWNER <span class="mandatory">*</span></span><select id="franchiseeTypeOfOwner" class="form-control franchiseeTypeOfOwner" data-old="' +
+        franchiseeTypeOfOwner + '">';
       if (franchiseeTypeOfOwner == 0 || isNullorEmpty(franchiseeTypeOfOwner)) {
         inlineHtml +=
           '<option value=0></option><option value=1>COMPANY OWNED</option><option value=2>INVESTOR</option><option value=3>Owner / Operator</option>';
@@ -753,18 +1033,21 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         primaryEmail + '" readonly/></div></div>';
       inlineHtml +=
         '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">PERSONAL EMAIL <span class="mandatory">*</span></span><input id="personalEmail" class="form-control personalEmail" value="' +
-        personalEmail + '" /></div></div>';
+        personalEmail + '" data-old="' + personalEmail + '" /></div></div>';
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
       inlineHtml +=
         '<div class="form-group container company_name_section">';
       inlineHtml += '<div class="row">';
+      var dobArray = dob.split('/')
+      var formattedDOB = dobArray[2] + '-' + dobArray[1] + '-' + dobArray[0]
       inlineHtml +=
         '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">DATE OF BIRTH <span class="mandatory">*</span></span><input id="dob" type="date" class="form-control dob" value="' +
-        dob + '" /></div></div>';
+        formattedDOB + '" data-old="' + formattedDOB + '"/></div></div>';
       inlineHtml +=
-        '<div class="col-xs-6 zee"><div class="input-group"><span class="input-group-addon" id="zee_text">VACCINATION STATUS <span class="mandatory">*</span></span><select id="vaccinationStatus" class="form-control vaccinationStatus" >';
+        '<div class="col-xs-6 zee"><div class="input-group"><span class="input-group-addon" id="zee_text">VACCINATION STATUS <span class="mandatory">*</span></span><select id="vaccinationStatus" class="form-control vaccinationStatus" data-old="' +
+        vaccinationStatus + '">';
       if (vaccinationStatus == 1) {
         inlineHtml +=
           '<option value=0></option><option value=1 selected>YES</option><option value=2>NO</option>';
@@ -1004,12 +1287,15 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '<div class="row">';
       inlineHtml +=
         '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">NAME <span class="mandatory">*</span></span><input id="franchiseeNextOfKinName" type="text" class="form-control franchiseeNextOfKinName" value="' +
-        franchiseeNextOfKinName + '" /></div></div>';
+        franchiseeNextOfKinName + '" data-old="' + franchiseeNextOfKinName +
+        '"/></div></div>';
       inlineHtml +=
         '<div class="col-xs-3 name_section"><div class="input-group"><span class="input-group-addon">MOBILE NUMBER <span class="mandatory">*</span></span><input id="franchiseeNextOfKinMobile" class="form-control franchiseeNextOfKinMobile" value="' +
-        franchiseeNextOfKinMobile + '" /></div></div>';
+        franchiseeNextOfKinMobile + '" data-old="' +
+        franchiseeNextOfKinMobile + '"/></div></div>';
       inlineHtml +=
-        '<div class="col-xs-5 zee"><div class="input-group"><span class="input-group-addon" id="zee_text">RELATIONSHIP <span class="mandatory">*</span></span><select id="franchiseeNextOfKinRelationship" class="form-control franchiseeNextOfKinRelationship" ><option value=0></option>';
+        '<div class="col-xs-5 zee"><div class="input-group"><span class="input-group-addon" id="zee_text">RELATIONSHIP <span class="mandatory">*</span></span><select id="franchiseeNextOfKinRelationship" class="form-control franchiseeNextOfKinRelationship" data-old="' +
+        franchiseeNextOfKinRelationship + '"><option value=0></option>';
       /*
         Brother	  5
         Daughter	7
@@ -1022,7 +1308,11 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         Son	      6
         Spouse	  3
        */
-      switch (franchiseeNextOfKinRelationship) {
+      log.debug({
+        title: 'franchiseeNextOfKinRelationship',
+        details: franchiseeNextOfKinRelationship
+      })
+      switch (parseInt(franchiseeNextOfKinRelationship)) {
         case 5:
           inlineHtml += '<option value=0></option>';
           inlineHtml += '<option value=5 selected>Brother</option>';
@@ -1556,13 +1846,18 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var operatorPrimaryOperatorID = searchResultOperators.getValue(
           'custrecord_primary_operator');
 
+        log.debug({
+          title: title,
+          details: details
+        })
+
         inlineHtml += '<tr>'
         inlineHtml +=
           '<td><a data-id="' +
           operatorID +
           '" class="btn btn-md btn-primary editOperator" >EDIT</a> <a data-id="' +
           operatorID +
-          '" class="btn btn-md btn-danger deleteOperator" >DELETE</a></td>'
+          '" class="btn btn-md btn-danger deleteOperator" >DELETE</a><input class="operatorrecordchanged" hidden value="notchanged" /></td>'
         inlineHtml += '<td><input value="' + operatorName +
           '" readonly class="form-control operatorNameTable" /></td>'
         inlineHtml += '<td><input value="' + operatorEmail +
@@ -1770,7 +2065,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           vehicleID +
           '" class=" btn btn-md btn-primary editFleet" >EDIT</a> <a data-id="' +
           vehicleID +
-          '" class=" btn btn-md btn-danger deleteFleet" >DELETE</a></td>'
+          '" class=" btn btn-md btn-danger deleteFleet" >DELETE</a><input class="fleetrecordchanged" value="notchanged" /></td>'
         inlineHtml += '<td><input value="' + vehicleRegistration +
           '" readonly class="form-control vehicleRegistrationTable"/></td>'
         inlineHtml += '<td><input value="' + vehicleModel +
@@ -1912,7 +2207,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             id +
             '" class="btn btn-md btn-primary editAddress" >EDIT</a> <a data-id="' +
             id +
-            '" class="btn btn-md btn-danger deleteAddress" >DELETE</a></td>';
+            '" class="btn btn-md btn-danger deleteAddress" >DELETE</a><input class="addressrecordchanged" hidden value="notchanged" /></td>';
           inlineQty += '<td><input value="' + id +
             '" readonly class="form-control id"/></td>';
           inlineQty += '<td><input value="' + addr1 +
@@ -1969,6 +2264,21 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '</div></div></div>';
 
       return inlineHtml;
+    }
+
+    function getDate(inputDate) {
+      var date = new Date(inputDate);
+      log.debug({
+        title: 'date',
+        details: date
+      })
+      format.format({
+        value: date,
+        type: format.Type.DATE,
+        timezone: format.Timezone.AUSTRALIA_SYDNEY
+      })
+
+      return date;
     }
 
     function getDay() {

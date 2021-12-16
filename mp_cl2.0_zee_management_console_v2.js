@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-11-02T08:24:43+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2021-12-16T08:31:32+11:00
+ * @Last modified time: 2021-12-17T08:34:04+11:00
  */
 
 
@@ -102,19 +102,23 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       }
     }
 
+    //Fade out the Loading symbol
     function afterLoad() {
       $(".se-pre-con").fadeOut("slow");
     }
 
+    //On page load
     function pageInit() {
 
+      //Backgorund color of the page
       $("#NS_MENU_ID0-item0").css("background-color", "#CFE0CE");
       $("#NS_MENU_ID0-item0 a").css("background-color", "#CFE0CE");
       $("#body").css("background-color", "#CFE0CE");
 
+      //Hide the alert section on the page
       $('#alert').hide();
 
-      // Set the value of another custom field
+      // Get the value of custom fields
       zee = (myRecord.getValue({
         fieldId: 'custpage_zee'
       }));
@@ -129,6 +133,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         zee = parseInt(zee)
       }
 
+      //Fill the map based on the digitised run of the franchisee
       if (zee != 0) {
         console.log(zee)
         map = new google.maps.Map(document.getElementById('map'), {
@@ -271,6 +276,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         }
       }
 
+      //On click of the cancel button, hide all the fields
       $(document).on('focus', '#cancel', function(event) {
         $('.row_address1').addClass('hide')
         $('.city_state_postcode').addClass('hide')
@@ -284,6 +290,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         $('.savefleet_section').addClass('hide');
       });
 
+      //Google Dropdown for the address2 field
       $(document).on('focus', '#address2', function(event) {
         // alert('onfocus')
         initAutocomplete();
@@ -291,6 +298,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
 
       afterLoad();
 
+      //Reload the page with the selected franchisee from the dropdown
       $(document).on("change", "#zee_dropdown", function(e) {
         var zee = $(this).val();
         var url = baseURL +
@@ -301,6 +309,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         window.location.href = url;
       });
 
+      //Redirect page to the Franchise Service Network Page
       $(document).on("click", "#serviceNetwork", function(e) {
         var zee = $('#zee_dropdown').val();
         var url = baseURL +
@@ -311,6 +320,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         window.location.href = url;
       });
 
+      //Redirect page to the New Zee Agreement Page
       $(document).on("click", "#newAgreement", function(e) {
         var zee = $('#zee_dropdown').val();
         var url =
@@ -320,6 +330,8 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         window.location.href = url;
       });
 
+
+      //Redirect page to the First Mile Suburb Selection Page
       $(document).on("click", "#firstMile", function(e) {
         var zee = $('#zee_dropdown').val();
 
@@ -329,6 +341,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         window.location.href = url;
       });
 
+      //Redirect page to the Last Mile Suburb Selection Page
       $(document).on("click", "#lastMile", function(e) {
         var zee = $('#zee_dropdown').val();
         var url =
@@ -337,18 +350,23 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         window.location.href = url;
       });
 
+      //On click of Add Address. unhide the fields
       $(document).on("click", "#reviewaddress", function(e) {
         $('.row_address1').removeClass('hide')
         $('.city_state_postcode').removeClass('hide')
         $('.saveaddress_section').removeClass('hide')
 
       });
+
+      //On click of Add Operator, unhide the fields
       $(document).on("click", "#addOperator", function(e) {
         $('.row_operator_details').removeClass('hide');
         $('.operatorRole').removeClass('hide');
         $('.saveoperator_section').removeClass('hide');
 
       });
+
+      //On click of Add Fleet, unhide the fields
       $(document).on("click", "#addFleet", function(e) {
 
         $('.row_fleet_details').removeClass('hide');
@@ -358,12 +376,17 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
 
       });
 
-      $(document).on("click", ".editFleet", function(e) {
+      //On click of Edit Fleet, populate the fields with the values from the respective row that is being edited
+      $(document).on("click", ".editFleetTable", function(e) {
 
-        var vehicleInternalId = $('.editFleet').attr('data-id')
+        //get Operator Vehicle internal id
+        var vehicleInternalId = $(this).closest('tr').find(
+          '.editFleetTable').attr(
+          'data-id')
         console.log(id)
         $('#vehicleInternalId').val(vehicleInternalId)
-          //
+
+        //Get values from the table
         var vehicleRegistration = $(this).closest('tr').find(
           '.vehicleRegistrationTable').val()
         var vehicleModel = $(this).closest('tr').find(
@@ -391,6 +414,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         var vehicleOperatorID = $(this).closest('tr').find(
           '.vehicleOperatorID').val()
 
+        //Update fields with the value got from the table
         $('.vehicleRegistration').val(vehicleRegistration);
         $('.vehicleModel').val(vehicleModel);
         $('.vehicleMake').val(vehicleMake);
@@ -399,48 +423,57 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         if (vehicleSignageID == "true") {
           $('.vehicleSignage').val("1");
         }
-
         $('.vehicleCargoCage').val(vehicleCargoCageID);
         $('.vehicleOwner').val(vehicleOwnerID);
         $('.vehicleOperator').val(vehicleOperatorID);
 
+        //Unhide the fields
         $('.row_fleet_details').removeClass('hide');
         $('.row_fleet_details2').removeClass('hide');
         $('.row_fleet_details3').removeClass('hide');
         $('.savefleet_section').removeClass('hide');
       });
 
+      //On click of Edit Address, populate the fields with the values from the respective row that is being edited
+      $(document).on("click", ".editAddressTable", function(e) {
 
-      $(document).on("click", ".editAddress", function(e) {
-
-        var id = $('.editAddress').attr('data-id')
+        //Get the Address Internal ID
+        var id = $(this).closest('tr').find('.editAddressTable').attr(
+          'data-id')
         console.log(id)
         $('#internalid').val(id)
 
+        //Get the values of thw row from the table
         var addr1 = $(this).closest('tr').find('.addr1Table').val()
         var addr2 = $(this).closest('tr').find('.addr2Table').val()
         var suburb = $(this).closest('tr').find('.cityTable').val()
         var state = $(this).closest('tr').find('.stateTable').val()
         var postcode = $(this).closest('tr').find('.zipTable').val()
 
+        //Populate the fields with the values got from the table
         $('.address1').val(addr1);
         $('.address2').val(addr2);
         $('.city').val(suburb);
         $('.state').val(state);
         $('.postcode').val(postcode);
 
+        //Unhide the fields
         $('.row_address1').removeClass('hide');
         $('.city_state_postcode').removeClass('hide');
         $('.saveaddress_section').removeClass('hide');
       });
 
+      //On click of Edit Operator, populate the fields with the values from the respective row that is being edited
+      $(document).on("click", ".editOperatorTable", function(e) {
 
-      $(document).on("click", ".editOperator", function(e) {
-
-        var operatorId = $('.editOperator').attr('data-id')
+        //Get the App Operator Internal ID
+        var operatorId = $(this).closest('tr').find('.editOperatorTable')
+          .attr(
+            'data-id')
         console.log(operatorId)
         $('#operatorInternalId').val(operatorId)
 
+        //Get the values of the row from the table
         var operatorName = $(this).closest('tr').find(
           '.operatorNameTable').val()
         var operatorEmail = $(this).closest('tr').find(
@@ -449,47 +482,60 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
           '.operatorPhoneTable').val()
         var operatorRole = $(this).closest('tr').find(
           '.operatorRoleTable').val()
-        var operatorRoleID = $(this).closest('tr').find('#operatorRoleID')
+        var operatorRoleID = $(this).closest('tr').find('.operatorRoleID')
           .val()
         var operatorEmploymentType = $(this).closest('tr').find(
           '.operatorEmploymentTypeTable').val()
         var operatorEmploymentTypeID = $(this).closest('tr').find(
-          '#operatorEmploymentTypeID').val()
+          '.operatorEmploymentTypeID').val()
         var operatorDDS = $(this).closest('tr').find('.operatorDDSTable')
           .val()
-        var operatorDDSID = $(this).closest('tr').find('#operatorDDSID').val()
+        var operatorDDSID = $(this).closest('tr').find('.operatorDDSID').val()
         var operatorPrimaryOperator = $(this).closest('tr').find(
           '.operatorPrimaryOperatorTable').val()
         var operatorPrimaryOperatorID = $(this).closest('tr').find(
-          '#operatorPrimaryOperatorID').val()
+          'operatorPrimaryOperatorID').val()
         var operatorMobileDev = $(this).closest('tr').find(
           '.operatorMobileDevTable').val()
         var operatorMobileDevID = $(this).closest('tr').find(
-          '#operatorMobileDevID').val()
+          '.operatorMobileDevID').val()
 
-        console.log('operatorRoleID' + operatorRoleID)
-        console.log('operatorEmploymentTypeID' + operatorEmploymentTypeID)
-        console.log('operatorDDSID' + operatorDDSID)
-        console.log('operatorPrimaryOperatorID' +
-          operatorPrimaryOperatorID)
-        console.log('operatorMobileDevID' + operatorMobileDevID)
+        console.log(operatorRole)
+        console.log(operatorRoleID)
+        console.log(operatorEmploymentType)
+        console.log(operatorEmploymentTypeID)
+        console.log(operatorDDS)
+        console.log(operatorDDSID)
+        console.log(operatorPrimaryOperator)
+        console.log(operatorPrimaryOperatorID)
+        console.log(operatorMobileDev)
+        console.log(operatorMobileDevID)
 
+        //Populate the fields from the values got from the row of the table
         $('.operatorName').val(operatorName);
         $('.operatorEmail').val(operatorEmail);
         $('.operatorMobile').val(operatorMobile);
         $('.operatorRole').val(operatorRoleID);
+        $('.operatorRoleID').val(operatorRoleID);
         $('.operatorEmploymentType').val(operatorEmploymentTypeID);
+        $('.operatorEmploymentTypeID').val(operatorEmploymentTypeID);
         $('.operatorPrimaryOperator').val(operatorDDSID);
+        $('.operatorPrimaryOperatorID').val(operatorDDSID);
         $('.operatorContingency').val(operatorPrimaryOperatorID);
+        $('.operatorContingencyID').val(operatorPrimaryOperatorID);
         $('.operatorMobileDev').val(operatorMobileDevID);
+        $('.operatorMobileDevID').val(operatorMobileDevID);
 
+        //Unhide the fields
         $('.row_operator_details').removeClass('hide');
         $('.operatorRole').removeClass('hide');
         $('.saveoperator_section').removeClass('hide');
       });
 
+      //On click of Save Address, either create a new row in the table or update the existing row with the values from the fields
       $(document).on("click", "#saveAddress", function(e) {
 
+        //get values from the fields
         var errorMessage = '';
         var id = $('#internalid').val();
         var addr1 = $('.address1').val();
@@ -498,74 +544,109 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         var state = $('.state').val();
         var postcode = $('.postcode').val();
 
+        console.log(id)
+
+        //Throw error if the Address2 fields is blank
         if (isNullorEmpty(addr2)) {
           errorMessage +=
             'Please Select Address from the Google Dropdown</br>';
         }
 
+        //Throw error if the Suburb fields is blank
+        if (isNullorEmpty(suburb)) {
+          errorMessage +=
+            'Please Select Address from the Google Dropdown so that the Suburb is automatically filled</br>';
+        }
+
+        //Throw error if the State fields is blank
+        if (isNullorEmpty(state)) {
+          errorMessage +=
+            'Please Select Address from the Google Dropdown so that the State is automatically filled</br>';
+        }
+
+        //Throw error if the Postcode fields is blank
+        if (isNullorEmpty(postcode)) {
+          errorMessage +=
+            'Please Select Address from the Google Dropdown so that the Postcode is automatically filled</br>';
+        }
+
+        console.log('errorMessage ' + errorMessage)
+
+        //Show the error message
         if (!isNullorEmpty(errorMessage)) {
           showAlert(errorMessage);
           return false;
         } else {
-          return true;
-        }
+          console.log(id)
 
+          //If updating exisitng address from the table
+          if (!isNullorEmpty(id)) {
 
-        if (!isNullorEmpty(id)) {
-          var edit_address_elem = document.getElementsByClassName(
-            "editAddress");
-          var addr1_elem = document.getElementsByClassName("addr1Table");
-          var addr2_elem = document.getElementsByClassName("addr2Table");
-          var city_elem = document.getElementsByClassName("cityTable");
-          var state_elem = document.getElementsByClassName("stateTable");
-          var zip_elem = document.getElementsByClassName("zipTable");
+            var edit_address_elem = document.getElementsByClassName(
+              "editAddressTable");
+            var recordchanged_elem = document.getElementsByClassName(
+              "addressrecordchanged");
+            var addr1_elem = document.getElementsByClassName("addr1Table");
+            var addr2_elem = document.getElementsByClassName("addr2Table");
+            var city_elem = document.getElementsByClassName("cityTable");
+            var state_elem = document.getElementsByClassName("stateTable");
+            var zip_elem = document.getElementsByClassName("zipTable");
 
-
-          for (var i = 0; i < edit_address_elem.length; ++i) {
-            var row_address_id = edit_address_elem[i].getAttribute(
-              'data-id');
-            if (id == row_address_id) {
-              addr1_elem[i].value = addr1;
-              addr2_elem[i].value = addr2;
-              city_elem[i].value = suburb;
-              state_elem[i].value = state;
-              zip_elem[i].value = postcode;
+            //Go through the rows from the table
+            for (var i = 0; i < edit_address_elem.length; ++i) {
+              var row_address_id = edit_address_elem[i].getAttribute(
+                'data-id');
+              //If the Ids match, update the row with the values from the fields
+              if (id == row_address_id) {
+                recordchanged_elem[i].value = "changed";
+                addr1_elem[i].value = addr1;
+                addr2_elem[i].value = addr2;
+                city_elem[i].value = suburb;
+                state_elem[i].value = state;
+                zip_elem[i].value = postcode;
+              }
             }
+          } else {
+            //Create a new row in the table from the values from the fields entered.
+            var inlineHtml = '';
+            inlineHtml +=
+              '<tr><td><a data-id="0" class="btn btn-md btn-primary editAddressTable" data-changed="changed">EDIT</a> <a data-id="0" class="btn btn-md btn-danger deleteAddressTable" >DELETE</a></td>';
+            inlineHtml +=
+              '<td><input value="0" readonly class="form-control id"/></td>';
+            inlineHtml += '<td><input value="' + addr1 +
+              '" readonly class="form-control addr1Table"/></td>';
+            inlineHtml += '<td><input value="' + addr2 +
+              '" readonly class="form-control addr2Table"/></td>';
+            inlineHtml += '<td><input value="' + suburb +
+              '" readonly class="form-control cityTable"/></td>';
+            inlineHtml += '<td><input value="' + state +
+              '" readonly class="form-control stateTable"/></td>';
+            inlineHtml += '<td><input value="' + postcode +
+              '" readonly class="form-control zipTable"/></td>';
+
+            $('#address tr:last').after(inlineHtml);
           }
-        } else {
-          var inlineHtml = '';
-          inlineHtml +=
-            '<tr><td><button class="form-control btn btn-xs btn-primary glyphicon glyphicon-pencil editAddress" style="width: fit-content;" data-id="0"></button> <button class="form-control btn btn-xs btn-danger glyphicon glyphicon-trash deleteAddress" style="width: fit-content;" data-id="0"></button></td>';
-          inlineHtml +=
-            '<td><input value="0" readonly class="form-control id"/></td>';
-          inlineHtml += '<td><input value="' + addr1 +
-            '" readonly class="form-control addr1Table"/></td>';
-          inlineHtml += '<td><input value="' + addr2 +
-            '" readonly class="form-control addr2Table"/></td>';
-          inlineHtml += '<td><input value="' + suburb +
-            '" readonly class="form-control cityTable"/></td>';
-          inlineHtml += '<td><input value="' + state +
-            '" readonly class="form-control stateTable"/></td>';
-          inlineHtml += '<td><input value="' + postcode +
-            '" readonly class="form-control zipTable"/></td>';
 
-          $('#address tr:last').after(inlineHtml);
+          //Blank the values in the fields
+          $('#internalid').val("");
+          $('.address1').val("");
+          $('.address2').val("");
+          $('.city').val("");
+          $('.state').val("");
+          $('.postcode').val("");
+
+          //Hide the fields
+          $('.row_address1').addClass('hide');
+          $('.city_state_postcode').addClass('hide');
+          $('.saveaddress_section').addClass('hide');
         }
-
-        $('#internalid').val("");
-        $('.address1').val("");
-        $('.address2').val("");
-        $('.city').val("");
-        $('.state').val("");
-        $('.postcode').val("");
-
-        $('.row_address1').addClass('hide');
-        $('.city_state_postcode').addClass('hide');
-        $('.saveaddress_section').addClass('hide');
       });
 
+      //On click of Save Operator, either create a new row in the table or update the existing row with the values from the fields
       $(document).on("click", "#saveOperator", function(e) {
 
+        //Get values from the fields
+        var errorMessage = '';
         var operatorID = $('#operatorInternalId').val();
         var operatorName = $('.operatorName').val();
         var operatorEmail = $('.operatorEmail').val();
@@ -585,110 +666,186 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         var operatorMobileDevText = $(
           '.operatorMobileDev option:selected').text();
 
-
-        if (!isNullorEmpty(operatorID)) {
-          var edit_operator_elem = document.getElementsByClassName(
-            "editOperator");
-          var edit_name_elem = document.getElementsByClassName(
-            "operatorNameTable");
-          var operator_email_elem = document.getElementsByClassName(
-            "operatorEmailTable");
-          var operator_phone_elem = document.getElementsByClassName(
-            "operatorPhoneTable");
-          var operator_role_elem = document.getElementsByClassName(
-            "operatorRoleTable");
-          var operator_roleid_elem = document.getElementsByClassName(
-            "operatorRoleID");
-          var operator_type_elem = document.getElementsByClassName(
-            "operatorEmploymentTypeTable");
-          var operator_typeid_elem = document.getElementsByClassName(
-            "operatorEmploymentTypeID");
-          var operator_dds_elem = document.getElementsByClassName(
-            "operatorDDSTable");
-          var operator_ddsid_elem = document.getElementsByClassName(
-            "operatorDDSID");
-          var operator_primary_elem = document.getElementsByClassName(
-            "operatorPrimaryOperatorTable");
-          var operator_primaryid_elem = document.getElementsByClassName(
-            "operatorPrimaryOperatorID");
-          var operator_mobdev_elem = document.getElementsByClassName(
-            "operatorMobileDevTable");
-          var operator_mobdevid_elem = document.getElementsByClassName(
-            "operatorMobileDevID");
+        console.log(operatorName)
+        console.log(operatorRoleID)
+        console.log(operatorRoleText)
+        console.log(operatorEmploymentTypeID)
+        console.log(operatorEmploymentTypeText)
 
 
-          for (var i = 0; i < edit_operator_elem.length; ++i) {
-            var row_operator_id = edit_operator_elem[i].getAttribute(
-              'data-id');
-            if (operatorID == row_operator_id) {
-              edit_name_elem[i].value = operatorName;
-              operator_email_elem[i].value = operatorEmail;
-              operator_phone_elem[i].value = operatorMobile;
-              operator_role_elem[i].value = operatorRoleID;
-              operator_roleid_elem[i].value = operatorRoleText;
-              operator_type_elem[i].value = operatorEmploymentTypeID;
-              operator_typeid_elem[i].value = operatorEmploymentTypeText;
-              operator_dds_elem[i].value = operatorDDSID;
-              operator_ddsid_elem[i].value = operatorDDSText;
-              operator_primary_elem[i].value = operatorPrimaryOperatorID;
-              operator_primaryid_elem[i].value =
-                operatorPrimaryOperatorText;
-              operator_mobdev_elem[i].value = operatorMobileDevID;
-              operator_mobdevid_elem[i].value = operatorMobileDevText;
-            }
-          }
-        } else {
-          var inlineHtml = '';
-          inlineHtml += '<tr>'
-          inlineHtml +=
-            '<td><a data-id="' +
-            operatorID +
-            '" class="btn btn-md btn-primary editOperator" >EDIT</a> <a data-id="' +
-            operatorID +
-            '" class="btn btn-md btn-danger deleteOperator" >DELETE</a></td>'
-          inlineHtml += '<td><input value="' + operatorName +
-            '" readonly class="form-control operatorNameTable" /></td>'
-          inlineHtml += '<td><input value="' + operatorEmail +
-            '" readonly class="form-control operatorEmailTable" /></td>'
-          inlineHtml += '<td><input value="' + operatorMobile +
-            '" readonly class="form-control operatorPhoneTable" /></td>'
-          inlineHtml += '<td><input value="' + operatorRoleText +
-            '" readonly class="form-control operatorRoleTable" /><input id="operatorRoleID" class="operatorRoleID" value="' +
-            operatorRoleID + '" type="hidden"/></td>'
-          inlineHtml += '<td><input value="' + operatorEmploymentTypeText +
-            '" readonly class="form-control operatorEmploymentTypeTable"/><input id="operatorEmploymentTypeID" class="operatorEmploymentTypeID" value="' +
-            operatorEmploymentTypeID + '" type="hidden"/></td>'
-          inlineHtml += '<td><input value="' + operatorDDSText +
-            '" readonly class="form-control operatorDDSTable" /><input id="operatorDDSID" class="operatorDDSID" value="' +
-            operatorDDSID + '" type="hidden"/></td>'
-          inlineHtml += '<td><input value="' +
-            operatorPrimaryOperatorText +
-            '" readonly class="form-control operatorPrimaryOperatorTable" /><input id="operatorPrimaryOperatorID" class="operatorPrimaryOperatorID" value="' +
-            operatorPrimaryOperatorID + '" type="hidden"/></td>'
-          inlineHtml += '<td><input value="' + operatorMobileDevText +
-            '" readonly class="form-control operatorMobileDevTable" /><input id="operatorMobileDevID" class="operatorMobileDevID" value="' +
-            operatorMobileDevID + '" type="hidden"/></td>'
-          inlineHtml += '</tr>';
-
-          $('#operatorTable tr:last').after(inlineHtml);
+        //Throw error if the Operator Name fields is blank
+        if (isNullorEmpty(operatorName)) {
+          errorMessage +=
+            'Please Enter the Operator Name</br>';
         }
 
-        $('.operatorName').val("");
-        $('.operatorEmail').val("");
-        $('.operatorMobile').val("");
-        $('.operatorRole').val("");
-        $('.operatorEmploymentType').val("");
-        $('.operatorPrimaryOperator').val("");
-        $('.operatorContingency').val("");
-        $('.operatorMobileDev').val("");
+        //Throw error if the Operator Email fields is blank
+        if (isNullorEmpty(operatorEmail)) {
+          errorMessage +=
+            'Please Enter the Operator Email</br>';
+        }
 
-        $('.row_operator_details').addClass('hide');
-        $('.operatorRole').addClass('hide');
-        $('.saveoperator_section').addClass('hide');
+        //Throw error if the Operator Mobile fields is blank
+        if (isNullorEmpty(operatorMobile)) {
+          errorMessage +=
+            'Please Enter the Operator Mobile Number</br>';
+        }
+
+        //Throw error if the Operator Role field is not selected
+        if (isNullorEmpty(operatorRoleID)) {
+          errorMessage +=
+            'Please Select the Operator Role</br>';
+        }
+
+        //Throw error if the Operator Employment Type field is not selected
+        if (isNullorEmpty(operatorEmploymentTypeID)) {
+          errorMessage +=
+            'Please Select the Operator Employment Type</br>';
+        }
+
+        //Throw error if the Operator Contingency field is not selected
+        if (isNullorEmpty(operatorDDSID)) {
+          errorMessage +=
+            'Please Select if the Operator is a contingency driver or not</br>';
+        }
+
+        //Throw error if the Primary Operator field is not selected
+        if (isNullorEmpty(operatorPrimaryOperatorID)) {
+          errorMessage +=
+            'Please Select if the operator is Primary Operator or not</br>';
+        }
+
+
+        //Show the error message
+        if (!isNullorEmpty(errorMessage)) {
+          showAlert(errorMessage);
+          return false;
+        } else {
+
+
+          //Update the existing row with the values from the fields
+          if (!isNullorEmpty(operatorID)) {
+            var edit_operator_elem = document.getElementsByClassName(
+              "editOperatorTable");
+            var edit_name_elem = document.getElementsByClassName(
+              "operatorNameTable");
+            var operator_email_elem = document.getElementsByClassName(
+              "operatorEmailTable");
+            var operator_phone_elem = document.getElementsByClassName(
+              "operatorPhoneTable");
+            var operator_role_elem = document.getElementsByClassName(
+              "operatorRoleTable");
+            var operator_roleid_elem = document.getElementsByClassName(
+              "operatorRoleID");
+            var operator_type_elem = document.getElementsByClassName(
+              "operatorEmploymentTypeTable");
+            var operator_typeid_elem = document.getElementsByClassName(
+              "operatorEmploymentTypeID");
+            var operator_dds_elem = document.getElementsByClassName(
+              "operatorDDSTable");
+            var operator_ddsid_elem = document.getElementsByClassName(
+              "operatorDDSID");
+            var operator_primary_elem = document.getElementsByClassName(
+              "operatorPrimaryOperatorTable");
+            var operator_primaryid_elem = document.getElementsByClassName(
+              "operatorPrimaryOperatorID");
+            var operator_mobdev_elem = document.getElementsByClassName(
+              "operatorMobileDevTable");
+            var operator_mobdevid_elem = document.getElementsByClassName(
+              "operatorMobileDevID");
+
+            console.log('edit_operator_elem.length: ' +
+              edit_operator_elem.length)
+
+            for (var i = 0; i < edit_operator_elem.length; i++) {
+              var row_operator_id = edit_operator_elem[i].getAttribute(
+                'data-id');
+              console.log('row_operator_id: ' + row_operator_id)
+
+              if (operatorID == row_operator_id) {
+                console.log('i: ' + i)
+                console.log('operatorID: ' + operatorID)
+                console.log('edit_name_elem[i]: ' + edit_name_elem[i])
+
+                edit_name_elem[i].value = operatorName;
+                edit_operator_elem[i].setAttribute(
+                  'data-changed', 'changed')
+                operator_email_elem[i].value = operatorEmail;
+                operator_phone_elem[i].value = operatorMobile;
+                operator_role_elem[i].value = operatorRoleText;
+                operator_roleid_elem[i].value = operatorRoleID;
+                operator_type_elem[i].value = operatorEmploymentTypeText;
+                operator_typeid_elem[i].value =
+                  operatorEmploymentTypeID;
+                operator_dds_elem[i].value = operatorDDSText;
+                operator_ddsid_elem[i].value = operatorDDSID;
+                operator_primary_elem[i].value =
+                  operatorPrimaryOperatorText;
+                operator_primaryid_elem[i].value =
+                  operatorPrimaryOperatorID;
+                operator_mobdev_elem[i].value = operatorMobileDevText;
+                operator_mobdevid_elem[i].value = operatorMobileDevID;
+              }
+            }
+          } else {
+            //Create a new row from the values entered in the fields
+            var inlineHtml = '';
+            inlineHtml += '<tr>'
+            inlineHtml +=
+              '<td><a data-id="' +
+              operatorID +
+              '" class="btn btn-md btn-primary editOperatorTable" data-changed="changed">EDIT</a> <a data-id="0" class="btn btn-md btn-danger deleteOperatorTable" >DELETE</a></td>'
+            inlineHtml += '<td><input value="' + operatorName +
+              '" readonly class="form-control operatorNameTable" /></td>'
+            inlineHtml += '<td><input value="' + operatorEmail +
+              '" readonly class="form-control operatorEmailTable" /></td>'
+            inlineHtml += '<td><input value="' + operatorMobile +
+              '" readonly class="form-control operatorPhoneTable" /></td>'
+            inlineHtml += '<td><input value="' + operatorRoleText +
+              '" readonly class="form-control operatorRoleTable" /><input id="operatorRoleID" class="operatorRoleID" value="' +
+              operatorRoleID + '" type="hidden"/></td>'
+            inlineHtml += '<td><input value="' +
+              operatorEmploymentTypeText +
+              '" readonly class="form-control operatorEmploymentTypeTable"/><input id="operatorEmploymentTypeID" class="operatorEmploymentTypeID" value="' +
+              operatorEmploymentTypeID + '" type="hidden"/></td>'
+            inlineHtml += '<td><input value="' + operatorDDSText +
+              '" readonly class="form-control operatorDDSTable" /><input id="operatorDDSID" class="operatorDDSID" value="' +
+              operatorDDSID + '" type="hidden"/></td>'
+            inlineHtml += '<td><input value="' +
+              operatorPrimaryOperatorText +
+              '" readonly class="form-control operatorPrimaryOperatorTable" /><input id="operatorPrimaryOperatorID" class="operatorPrimaryOperatorID" value="' +
+              operatorPrimaryOperatorID + '" type="hidden"/></td>'
+            inlineHtml += '<td><input value="' + operatorMobileDevText +
+              '" readonly class="form-control operatorMobileDevTable" /><input id="operatorMobileDevID" class="operatorMobileDevID" value="' +
+              operatorMobileDevID + '" type="hidden"/></td>'
+            inlineHtml += '</tr>';
+
+            $('#operatorTable tr:last').after(inlineHtml);
+          }
+
+          //Blank out all the fields
+          $('.operatorName').val("");
+          $('.operatorEmail').val("");
+          $('.operatorMobile').val("");
+          $('.operatorRole').val("");
+          $('.operatorEmploymentType').val("");
+          $('.operatorPrimaryOperator').val("");
+          $('.operatorContingency').val("");
+          $('.operatorMobileDev').val("");
+
+          //Hide the FIELDS
+          $('.row_operator_details').addClass('hide');
+          $('.operatorRole').addClass('hide');
+          $('.saveoperator_section').addClass('hide');
+        }
       });
 
+
+      //On click of Save Vehicle, either create a new row in the table or update the existing row with the values from the fields
       $(document).on("click", "#saveVehicle", function(e) {
 
+        //Get values from the fields
+        var errorMessage = '';
         var vehicleID = $('#vehicleInternalId').val();
         var vehicleRegistration = $('.vehicleRegistration').val();
         var vehicleModel = $('.vehicleModel').val();
@@ -704,108 +861,176 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         var vehicleOperatorID = $('.vehicleOperator').val();
         var vehicleOperator = $('.vehicleOperator option:selected').text();
 
-
-        if (!isNullorEmpty(vehicleID)) {
-          var edit_fleet_elem = document.getElementsByClassName(
-            "editFleet");
-          var vehicle_rego_elem = document.getElementsByClassName(
-            "vehicleRegistrationTable");
-          var vehicle_model_elem = document.getElementsByClassName(
-            "vehicleModelTable");
-          var vehicle_make_elem = document.getElementsByClassName(
-            "vehicleMakeTable");
-          var vehicle_color_elem = document.getElementsByClassName(
-            "vehicleColorTable");
-          var vehicle_year_elem = document.getElementsByClassName(
-            "vehicleYearTable");
-          var vehicle_signage_elem = document.getElementsByClassName(
-            "vehicleSignageTable");
-          var vehicle_signageid_elem = document.getElementsByClassName(
-            "vehicleSignageID");
-          var vehicle_cargocage_elem = document.getElementsByClassName(
-            "vehicleCargoCageTable");
-          var vehicle_cargocageid_elem = document.getElementsByClassName(
-            "vehicleCargoCageID");
-          var vehicle_owner_elem = document.getElementsByClassName(
-            "vehicleOwnerTable");
-          var vehicle_ownerid_elem = document.getElementsByClassName(
-            "vehicleOwnerID");
-          var vehicle_operator_elem = document.getElementsByClassName(
-            "vehicleOperatorNameTable");
-          var vehicle_operatorid_elem = document.getElementsByClassName(
-            "vehicleOperatorID");
-
-
-          for (var i = 0; i < edit_fleet_elem.length; ++i) {
-            var row_fleet_id = edit_fleet_elem[i].getAttribute(
-              'data-id');
-            if (vehicleID == row_fleet_id) {
-              vehicle_rego_elem[i].value = vehicleRegistration;
-              vehicle_model_elem[i].value = vehicleModel;
-              vehicle_make_elem[i].value = vehicleMake;
-              vehicle_color_elem[i].value = vehicleColor;
-              vehicle_year_elem[i].value = vehicleYear;
-              vehicle_signage_elem[i].value = vehicleSignage;
-              vehicle_signageid_elem[i].value = vehicleSignageID;
-              vehicle_cargocage_elem[i].value = vehicleCargoCage;
-              vehicle_cargocageid_elem[i].value = vehicleCargoCageID;
-              vehicle_owner_elem[i].value = vehicleOwner;
-              vehicle_ownerid_elem[i].value =
-                vehicleOwnerID;
-              vehicle_operator_elem[i].value = vehicleOperator;
-              vehicle_operatorid_elem[i].value = vehicleOperatorID;
-            }
-          }
-        } else {
-          var inlineHtml = '';
-          inlineHtml += '<tr>'
-          inlineHtml +=
-            '<td><a data-id="' +
-            vehicleID +
-            '" class=" btn btn-md btn-primary editFleet" >EDIT</a> <a data-id="' +
-            vehicleID +
-            '" class=" btn btn-md btn-danger deleteFleet" >DELETE</a></td>'
-          inlineHtml += '<td><input value="' + vehicleRegistration +
-            '" readonly class="form-control vehicleRegistrationTable"/></td>'
-          inlineHtml += '<td><input value="' + vehicleModel +
-            '" readonly class="form-control vehicleModelTable"/></td>'
-          inlineHtml += '<td><input value="' + vehicleMake +
-            '" readonly class="form-control vehicleMakeTable"/></td>'
-          inlineHtml += '<td><input value="' + vehicleColor +
-            '" readonly class="form-control vehicleColorTable"/></td>'
-          inlineHtml += '<td><input value="' + vehicleYear +
-            '" readonly class="form-control vehicleYearTable"/></td>'
-          inlineHtml += '<td><input value="' + vehicleSignage +
-            '" readonly class="form-control vehicleSignageTable"/><input id="vehicleSignageID" class="vehicleSignageID" value="' +
-            vehicleSignage + '" type="hidden"/></td>'
-          inlineHtml += '<td><input value="' + vehicleCargoCage +
-            '" readonly class="form-control vehicleCargoCageTable"/><input id="vehicleCargoCageID" class="vehicleCargoCageID" value="' +
-            vehicleCargoCageID + '" type="hidden"/></td>'
-          inlineHtml += '<td><input value="' + vehicleOwner +
-            '" readonly class="form-control vehicleOwnerTable"/><input id="vehicleOwnerID" class="vehicleOwnerID" value="' +
-            vehicleOwnerID + '" type="hidden"/></td>'
-          inlineHtml += '<td><input value="' + vehicleOperator +
-            '" readonly class="form-control vehicleOperatorNameTable"/><input id="vehicleOperatorID" class="vehicleOperatorID" value="' +
-            vehicleOperatorID + '" type="hidden"/></td>'
-          inlineHtml += '</tr>';
-
-          $('#fleetTable tr:last').after(inlineHtml);
+        //Throw error if the Registration fields is blank
+        if (isNullorEmpty(vehicleRegistration)) {
+          errorMessage +=
+            'Please Enter the Vehcile Registration Number</br>';
         }
 
-        $('.vehicleRegistration').val("");
-        $('.vehicleModel').val("");
-        $('.vehicleMake').val("");
-        $('.vehicleColor').val("");
-        $('.vehicleYear').val("");
-        $('.vehicleSignage').val("");
-        $('.vehicleCargoCage').val("");
-        $('.vehicleOwner').val("");
-        $('.vehicleOperator').val("");
+        //Throw error if the Model fields is blank
+        if (isNullorEmpty(vehicleModel)) {
+          errorMessage +=
+            'Please Enter the Vehcile Model</br>';
+        }
 
-        $('.row_fleet_details').addClass('hide');
-        $('.row_fleet_details2').addClass('hide');
-        $('.row_fleet_details3').addClass('hide');
-        $('.savefleet_section').addClass('hide');
+        //Throw error if the Make fields is blank
+        if (isNullorEmpty(vehicleMake)) {
+          errorMessage +=
+            'Please Enter the Vehcile Make</br>';
+        }
+
+        //Throw error if the Color fields is blank
+        if (isNullorEmpty(vehicleColor)) {
+          errorMessage +=
+            'Please Enter the Vehcile Color</br>';
+        }
+
+        //Throw error if the Year fields is blank
+        if (isNullorEmpty(vehicleYear)) {
+          errorMessage +=
+            'Please Enter the Vehcile Year</br>';
+        }
+
+        //Throw error if the Signage fields is blank
+        if (isNullorEmpty(vehicleSignageID)) {
+          errorMessage +=
+            'Please Select if the vehicle has signage or not</br>';
+        }
+
+        //Throw error if the Cargo Cage fields is blank
+        if (isNullorEmpty(vehicleCargoCageID)) {
+          errorMessage +=
+            'Please Select if the vehicle has cargo cage or not</br>';
+        }
+
+        //Throw error if the Owner fields is blank
+        if (isNullorEmpty(vehicleOwnerID)) {
+          errorMessage +=
+            'Please Select the owner of the vehicle</br>';
+        }
+
+        //Throw error if the Operator fields is blank
+        if (isNullorEmpty(vehicleOperatorID)) {
+          errorMessage +=
+            'Please assign the operator to the fleet</br>';
+        }
+
+        //Show the error message
+        if (!isNullorEmpty(errorMessage)) {
+          showAlert(errorMessage);
+          return false;
+        } else {
+
+          //Update the existing row with the values from the fields
+          if (!isNullorEmpty(vehicleID)) {
+            var edit_fleet_elem = document.getElementsByClassName(
+              "editFleetTable");
+            var recordchanged_elem = document.getElementsByClassName(
+              "fleetrecordchanged");
+            var vehicle_rego_elem = document.getElementsByClassName(
+              "vehicleRegistrationTable");
+            var vehicle_model_elem = document.getElementsByClassName(
+              "vehicleModelTable");
+            var vehicle_make_elem = document.getElementsByClassName(
+              "vehicleMakeTable");
+            var vehicle_color_elem = document.getElementsByClassName(
+              "vehicleColorTable");
+            var vehicle_year_elem = document.getElementsByClassName(
+              "vehicleYearTable");
+            var vehicle_signage_elem = document.getElementsByClassName(
+              "vehicleSignageTable");
+            var vehicle_signageid_elem = document.getElementsByClassName(
+              "vehicleSignageID");
+            var vehicle_cargocage_elem = document.getElementsByClassName(
+              "vehicleCargoCageTable");
+            var vehicle_cargocageid_elem = document.getElementsByClassName(
+              "vehicleCargoCageID");
+            var vehicle_owner_elem = document.getElementsByClassName(
+              "vehicleOwnerTable");
+            var vehicle_ownerid_elem = document.getElementsByClassName(
+              "vehicleOwnerID");
+            var vehicle_operator_elem = document.getElementsByClassName(
+              "vehicleOperatorNameTable");
+            var vehicle_operatorid_elem = document.getElementsByClassName(
+              "vehicleOperatorID");
+
+
+            for (var i = 0; i < edit_fleet_elem.length; ++i) {
+              var row_fleet_id = edit_fleet_elem[i].getAttribute(
+                'data-id');
+              if (vehicleID == row_fleet_id) {
+                vehicle_rego_elem[i].value = vehicleRegistration;
+                edit_fleet_elem[i].setAttribute(
+                  'data-changed', 'changed')
+                vehicle_model_elem[i].value = vehicleModel;
+                vehicle_make_elem[i].value = vehicleMake;
+                vehicle_color_elem[i].value = vehicleColor;
+                vehicle_year_elem[i].value = vehicleYear;
+                vehicle_signage_elem[i].value = vehicleSignage;
+                vehicle_signageid_elem[i].value = vehicleSignageID;
+                vehicle_cargocage_elem[i].value = vehicleCargoCage;
+                vehicle_cargocageid_elem[i].value = vehicleCargoCageID;
+                vehicle_owner_elem[i].value = vehicleOwner;
+                vehicle_ownerid_elem[i].value =
+                  vehicleOwnerID;
+                vehicle_operator_elem[i].value = vehicleOperator;
+                vehicle_operatorid_elem[i].value = vehicleOperatorID;
+              }
+            }
+          } else {
+            //Create a new row in the table with the values from the field
+            var inlineHtml = '';
+            inlineHtml += '<tr>'
+            inlineHtml +=
+              '<td><a data-id="' +
+              vehicleID +
+              '" class=" btn btn-md btn-primary editFleetTable" data-changed="changed">EDIT</a> <a data-id="' +
+              vehicleID +
+              '" class=" btn btn-md btn-danger deleteFleetTable" >DELETE</a></td>'
+            inlineHtml += '<td><input value="' + vehicleRegistration +
+              '" readonly class="form-control vehicleRegistrationTable"/></td>'
+            inlineHtml += '<td><input value="' + vehicleModel +
+              '" readonly class="form-control vehicleModelTable"/></td>'
+            inlineHtml += '<td><input value="' + vehicleMake +
+              '" readonly class="form-control vehicleMakeTable"/></td>'
+            inlineHtml += '<td><input value="' + vehicleColor +
+              '" readonly class="form-control vehicleColorTable"/></td>'
+            inlineHtml += '<td><input value="' + vehicleYear +
+              '" readonly class="form-control vehicleYearTable"/></td>'
+            inlineHtml += '<td><input value="' + vehicleSignage +
+              '" readonly class="form-control vehicleSignageTable"/><input id="vehicleSignageID" class="vehicleSignageID" value="' +
+              vehicleSignage + '" type="hidden"/></td>'
+            inlineHtml += '<td><input value="' + vehicleCargoCage +
+              '" readonly class="form-control vehicleCargoCageTable"/><input id="vehicleCargoCageID" class="vehicleCargoCageID" value="' +
+              vehicleCargoCageID + '" type="hidden"/></td>'
+            inlineHtml += '<td><input value="' + vehicleOwner +
+              '" readonly class="form-control vehicleOwnerTable"/><input id="vehicleOwnerID" class="vehicleOwnerID" value="' +
+              vehicleOwnerID + '" type="hidden"/></td>'
+            inlineHtml += '<td><input value="' + vehicleOperator +
+              '" readonly class="form-control vehicleOperatorNameTable"/><input id="vehicleOperatorID" class="vehicleOperatorID" value="' +
+              vehicleOperatorID + '" type="hidden"/></td>'
+            inlineHtml += '</tr>';
+
+            $('#fleetTable tr:last').after(inlineHtml);
+          }
+
+          //Blank out the fields
+          $('.vehicleRegistration').val("");
+          $('.vehicleModel').val("");
+          $('.vehicleMake').val("");
+          $('.vehicleColor').val("");
+          $('.vehicleYear').val("");
+          $('.vehicleSignage').val("");
+          $('.vehicleCargoCage').val("");
+          $('.vehicleOwner').val("");
+          $('.vehicleOperator').val("");
+
+          //Hide the fields
+          $('.row_fleet_details').addClass('hide');
+          $('.row_fleet_details2').addClass('hide');
+          $('.row_fleet_details3').addClass('hide');
+          $('.savefleet_section').addClass('hide');
+        }
       });
 
       /**
@@ -815,6 +1040,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         $(this).parent().hide();
       });
 
+      //On click of the Update Details button, store the values in the hidden fields after validation
       $(document).on("click", "#updateDetails", function(e) {
 
         console.log('inside update details')
@@ -834,7 +1060,9 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
 
         //ADDRESS SECTION
         var edit_address_elem = document.getElementsByClassName(
-          "editAddress");
+          "editAddressTable");
+        var addressrecordchanged_elem = document.getElementsByClassName(
+          "addressrecordchanged");
         var addr1_elem = document.getElementsByClassName("addr1Table");
         var addr2_elem = document.getElementsByClassName("addr2Table");
         var city_elem = document.getElementsByClassName("cityTable");
@@ -848,19 +1076,163 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         var addressStateArray = []
         var addressPostcodeArray = []
 
+        //Store the address values from the table into arrays
         for (var i = 0; i < edit_address_elem.length; ++i) {
           var row_address_id = edit_address_elem[i].getAttribute(
             'data-id');
-
-          addressIdsArray[addressIdsArray.length] = row_address_id
-          address1Array[address1Array.length] = addr1_elem[i].value
-          address2Array[address2Array.length] = addr2_elem[i].value
-          addressSuburbArray[addressSuburbArray.length] = city_elem[i].value
-          addressStateArray[addressStateArray.length] = state_elem[i].value
-          addressPostcodeArray[addressPostcodeArray.length] = zip_elem[i]
-            .value
+          if (addressrecordchanged_elem[i].value == "changed") {
+            addressIdsArray[addressIdsArray.length] = row_address_id
+            address1Array[address1Array.length] = addr1_elem[i].value
+            address2Array[address2Array.length] = addr2_elem[i].value
+            addressSuburbArray[addressSuburbArray.length] = city_elem[i].value
+            addressStateArray[addressStateArray.length] = state_elem[i].value
+            addressPostcodeArray[addressPostcodeArray.length] = zip_elem[
+                i]
+              .value
+          }
         }
 
+        //OPERATOR SECTIONS
+        var edit_operator_elem = document.getElementsByClassName(
+          "editOperatorTable");
+        var operatorrecordchanged_elem = document.getElementsByClassName(
+          "operatorrecordchanged");
+        var edit_name_elem = document.getElementsByClassName(
+          "operatorNameTable");
+        var operator_email_elem = document.getElementsByClassName(
+          "operatorEmailTable");
+        var operator_phone_elem = document.getElementsByClassName(
+          "operatorPhoneTable");
+        var operator_role_elem = document.getElementsByClassName(
+          "operatorRoleTable");
+        var operator_roleid_elem = document.getElementsByClassName(
+          "operatorRoleID");
+        var operator_type_elem = document.getElementsByClassName(
+          "operatorEmploymentTypeTable");
+        var operator_typeid_elem = document.getElementsByClassName(
+          "operatorEmploymentTypeID");
+        var operator_dds_elem = document.getElementsByClassName(
+          "operatorDDSTable");
+        var operator_ddsid_elem = document.getElementsByClassName(
+          "operatorDDSID");
+        var operator_primary_elem = document.getElementsByClassName(
+          "operatorPrimaryOperatorTable");
+        var operator_primaryid_elem = document.getElementsByClassName(
+          "operatorPrimaryOperatorID");
+        var operator_mobdev_elem = document.getElementsByClassName(
+          "operatorMobileDevTable");
+        var operator_mobdevid_elem = document.getElementsByClassName(
+          "operatorMobileDevID");
+
+        var operatorIdsArray = []
+        var operatorNameArray = []
+        var operatorEmailArray = []
+        var operatorMobileArray = []
+        var operatorRoleArray = []
+        var operatorEmploymentTypeArray = []
+        var operatorDDSArray = []
+        var operatorPrimaryArray = []
+        var operatorMobileDevArray = []
+
+        for (var i = 0; i < edit_operator_elem.length; ++i) {
+          var row_operator_id = edit_operator_elem[i].getAttribute(
+            'data-id');
+
+          if (operatorrecordchanged_elem[i].value == "changed") {
+            operatorIdsArray[operatorIdsArray.length] = row_operator_id
+            operatorNameArray[operatorNameArray.length] = edit_name_elem[
+                i]
+              .value
+            operatorEmailArray[operatorEmailArray.length] =
+              operator_email_elem[i].value
+            operatorMobileArray[operatorMobileArray.length] =
+              operator_phone_elem[i].value
+            operatorRoleArray[operatorRoleArray.length] =
+              operator_roleid_elem[i].value
+            operatorEmploymentTypeArray[operatorEmploymentTypeArray.length] =
+              operator_typeid_elem[i].value
+            operatorDDSArray[operatorDDSArray.length] =
+              operator_ddsid_elem[
+                i].value
+            operatorPrimaryArray[operatorPrimaryArray.length] =
+              operator_primaryid_elem[i].value
+            operatorMobileDevArray[operatorMobileDevArray.length] =
+              operator_mobdevid_elem[i].value
+          }
+        }
+
+        //FLEET SECTION
+        var edit_fleet_elem = document.getElementsByClassName(
+          "editFleetTable");
+        var fleetrecordchanged_elem = document.getElementsByClassName(
+          "fleetrecordchanged");
+        var vehicle_rego_elem = document.getElementsByClassName(
+          "vehicleRegistrationTable");
+        var vehicle_model_elem = document.getElementsByClassName(
+          "vehicleModelTable");
+        var vehicle_make_elem = document.getElementsByClassName(
+          "vehicleMakeTable");
+        var vehicle_color_elem = document.getElementsByClassName(
+          "vehicleColorTable");
+        var vehicle_year_elem = document.getElementsByClassName(
+          "vehicleYearTable");
+        var vehicle_signage_elem = document.getElementsByClassName(
+          "vehicleSignageTable");
+        var vehicle_signageid_elem = document.getElementsByClassName(
+          "vehicleSignageID");
+        var vehicle_cargocage_elem = document.getElementsByClassName(
+          "vehicleCargoCageTable");
+        var vehicle_cargocageid_elem = document.getElementsByClassName(
+          "vehicleCargoCageID");
+        var vehicle_owner_elem = document.getElementsByClassName(
+          "vehicleOwnerTable");
+        var vehicle_ownerid_elem = document.getElementsByClassName(
+          "vehicleOwnerID");
+        var vehicle_operator_elem = document.getElementsByClassName(
+          "vehicleOperatorNameTable");
+        var vehicle_operatorid_elem = document.getElementsByClassName(
+          "vehicleOperatorID");
+
+        var vehicleIdsArray = []
+        var vehicleRegoArray = []
+        var vehicleModelArray = []
+        var vehicleMakeArray = []
+        var vehicleColorArray = []
+        var vehicleYearArray = []
+        var vehicleSignageArray = []
+        var vehicleCargoCageArray = []
+        var vehicleOwnerArray = []
+        var vehicleOperatorArray = []
+
+        for (var i = 0; i < edit_fleet_elem.length; ++i) {
+          var row_fleet_id = edit_fleet_elem[i].getAttribute(
+            'data-id');
+          if (fleetrecordchanged_elem[i].value == "changed") {
+            vehicleIdsArray[vehicleIdsArray.length] = row_fleet_id
+            vehicleRegoArray[vehicleRegoArray.length] = vehicle_rego_elem[
+                i]
+              .value
+            vehicleModelArray[vehicleModelArray.length] =
+              vehicle_model_elem[i].value
+            vehicleMakeArray[vehicleMakeArray.length] =
+              vehicle_make_elem[i].value
+            vehicleColorArray[vehicleColorArray.length] =
+              vehicle_color_elem[i].value
+            vehicleYearArray[vehicleYearArray.length] =
+              vehicle_year_elem[i].value
+            vehicleSignageArray[vehicleSignageArray.length] =
+              vehicle_signageid_elem[
+                i].value
+            vehicleCargoCageArray[vehicleCargoCageArray.length] =
+              vehicle_cargocageid_elem[i].value
+            vehicleOwnerArray[vehicleOwnerArray.length] =
+              vehicle_ownerid_elem[i].value
+            vehicleOperatorArray[vehicleOperatorArray.length] =
+              vehicle_operatorid_elem[i].value
+          }
+        }
+
+        //Validation of the franchisee main details
         if (validate()) {
           myRecord.setValue({
             fieldId: 'custpage_maincontact',
@@ -908,6 +1280,104 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
             fieldId: 'custpage_addressids',
             value: addressIdsArray.toString()
           });
+          myRecord.setValue({
+            fieldId: 'custpage_address1',
+            value: address1Array.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_address2',
+            value: address2Array.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_suburb',
+            value: addressSuburbArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_state',
+            value: addressStateArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_postcode',
+            value: addressPostcodeArray.toString()
+          });
+
+          myRecord.setValue({
+            fieldId: 'custpage_operatorids',
+            value: operatorIdsArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_operatorname',
+            value: operatorNameArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_operatoremail',
+            value: operatorEmailArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_operatormobile',
+            value: operatorMobileArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_operatorrole',
+            value: operatorRoleArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_operatoremploymentype',
+            value: operatorEmploymentTypeArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_operatordds',
+            value: operatorDDSArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_operatorprimary',
+            value: operatorPrimaryArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_operatormobiledev',
+            value: operatorMobileDevArray.toString()
+          });
+
+          myRecord.setValue({
+            fieldId: 'custpage_fleetids',
+            value: vehicleIdsArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_fleetrego',
+            value: vehicleRegoArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_fleetmodel',
+            value: vehicleModelArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_fleetmake',
+            value: vehicleMakeArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_fleetcolor',
+            value: vehicleColorArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_fleetyear',
+            value: vehicleYearArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_fleetsignage',
+            value: vehicleSignageArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_caregocage',
+            value: vehicleCargoCageArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_owner',
+            value: vehicleOwnerArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_operator',
+            value: vehicleOperatorArray.toString()
+          });
 
           document.getElementById('submitter').click();
         }
@@ -915,6 +1385,13 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
 
     }
 
+
+    /*
+     * PURPOSE : Ability to unhide the Alert section and display the error message
+     *  PARAMS : Error message
+     * RETURNS :
+     *   NOTES :
+     */
     function showAlert(message) {
       console.log(message)
       $('#alert').html(
@@ -928,6 +1405,13 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       }, 100000);
     }
 
+
+    /*
+     * PURPOSE : Validate the franchisee main details
+     *  PARAMS :
+     * RETURNS :
+     *   NOTES :
+     */
     function validate() {
       var mainContact = $('#mainContact').val();
       var mainContactMobile = $('#mainContactMobile').val();
@@ -983,6 +1467,13 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
 
     }
 
+
+    /*
+     * PURPOSE : Save Record
+     *  PARAMS :
+     * RETURNS :
+     *   NOTES :
+     */
     function saveRecord() {
       console.log('inside save record')
       return true;
