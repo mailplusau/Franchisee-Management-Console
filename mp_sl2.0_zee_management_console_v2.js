@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-11-15T07:25:50+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2021-12-17T06:46:17+11:00
+ * @Last modified time: 2021-12-22T10:40:44+11:00
  */
 
 define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
@@ -36,6 +36,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     var franchiseeSendlePrimaryLocations = '';
     var franchiseeLastMileLocations = '';
     var franchiseeSendleSecondaryLocations = '';
+    var franchiseeListedForSale = '';
 
     var color_array = ['blue', 'red', 'green', 'orange', 'black'];
 
@@ -183,6 +184,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           displayType: ui.FieldDisplayType.HIDDEN
         });
         form.addField({
+          id: 'custpage_addressids_delete',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
           id: 'custpage_address1',
           type: ui.FieldType.TEXT,
           label: 'Day'
@@ -221,6 +229,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         //Operator Table Hidden Fields
         form.addField({
           id: 'custpage_operatorids',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_operatorids_delete',
           type: ui.FieldType.TEXT,
           label: 'Day'
         }).updateDisplayType({
@@ -292,6 +307,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           displayType: ui.FieldDisplayType.HIDDEN
         });
         form.addField({
+          id: 'custpage_fleetids_delete',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
           id: 'custpage_fleetrego',
           type: ui.FieldType.TEXT,
           label: 'Day'
@@ -354,6 +376,14 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         }).updateDisplayType({
           displayType: ui.FieldDisplayType.HIDDEN
         });
+
+        form.addField({
+          id: 'custpage_listforsale',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        }).defaultValue = 'F';
 
         inlineHtml +=
           '<div class="se-pre-con"></div><div ng-app="myApp" ng-controller="myCtrl">';
@@ -420,11 +450,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var franchiseeNextOfKinRelationship = context.request.parameters.custpage_nextofkinrelationship;
 
         var addressids = context.request.parameters.custpage_addressids;
+        var addressids_delete = context.request.parameters.custpage_addressids_delete;
         var address1 = context.request.parameters.custpage_address1;
         var address2 = context.request.parameters.custpage_address2;
         var suburb = context.request.parameters.custpage_suburb;
         var state = context.request.parameters.custpage_state;
         var postcode = context.request.parameters.custpage_postcode;
+        var listforsale = context.request.parameters.custpage_listforsale;
 
         log.debug({
           title: 'addressids',
@@ -432,6 +464,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         })
 
         var addressidsArrays = addressids.split(',');
+        var addressidsdeleteArrays = addressids_delete.split(',');
         var address1Arrays = address1.split(',');
         var address2Arrays = address2.split(',');
         var suburbArrays = suburb.split(',');
@@ -439,6 +472,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var postcodeArrays = postcode.split(',');
 
         var operatorids = context.request.parameters.custpage_operatorids;
+        var operatorids_delete = context.request.parameters.custpage_operatorids_delete;
         var operatorname = context.request.parameters.custpage_operatorname;
         var operatoremail = context.request.parameters.custpage_operatoremail;
         var operatormobile = context.request.parameters.custpage_operatormobile;
@@ -449,6 +483,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var operatormobiledev = context.request.parameters.custpage_operatormobiledev;
 
         var operatoridsArrys = operatorids.split(',')
+        var operatoridsdeleteArrys = operatorids_delete.split(',')
         var operatornameArrys = operatorname.split(',')
         var operatoremailArrys = operatoremail.split(',')
         var operatormobileArrys = operatormobile.split(',')
@@ -459,6 +494,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var operatormobiledevArrys = operatormobiledev.split(',')
 
         var fleetids = context.request.parameters.custpage_fleetids;
+        var fleetids_delete = context.request.parameters.custpage_fleetids_delete;
         var fleetrego = context.request.parameters.custpage_fleetrego;
         var fleetmodel = context.request.parameters.custpage_fleetmodel;
         var fleetmake = context.request.parameters.custpage_fleetmake;
@@ -470,6 +506,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var operator = context.request.parameters.custpage_operator;
 
         var fleetidsArrys = fleetids.split(',')
+        var fleetidsdeleteArrys = fleetids_delete.split(',')
         var fleetregoArrys = fleetrego.split(',')
         var fleetmodelArrys = fleetmodel.split(',')
         var fleetmakeArrys = fleetmake.split(',')
@@ -535,71 +572,107 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           value: franchiseeNextOfKinRelationship
         })
 
+        if (listforsale == 'T') {
+          zeeRecord.setValue({
+            fieldId: 'custentity_listed_for_sale',
+            value: 1
+          })
+          zeeRecord.setValue({
+            fieldId: 'custentity_date_listed_for_sale',
+            value: getDateToday()
+          })
+        }
+
         log.debug({
           title: 'isDynamic',
           details: zeeRecord.isDynamic
         })
 
+
         //ADD/UPDATE ADDRESS
-        for (var x = 0; x < addressidsArrays.length; x++) {
-          if (addressidsArrays[x] == 0) {
-            zeeRecord.insertLine({
+        if (!isNullorEmpty(addressidsArrays)) {
+          for (var x = 0; x < addressidsArrays.length; x++) {
+            if (addressidsArrays[x] == 0) {
+              zeeRecord.insertLine({
+                sublistId: 'addressbook',
+                line: 0
+              })
+              var lineIndex = 0;
+            } else {
+              var lineIndex = zeeRecord.findSublistLineWithValue({
+                sublistId: 'addressbook',
+                fieldId: 'internalid',
+                value: addressidsArrays[x]
+              });
+              log.debug({
+                title: "lineIndex",
+                details: lineIndex
+              });
+            }
+
+            var updateAddress = zeeRecord.getSublistSubrecord({
               sublistId: 'addressbook',
-              line: 0
+              fieldId: 'addressbookaddress',
+              line: lineIndex
             })
-            var lineIndex = 0;
-          } else {
+
+            updateAddress.setValue({
+              fieldId: 'country',
+              value: 'AU'
+            });
+
+            updateAddress.setValue({
+              fieldId: 'addressee',
+              value: franchiseeMainContact
+            });
+
+            updateAddress.setValue({
+              fieldId: 'addr1',
+              value: address1Arrays[x]
+            });
+            updateAddress.setValue({
+              fieldId: 'addr2',
+              value: address2Arrays[x]
+            });
+            updateAddress.setValue({
+              fieldId: 'city',
+              value: suburbArrays[x]
+            });
+            updateAddress.setValue({
+              fieldId: 'state',
+              value: stateArrays[x]
+            });
+            updateAddress.setValue({
+              fieldId: 'zip',
+              value: postcodeArrays[x]
+            });
+            updateAddress.setValue({
+              fieldId: 'isresidential',
+              value: 'T'
+            });
+          }
+        }
+
+        if (!isNullorEmpty(addressidsdeleteArrays)) {
+          for (var x = 0; x < addressidsdeleteArrays.length; x++) {
             var lineIndex = zeeRecord.findSublistLineWithValue({
               sublistId: 'addressbook',
               fieldId: 'internalid',
-              value: addressidsArrays[x]
+              value: addressidsdeleteArrays[x]
             });
-            log.debug({
-              title: "lineIndex",
-              details: lineIndex
-            });
+
+
+            var deleteAddress = zeeRecord.removeSublistSubrecord({
+                sublistId: 'addressbook',
+                fieldId: 'addressbookaddress',
+                line: lineIndex
+              })
+              //
+              // deleteAddress.setValue({
+              //   fieldId: 'country',
+              //   value: 'AU'
+              // });
           }
-
-          var updateAddress = zeeRecord.getSublistSubrecord({
-            sublistId: 'addressbook',
-            fieldId: 'addressbookaddress',
-            line: lineIndex
-          })
-
-          updateAddress.setValue({
-            fieldId: 'country',
-            value: 'AU'
-          });
-
-          updateAddress.setValue({
-            fieldId: 'addressee',
-            value: franchiseeMainContact
-          });
-
-          updateAddress.setValue({
-            fieldId: 'addr1',
-            value: address1Arrays[x]
-          });
-          updateAddress.setValue({
-            fieldId: 'addr2',
-            value: address2Arrays[x]
-          });
-          updateAddress.setValue({
-            fieldId: 'city',
-            value: suburbArrays[x]
-          });
-          updateAddress.setValue({
-            fieldId: 'state',
-            value: stateArrays[x]
-          });
-          updateAddress.setValue({
-            fieldId: 'zip',
-            value: postcodeArrays[x]
-          });
-          updateAddress.setValue({
-            fieldId: 'isresidential',
-            value: 'T'
-          });
         }
 
         var zeeRecordId = zeeRecord.save({
@@ -607,46 +680,147 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         });
 
         //ADD/UPDATE OPREATOR DETAILS
-        for (var y = 0; y < operatoridsArrys.length; y++) {
-          var operatorRecord = record.load({
-            type: 'customrecord_operator',
-            id: operatoridsArrys[y]
-          });
+        if (!isNullorEmpty(operatoridsArrys)) {
+          for (var y = 0; y < operatoridsArrys.length; y++) {
+            var operatorRecord = record.load({
+              type: 'customrecord_operator',
+              id: operatoridsArrys[y]
+            });
 
-          operatorRecord.setValue({
-            fieldId: 'name',
-            value: operatornameArrys
-          })
-          operatorRecord.setValue({
-            fieldId: 'custrecord_operator_email',
-            value: operatoremailArrys
-          })
-          operatorRecord.setValue({
-            fieldId: 'custrecord_operator_phone',
-            value: operatormobileArrys
-          })
-          operatorRecord.setValue({
-            fieldId: 'custrecord_operator_role',
-            value: operatorroleArrys
-          })
-          operatorRecord.setValue({
-            fieldId: 'custrecord_operator_employment',
-            value: operatoremploymentypeArrys
-          })
-          operatorRecord.setValue({
-            fieldId: 'custrecord_dds_operator',
-            value: operatorddsArrys
-          })
-          operatorRecord.setValue({
-            fieldId: 'custrecord_primary_operator',
-            value: operatorprimaryArrys
-          })
-          operatorRecord.setValue({
-            fieldId: 'custrecord_operator_mobdev_platform',
-            value: operatormobiledevArrys
-          })
+            operatorRecord.setValue({
+              fieldId: 'name',
+              value: operatornameArrys[y]
+            })
+            operatorRecord.setValue({
+              fieldId: 'custrecord_operator_email',
+              value: operatoremailArrys[y]
+            })
+            operatorRecord.setValue({
+              fieldId: 'custrecord_operator_phone',
+              value: operatormobileArrys[y]
+            })
+            operatorRecord.setValue({
+              fieldId: 'custrecord_operator_role',
+              value: operatorroleArrys[y]
+            })
+            operatorRecord.setValue({
+              fieldId: 'custrecord_operator_employment',
+              value: operatoremploymentypeArrys[y]
+            })
+            operatorRecord.setValue({
+              fieldId: 'custrecord_dds_operator',
+              value: operatorddsArrys[y]
+            })
+            operatorRecord.setValue({
+              fieldId: 'custrecord_primary_operator',
+              value: operatorprimaryArrys[y]
+            })
+            operatorRecord.setValue({
+              fieldId: 'custrecord_operator_mobdev_platform',
+              value: operatormobiledevArrys[y]
+            })
 
-          operatoeRecord.save()
+            operatorRecord.save()
+          }
+        }
+
+        if (!isNullorEmpty(operatoridsdeleteArrys)) {
+          for (var y = 0; y < operatoridsdeleteArrys.length; y++) {
+            var deleteOperatorRecord = record.load({
+              type: 'customrecord_operator',
+              id: operatoridsdeleteArrys[y]
+            });
+
+            deleteOperatorRecord.setValue({
+              fieldId: 'isinactive',
+              value: true
+            })
+
+            deleteOperatorRecord.save()
+          }
+        }
+
+        //ADD/EDIT FLEET DETAILS
+        if (!isNullorEmpty(fleetidsArrys)) {
+          for (var w = 0; w < fleetidsArrys.length; w++) {
+            var vehicleRecord = record.load({
+              type: 'customrecord_vehicle',
+              id: fleetidsArrys[w]
+            });
+
+            vehicleRecord.setValue({
+              fieldId: 'name',
+              value: fleetregoArrys[w]
+            })
+            vehicleRecord.setValue({
+              fieldId: 'custrecord_vehicle_model_text',
+              value: fleetmodelArrys[w]
+            })
+            vehicleRecord.setValue({
+              fieldId: 'custrecord_vehicle_make',
+              value: fleetmakeArrys[w]
+            })
+            vehicleRecord.setValue({
+              fieldId: 'custrecord_vehicle_colour',
+              value: fleetcolorArrys[w]
+            })
+            vehicleRecord.setValue({
+              fieldId: 'custrecord_vehicle_year',
+              value: fleetyearArrys[w]
+            })
+
+            if (fleetsignageArrys[w] == 1 || fleetsignageArrys[w] == '1') {
+              vehicleRecord.setValue({
+                fieldId: 'custrecord_vehicle_signage',
+                value: true
+              })
+            }
+            vehicleRecord.setValue({
+              fieldId: 'custrecord_cargo_cage',
+              value: caregocageArrys[w]
+            })
+            vehicleRecord.setValue({
+              fieldId: 'custrecord_vehicle_owner',
+              value: ownerArrys[w]
+            })
+            vehicleRecord.setValue({
+              fieldId: 'custrecord_vehicle_date_reviewed',
+              value: getDateToday()
+            })
+
+            var newFleetID = vehicleRecord.save()
+
+            //SAVE FLEET DETAILS ON THE OPERATOR RECORD
+            var operatorRecord = record.load({
+              type: 'customrecord_operator',
+              id: operatorArrys[w]
+            });
+
+            operatorRecord.setValue({
+              fieldId: 'custrecord_operator_vehicle',
+              value: newFleetID
+            })
+            operatorRecord.save()
+
+
+          }
+        }
+
+
+        if (!isNullorEmpty(fleetidsdeleteArrys)) {
+          for (var y = 0; y < fleetidsdeleteArrys.length; y++) {
+            var deleteFleetRecord = record.load({
+              type: 'customrecord_vehicle',
+              id: fleetidsdeleteArrys[y]
+            });
+
+            deleteFleetRecord.setValue({
+              fieldId: 'isinactive',
+              value: true
+            })
+
+            deleteFleetRecord.save()
+          }
         }
 
         redirect.toSuitelet({
@@ -723,8 +897,11 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml += '<div class="row">';
         inlineHtml +=
           '<div class="col-xs-6 updateDetails"><input type="button" value="UPDATE DETAILS" class="form-control btn btn-primary" id="updateDetails" /></div>'
-        inlineHtml +=
-          '<div class="col-xs-6 listForSale"><input type="button" value="LIST FOR SALE" class="form-control btn btn-success" id="listForSale" /></div>'
+        if (franchiseeListedForSale != 1) {
+          inlineHtml +=
+            '<div class="col-xs-6 listForSale"><input type="button" value="LIST FOR SALE" class="form-control btn btn-success" id="listForSale" /></div>'
+        }
+
         inlineHtml += '</div>';
         inlineHtml += '</div>';
         inlineHtml +=
@@ -746,8 +923,10 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml += '<div class="row">';
         inlineHtml +=
           '<div class="col-xs-6 updateDetails"><input type="button" value="UPDATE DETAILS" class="form-control btn btn-primary" id="updateDetails" /></div>'
-        inlineHtml +=
-          '<div class="col-xs-6 listForSale"><input type="button" value="LIST FOR SALE" class="form-control btn btn-success" id="listForSale" /></div>'
+        if (franchiseeListedForSale != 1) {
+          inlineHtml +=
+            '<div class="col-xs-6 listForSale"><input type="button" value="LIST FOR SALE" class="form-control btn btn-success" id="listForSale" /></div>'
+        }
         inlineHtml += '</div>';
         inlineHtml += '</div>';
       }
@@ -952,6 +1131,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           'custentity_kin_name');
         franchiseeNextOfKinRelationship = searchResultZees.getValue(
           'custentity_kin_relationship');
+        franchiseeListedForSale = searchResultZees.getValue(
+          'custentity_listed_for_sale');
 
         return true;
       });
@@ -1847,17 +2028,49 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           'custrecord_primary_operator');
 
         log.debug({
-          title: title,
-          details: details
+          title: 'operatorEmploymentType',
+          details: operatorEmploymentType
+        })
+        log.debug({
+          title: 'operatorEmploymentTypeID',
+          details: operatorEmploymentTypeID
+        })
+        log.debug({
+          title: 'operatorRole',
+          details: operatorRole
+        })
+        log.debug({
+          title: 'operatorRoleID',
+          details: operatorRoleID
+        })
+        log.debug({
+          title: 'operatorMobileDevID',
+          details: operatorMobileDevID
+        })
+        log.debug({
+          title: 'operatorDDS',
+          details: operatorDDS
+        })
+        log.debug({
+          title: 'operatorDDSID',
+          details: operatorDDSID
+        })
+        log.debug({
+          title: 'operatorPrimaryOperator',
+          details: operatorPrimaryOperator
+        })
+        log.debug({
+          title: 'operatorPrimaryOperatorID',
+          details: operatorPrimaryOperatorID
         })
 
         inlineHtml += '<tr>'
         inlineHtml +=
           '<td><a data-id="' +
           operatorID +
-          '" class="btn btn-md btn-primary editOperator" >EDIT</a> <a data-id="' +
+          '" class="btn btn-md btn-primary editOperatorTable" data-changed="notchanged">EDIT</a> <a data-id="' +
           operatorID +
-          '" class="btn btn-md btn-danger deleteOperator" >DELETE</a><input class="operatorrecordchanged" hidden value="notchanged" /></td>'
+          '" class="btn btn-md btn-danger deleteOperatorTable" >DELETE</a></td>'
         inlineHtml += '<td><input value="' + operatorName +
           '" readonly class="form-control operatorNameTable" /></td>'
         inlineHtml += '<td><input value="' + operatorEmail +
@@ -1865,19 +2078,19 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml += '<td><input value="' + operatorPhone +
           '" readonly class="form-control operatorPhoneTable" /></td>'
         inlineHtml += '<td><input value="' + operatorRole +
-          '" readonly class="form-control operatorRoleTable" /><input id="operatorRoleID" class="operatorRoleID" value="' +
+          '" readonly class="form-control operatorRoleTable" /><input id="" class="operatorRoleID" value="' +
           operatorRoleID + '" type="hidden"/></td>'
         inlineHtml += '<td><input value="' + operatorEmploymentType +
-          '" readonly class="form-control operatorEmploymentTypeTable"/><input id="operatorEmploymentTypeID" class="operatorEmploymentTypeID" value="' +
+          '" readonly class="form-control operatorEmploymentTypeTable"/><input id="" class="operatorEmploymentTypeID" value="' +
           operatorEmploymentTypeID + '" type="hidden"/></td>'
         inlineHtml += '<td><input value="' + operatorDDS +
-          '" readonly class="form-control operatorDDSTable" /><input id="operatorDDSID" class="operatorDDSID" value="' +
+          '" readonly class="form-control operatorDDSTable" /><input id="" class="operatorDDSID" value="' +
           operatorDDSID + '" type="hidden"/></td>'
         inlineHtml += '<td><input value="' + operatorPrimaryOperator +
-          '" readonly class="form-control operatorPrimaryOperatorTable" /><input id="operatorPrimaryOperatorID" class="operatorPrimaryOperatorID" value="' +
+          '" readonly class="form-control operatorPrimaryOperatorTable" /><input id="" class="operatorPrimaryOperatorID" value="' +
           operatorPrimaryOperatorID + '" type="hidden"/></td>'
         inlineHtml += '<td><input value="' + operatorMobileDev +
-          '" readonly class="form-control operatorMobileDevTable" /><input id="operatorMobileDevID" class="operatorMobileDevID" value="' +
+          '" readonly class="form-control operatorMobileDevTable" /><input id="" class="operatorMobileDevID" value="' +
           operatorMobileDevID + '" type="hidden"/></td>'
         inlineHtml += '</tr>';
 
@@ -2063,9 +2276,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml +=
           '<td><a data-id="' +
           vehicleID +
-          '" class=" btn btn-md btn-primary editFleet" >EDIT</a> <a data-id="' +
+          '" class=" btn btn-md btn-primary editFleetTable" data-changed="notchanged">EDIT</a> <a data-id="' +
           vehicleID +
-          '" class=" btn btn-md btn-danger deleteFleet" >DELETE</a><input class="fleetrecordchanged" value="notchanged" /></td>'
+          '" class=" btn btn-md btn-danger deleteFleetTable" >DELETE</a></td>'
         inlineHtml += '<td><input value="' + vehicleRegistration +
           '" readonly class="form-control vehicleRegistrationTable"/></td>'
         inlineHtml += '<td><input value="' + vehicleModel +
@@ -2205,9 +2418,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           inlineQty +=
             '<tr><td><a data-id="' +
             id +
-            '" class="btn btn-md btn-primary editAddress" >EDIT</a> <a data-id="' +
+            '" class="btn btn-md btn-primary editAddressTable" data-changed="notchanged">EDIT</a> <a data-id="' +
             id +
-            '" class="btn btn-md btn-danger deleteAddress" >DELETE</a><input class="addressrecordchanged" hidden value="notchanged" /></td>';
+            '" class="btn btn-md btn-danger deleteAddressTable" >DELETE</a></td>';
           inlineQty += '<td><input value="' + id +
             '" readonly class="form-control id"/></td>';
           inlineQty += '<td><input value="' + addr1 +
@@ -2264,6 +2477,21 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '</div></div></div>';
 
       return inlineHtml;
+    }
+
+    function getDateToday() {
+      var date = new Date();
+      log.debug({
+        title: 'date',
+        details: date
+      })
+      format.format({
+        value: date,
+        type: format.Type.DATE,
+        timezone: format.Timezone.AUSTRALIA_SYDNEY
+      })
+
+      return date;
     }
 
     function getDate(inputDate) {

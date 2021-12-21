@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-11-02T08:24:43+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2021-12-17T08:34:04+11:00
+ * @Last modified time: 2021-12-22T10:35:57+11:00
  */
 
 
@@ -19,6 +19,10 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
     var franchiseeName = 0;
     var userId = 0;
     var role = 0;
+
+    var deleteAddressArray = [];
+    var deleteOperatorArray = [];
+    var deleteFleetArray = [];
 
     var startPosition
 
@@ -584,8 +588,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
 
             var edit_address_elem = document.getElementsByClassName(
               "editAddressTable");
-            var recordchanged_elem = document.getElementsByClassName(
-              "addressrecordchanged");
+
             var addr1_elem = document.getElementsByClassName("addr1Table");
             var addr2_elem = document.getElementsByClassName("addr2Table");
             var city_elem = document.getElementsByClassName("cityTable");
@@ -598,7 +601,8 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
                 'data-id');
               //If the Ids match, update the row with the values from the fields
               if (id == row_address_id) {
-                recordchanged_elem[i].value = "changed";
+                edit_address_elem[i].setAttribute(
+                  'data-id', "changed");
                 addr1_elem[i].value = addr1;
                 addr2_elem[i].value = addr2;
                 city_elem[i].value = suburb;
@@ -840,7 +844,6 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         }
       });
 
-
       //On click of Save Vehicle, either create a new row in the table or update the existing row with the values from the fields
       $(document).on("click", "#saveVehicle", function(e) {
 
@@ -1033,6 +1036,69 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         }
       });
 
+      $(document).on("click", ".deleteAddressTable", function(e) {
+        //Get the Address Internal ID
+        var id = $(this).closest('tr').find('.deleteAddressTable').attr(
+          'data-id');
+        if (confirm(
+            "Are you sure you want to delete this address?\n\nThis action cannot be undone."
+          )) {
+          if (id != 0 && id != '0') {
+            deleteAddressArray[deleteAddressArray.length] = id
+            deleteAddressArray.toString();
+
+            myRecord.setValue({
+              fieldId: 'custpage_addressids_delete',
+              value: deleteAddressArray.toString()
+            });
+          }
+          $(this).closest("tr").remove();
+        }
+      });
+
+      $(document).on("click", ".deleteOperatorTable", function(e) {
+        //Get the Operator Internal ID
+        var id = $(this).closest('tr').find('.deleteOperatorTable').attr(
+          'data-id');
+        if (confirm(
+            "Are you sure you want to delete this address?\n\nThis action cannot be undone."
+          )) {
+          if (id != 0 && id != '0') {
+            deleteOperatorArray[deleteOperatorArray.length] = id
+            console.log(deleteOperatorArray)
+            deleteOperatorArray.toString();
+
+            myRecord.setValue({
+              fieldId: 'custpage_operatorids_delete',
+              value: deleteOperatorArray.toString()
+            });
+          }
+          $(this).closest("tr").remove();
+        }
+      });
+
+      $(document).on("click", ".deleteFleetTable", function(e) {
+        //Get the Fleet Internal ID
+        var id = $(this).closest('tr').find('.deleteFleetTable').attr(
+          'data-id');
+        if (confirm(
+            "Are you sure you want to delete this address?\n\nThis action cannot be undone."
+          )) {
+          if (id != 0 && id != '0') {
+            deleteFleetArray[deleteFleetArray.length] = id
+
+            deleteFleetArray.toString();
+
+            myRecord.setValue({
+              fieldId: 'custpage_fleetids_delete',
+              value: deleteFleetArray.toString()
+            });
+          }
+          $(this).closest("tr").remove();
+        }
+
+      });
+
       /**
        * Close the Alert box on click
        */
@@ -1061,8 +1127,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         //ADDRESS SECTION
         var edit_address_elem = document.getElementsByClassName(
           "editAddressTable");
-        var addressrecordchanged_elem = document.getElementsByClassName(
-          "addressrecordchanged");
+
         var addr1_elem = document.getElementsByClassName("addr1Table");
         var addr2_elem = document.getElementsByClassName("addr2Table");
         var city_elem = document.getElementsByClassName("cityTable");
@@ -1080,7 +1145,9 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         for (var i = 0; i < edit_address_elem.length; ++i) {
           var row_address_id = edit_address_elem[i].getAttribute(
             'data-id');
-          if (addressrecordchanged_elem[i].value == "changed") {
+          var row_address_changed = edit_address_elem[i].getAttribute(
+            'data-changed');
+          if (row_address_changed == "changed") {
             addressIdsArray[addressIdsArray.length] = row_address_id
             address1Array[address1Array.length] = addr1_elem[i].value
             address2Array[address2Array.length] = addr2_elem[i].value
@@ -1095,8 +1162,6 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         //OPERATOR SECTIONS
         var edit_operator_elem = document.getElementsByClassName(
           "editOperatorTable");
-        var operatorrecordchanged_elem = document.getElementsByClassName(
-          "operatorrecordchanged");
         var edit_name_elem = document.getElementsByClassName(
           "operatorNameTable");
         var operator_email_elem = document.getElementsByClassName(
@@ -1137,8 +1202,10 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         for (var i = 0; i < edit_operator_elem.length; ++i) {
           var row_operator_id = edit_operator_elem[i].getAttribute(
             'data-id');
+          var row_operator_changed = edit_operator_elem[i].getAttribute(
+            'data-changed');
 
-          if (operatorrecordchanged_elem[i].value == "changed") {
+          if (row_operator_changed == "changed") {
             operatorIdsArray[operatorIdsArray.length] = row_operator_id
             operatorNameArray[operatorNameArray.length] = edit_name_elem[
                 i]
@@ -1164,8 +1231,6 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         //FLEET SECTION
         var edit_fleet_elem = document.getElementsByClassName(
           "editFleetTable");
-        var fleetrecordchanged_elem = document.getElementsByClassName(
-          "fleetrecordchanged");
         var vehicle_rego_elem = document.getElementsByClassName(
           "vehicleRegistrationTable");
         var vehicle_model_elem = document.getElementsByClassName(
@@ -1207,7 +1272,9 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         for (var i = 0; i < edit_fleet_elem.length; ++i) {
           var row_fleet_id = edit_fleet_elem[i].getAttribute(
             'data-id');
-          if (fleetrecordchanged_elem[i].value == "changed") {
+          var row_fleet_changed = edit_fleet_elem[i].getAttribute(
+            'data-changed');
+          if (row_fleet_changed == "changed") {
             vehicleIdsArray[vehicleIdsArray.length] = row_fleet_id
             vehicleRegoArray[vehicleRegoArray.length] = vehicle_rego_elem[
                 i]
@@ -1382,6 +1449,356 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
           document.getElementById('submitter').click();
         }
       });
+
+      $(document).on("click", "#listForSale", function(e) {
+
+        console.log('inside list for sale')
+
+        //MAIN DETAILS
+        var mainContact = $('#mainContact').val();
+        var mainContactMobile = $('#mainContactMobile').val();
+        var franchiseeTypeOfOwner = $('#franchiseeTypeOfOwner').val();
+        var franchiseeABN = $('#franchiseeABN').val();
+        var personalEmail = $('#personalEmail').val();
+        var dob = $('#dob').val();
+        var vaccinationStatus = $('#vaccinationStatus').val();
+        var franchiseeNextOfKinName = $('#franchiseeNextOfKinName').val();
+        var franchiseeNextOfKinMobile = $('#franchiseeNextOfKinMobile').val();
+        var franchiseeNextOfKinRelationship = $(
+          '#franchiseeNextOfKinRelationship').val();
+
+        //ADDRESS SECTION
+        var edit_address_elem = document.getElementsByClassName(
+          "editAddressTable");
+
+        var addr1_elem = document.getElementsByClassName("addr1Table");
+        var addr2_elem = document.getElementsByClassName("addr2Table");
+        var city_elem = document.getElementsByClassName("cityTable");
+        var state_elem = document.getElementsByClassName("stateTable");
+        var zip_elem = document.getElementsByClassName("zipTable");
+
+        var addressIdsArray = []
+        var address1Array = []
+        var address2Array = []
+        var addressSuburbArray = []
+        var addressStateArray = []
+        var addressPostcodeArray = []
+
+        //Store the address values from the table into arrays
+        for (var i = 0; i < edit_address_elem.length; ++i) {
+          var row_address_id = edit_address_elem[i].getAttribute(
+            'data-id');
+          var row_address_changed = edit_address_elem[i].getAttribute(
+            'data-changed');
+          if (row_address_changed == "changed") {
+            addressIdsArray[addressIdsArray.length] = row_address_id
+            address1Array[address1Array.length] = addr1_elem[i].value
+            address2Array[address2Array.length] = addr2_elem[i].value
+            addressSuburbArray[addressSuburbArray.length] = city_elem[i].value
+            addressStateArray[addressStateArray.length] = state_elem[i].value
+            addressPostcodeArray[addressPostcodeArray.length] = zip_elem[
+                i]
+              .value
+          }
+        }
+
+        //OPERATOR SECTIONS
+        var edit_operator_elem = document.getElementsByClassName(
+          "editOperatorTable");
+        var edit_name_elem = document.getElementsByClassName(
+          "operatorNameTable");
+        var operator_email_elem = document.getElementsByClassName(
+          "operatorEmailTable");
+        var operator_phone_elem = document.getElementsByClassName(
+          "operatorPhoneTable");
+        var operator_role_elem = document.getElementsByClassName(
+          "operatorRoleTable");
+        var operator_roleid_elem = document.getElementsByClassName(
+          "operatorRoleID");
+        var operator_type_elem = document.getElementsByClassName(
+          "operatorEmploymentTypeTable");
+        var operator_typeid_elem = document.getElementsByClassName(
+          "operatorEmploymentTypeID");
+        var operator_dds_elem = document.getElementsByClassName(
+          "operatorDDSTable");
+        var operator_ddsid_elem = document.getElementsByClassName(
+          "operatorDDSID");
+        var operator_primary_elem = document.getElementsByClassName(
+          "operatorPrimaryOperatorTable");
+        var operator_primaryid_elem = document.getElementsByClassName(
+          "operatorPrimaryOperatorID");
+        var operator_mobdev_elem = document.getElementsByClassName(
+          "operatorMobileDevTable");
+        var operator_mobdevid_elem = document.getElementsByClassName(
+          "operatorMobileDevID");
+
+        var operatorIdsArray = []
+        var operatorNameArray = []
+        var operatorEmailArray = []
+        var operatorMobileArray = []
+        var operatorRoleArray = []
+        var operatorEmploymentTypeArray = []
+        var operatorDDSArray = []
+        var operatorPrimaryArray = []
+        var operatorMobileDevArray = []
+
+        for (var i = 0; i < edit_operator_elem.length; ++i) {
+          var row_operator_id = edit_operator_elem[i].getAttribute(
+            'data-id');
+          var row_operator_changed = edit_operator_elem[i].getAttribute(
+            'data-changed');
+
+          if (row_operator_changed == "changed") {
+            operatorIdsArray[operatorIdsArray.length] = row_operator_id
+            operatorNameArray[operatorNameArray.length] = edit_name_elem[
+                i]
+              .value
+            operatorEmailArray[operatorEmailArray.length] =
+              operator_email_elem[i].value
+            operatorMobileArray[operatorMobileArray.length] =
+              operator_phone_elem[i].value
+            operatorRoleArray[operatorRoleArray.length] =
+              operator_roleid_elem[i].value
+            operatorEmploymentTypeArray[operatorEmploymentTypeArray.length] =
+              operator_typeid_elem[i].value
+            operatorDDSArray[operatorDDSArray.length] =
+              operator_ddsid_elem[
+                i].value
+            operatorPrimaryArray[operatorPrimaryArray.length] =
+              operator_primaryid_elem[i].value
+            operatorMobileDevArray[operatorMobileDevArray.length] =
+              operator_mobdevid_elem[i].value
+          }
+        }
+
+        //FLEET SECTION
+        var edit_fleet_elem = document.getElementsByClassName(
+          "editFleetTable");
+        var vehicle_rego_elem = document.getElementsByClassName(
+          "vehicleRegistrationTable");
+        var vehicle_model_elem = document.getElementsByClassName(
+          "vehicleModelTable");
+        var vehicle_make_elem = document.getElementsByClassName(
+          "vehicleMakeTable");
+        var vehicle_color_elem = document.getElementsByClassName(
+          "vehicleColorTable");
+        var vehicle_year_elem = document.getElementsByClassName(
+          "vehicleYearTable");
+        var vehicle_signage_elem = document.getElementsByClassName(
+          "vehicleSignageTable");
+        var vehicle_signageid_elem = document.getElementsByClassName(
+          "vehicleSignageID");
+        var vehicle_cargocage_elem = document.getElementsByClassName(
+          "vehicleCargoCageTable");
+        var vehicle_cargocageid_elem = document.getElementsByClassName(
+          "vehicleCargoCageID");
+        var vehicle_owner_elem = document.getElementsByClassName(
+          "vehicleOwnerTable");
+        var vehicle_ownerid_elem = document.getElementsByClassName(
+          "vehicleOwnerID");
+        var vehicle_operator_elem = document.getElementsByClassName(
+          "vehicleOperatorNameTable");
+        var vehicle_operatorid_elem = document.getElementsByClassName(
+          "vehicleOperatorID");
+
+        var vehicleIdsArray = []
+        var vehicleRegoArray = []
+        var vehicleModelArray = []
+        var vehicleMakeArray = []
+        var vehicleColorArray = []
+        var vehicleYearArray = []
+        var vehicleSignageArray = []
+        var vehicleCargoCageArray = []
+        var vehicleOwnerArray = []
+        var vehicleOperatorArray = []
+
+        for (var i = 0; i < edit_fleet_elem.length; ++i) {
+          var row_fleet_id = edit_fleet_elem[i].getAttribute(
+            'data-id');
+          var row_fleet_changed = edit_fleet_elem[i].getAttribute(
+            'data-changed');
+          if (row_fleet_changed == "changed") {
+            vehicleIdsArray[vehicleIdsArray.length] = row_fleet_id
+            vehicleRegoArray[vehicleRegoArray.length] = vehicle_rego_elem[
+                i]
+              .value
+            vehicleModelArray[vehicleModelArray.length] =
+              vehicle_model_elem[i].value
+            vehicleMakeArray[vehicleMakeArray.length] =
+              vehicle_make_elem[i].value
+            vehicleColorArray[vehicleColorArray.length] =
+              vehicle_color_elem[i].value
+            vehicleYearArray[vehicleYearArray.length] =
+              vehicle_year_elem[i].value
+            vehicleSignageArray[vehicleSignageArray.length] =
+              vehicle_signageid_elem[
+                i].value
+            vehicleCargoCageArray[vehicleCargoCageArray.length] =
+              vehicle_cargocageid_elem[i].value
+            vehicleOwnerArray[vehicleOwnerArray.length] =
+              vehicle_ownerid_elem[i].value
+            vehicleOperatorArray[vehicleOperatorArray.length] =
+              vehicle_operatorid_elem[i].value
+          }
+        }
+
+        //Validation of the franchisee main details
+        if (validate()) {
+          myRecord.setValue({
+            fieldId: 'custpage_maincontact',
+            value: mainContact
+          });
+
+          myRecord.setValue({
+            fieldId: 'custpage_mobilenumber',
+            value: mainContactMobile
+          });
+
+          myRecord.setValue({
+            fieldId: 'custpage_typeofowner',
+            value: franchiseeTypeOfOwner
+          });
+
+          myRecord.setValue({
+            fieldId: 'custpage_personalemail',
+            value: personalEmail
+          });
+
+          myRecord.setValue({
+            fieldId: 'custpage_dob',
+            value: dob
+          });
+
+          myRecord.setValue({
+            fieldId: 'custpage_vaccinationstatus',
+            value: vaccinationStatus
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_nextofkinname',
+            value: franchiseeNextOfKinName
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_nextofkinmobile',
+            value: franchiseeNextOfKinMobile
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_nextofkinrelationship',
+            value: franchiseeNextOfKinRelationship
+          });
+
+          myRecord.setValue({
+            fieldId: 'custpage_addressids',
+            value: addressIdsArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_address1',
+            value: address1Array.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_address2',
+            value: address2Array.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_suburb',
+            value: addressSuburbArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_state',
+            value: addressStateArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_postcode',
+            value: addressPostcodeArray.toString()
+          });
+
+          myRecord.setValue({
+            fieldId: 'custpage_operatorids',
+            value: operatorIdsArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_operatorname',
+            value: operatorNameArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_operatoremail',
+            value: operatorEmailArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_operatormobile',
+            value: operatorMobileArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_operatorrole',
+            value: operatorRoleArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_operatoremploymentype',
+            value: operatorEmploymentTypeArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_operatordds',
+            value: operatorDDSArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_operatorprimary',
+            value: operatorPrimaryArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_operatormobiledev',
+            value: operatorMobileDevArray.toString()
+          });
+
+          myRecord.setValue({
+            fieldId: 'custpage_fleetids',
+            value: vehicleIdsArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_fleetrego',
+            value: vehicleRegoArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_fleetmodel',
+            value: vehicleModelArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_fleetmake',
+            value: vehicleMakeArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_fleetcolor',
+            value: vehicleColorArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_fleetyear',
+            value: vehicleYearArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_fleetsignage',
+            value: vehicleSignageArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_caregocage',
+            value: vehicleCargoCageArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_owner',
+            value: vehicleOwnerArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_operator',
+            value: vehicleOperatorArray.toString()
+          });
+
+          myRecord.setValue({
+            fieldId: 'custpage_listforsale',
+            value: 'T'
+          });
+
+          document.getElementById('submitter').click();
+        }
+      });
+
+
 
     }
 
