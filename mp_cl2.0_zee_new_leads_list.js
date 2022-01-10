@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2021-12-29T07:50:25+11:00
+ * @Last modified time: 2021-12-30T20:56:53+11:00
  */
 
 
@@ -66,34 +66,51 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       submitSearch();
 
       $(".lostZeeLead").click(function() {
-        var zeeLeadInternalID = $(this).attr("data-id");
+          var zeeLeadInternalID = $(this).attr("data-id");
+          $('.input-group').removeClass('input-group');
+          $('.reason_input_group').addClass('input-group');
+          console.log('inside modal')
+          console.log(zeeLeadInternalID)
+          $("#zeeleadid").val(zeeLeadInternalID);
 
-        if (confirm(
-            "Are you sure you want to continue?\n\nThis action cannot be undone."
-          )) {
-          var zeeSalesLeadRecord = record.load({
-            type: 'customrecord_zee_sales_leads',
-            id: zeeLeadInternalID
-          });
+          $("#myModal").show();
 
-          zeeSalesLeadRecord.setValue({
-            fieldId: 'custrecord_zee_lead_stage',
-            value: 3
-          });
-
-          zeeSalesLeadRecord.setValue({
-            fieldId: 'custrecord_date_lead_lost',
-            value: getDateToday()
-          });
-
-          zeeSalesLeadRecord.save();
-
-          var url = baseURL +
-            '/app/site/hosting/scriptlet.nl?script=1409&deploy=1';
-          window.location.href = url;
-        }
-
+        })
+        //On click of close icon in the modal
+      $('.close').click(function() {
+        location.reload();
       });
+      //Update the customer record on click of the button in the modal
+      $('#leadLost').click(function() {
+        zeeleadid = $("#zeeleadid").val();
+
+        var zeeSalesLeadRecord = record.load({
+          type: 'customrecord_zee_sales_leads',
+          id: zeeleadid
+        });
+
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_zee_lead_lost_reason',
+          value: $("#lostReason").val()
+        });
+
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_zee_lead_stage',
+          value: 3
+        });
+
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_date_lead_lost',
+          value: getDateToday()
+        });
+
+        zeeSalesLeadRecord.save();
+
+        var url = baseURL +
+          '/app/site/hosting/scriptlet.nl?script=1409&deploy=1'
+        window.location.href = url;
+      });
+
 
       $(".qualifyZeeLead").click(function() {
         var zeeLeadInternalID = $(this).attr("data-id");
@@ -251,7 +268,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           title: 'Sales Stage'
         }],
         columnDefs: [{
-          targets: [],
+          targets: [1, 6, 10],
           className: 'bolded'
         }, {
           className: "col-sm-2",

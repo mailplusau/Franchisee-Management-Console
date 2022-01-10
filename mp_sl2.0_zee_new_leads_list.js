@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T08:26:00+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2021-12-29T07:50:27+11:00
+ * @Last modified time: 2021-12-30T14:50:31+11:00
  */
 
 
@@ -37,13 +37,15 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css"><script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&c=1048144&h=9ee6accfd476c9cae718&_xt=.css"/><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&c=1048144&h=ef2cda20731d146b5e98&_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&c=1048144&h=a0ef6ac4e28f91203dfe&_xt=.css"><script src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"><script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/drilldown.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/export-data.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script><style>.mandatory{color:red;} .body{background-color: #CFE0CE !important;} @-webkit-keyframes animatetop {from {top:-300px; opacity:0} to {top:0; opacity:1}}@keyframes animatetop {from {top:-300px; opacity:0}to {top:0; opacity:1}}</style>';
 
         form.addField({
-            id: 'custpage_table_csv',
-            type: ui.FieldType.TEXT,
-            label: 'Table CSV'
-          }).updateDisplayType({
-            displayType: ui.FieldDisplayType.HIDDEN
-          })
-          //Loading Section that gets displayed when the page is being loaded
+          id: 'custpage_table_csv',
+          type: ui.FieldType.TEXT,
+          label: 'Table CSV'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        })
+
+        inlineHtml += lostZeeLeadModal();
+        //Loading Section that gets displayed when the page is being loaded
         inlineHtml +=
           '<div class="se-pre-con"></div><div ng-app="myApp" ng-controller="myCtrl">';
         inlineHtml += '<div id="container"></div>'
@@ -121,6 +123,37 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '</div>';
 
       return inlineHtml
+    }
+
+    /*
+     * PURPOSE : HTML code to generate the Modal Pop-up
+     *  PARAMS :  -
+     * RETURNS : HTML
+     *   NOTES :
+     */
+    function lostZeeLeadModal() {
+
+      var inlineHtml =
+        '<div id="myModal" class="modal" style="display: none; position: fixed; z-index: 1; padding-top: 100px;left: 0;top: 0;width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.4); "><div class="modal-content" style="position: absolute;transform: translate(-50%, -50%);background-color: #fefefe;/* margin: auto; *//* padding: 0; */border: 1px solid #888;width: 25%; left: 50%;top: 50%;/* box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19); */-webkit-animation-name: animatetop;-webkit-animation-duration: 0.4s;animation-name: animatetop;animation-duration: 0.4s;"><div class="modal-header" style="padding: 2px 16px;text-align: center;"><span class="close" style="color: black;float: right;font-size: 28px;font-weight: bold;"">&times;</span><h3 class="modal-title" id="modal-title">Franchisee Lead Lost</h3></div>';
+
+      inlineHtml +=
+        '<div class="modal-body" style="padding: 2px 16px;">';
+      inlineHtml +=
+        '<div class="form-group container zee_lead_section">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-3 zee_lead"><input type="text" id="zeeleadid" value="" hidden/><div class="input-group reason_input_group"><span class="input-group-addon" id="reason_text">REASON </span><select id="lostReason" class="form-control lostReason">';
+      inlineHtml +=
+        '<option value=0></option><option value=1>Price</option><option value=2>Finance</option><option value=3>Location</option>';
+
+      inlineHtml += '</select></div></div>';
+      inlineHtml += '</div></div>';
+
+      inlineHtml +=
+        '</div><div class="modal-footer" style="padding: 2px 16px;"><input type="button" value="LEAD LOST" class="form-control btn-danger" id="leadLost" style="" /></div></div></div>';
+
+      return inlineHtml;
+
     }
 
     /*

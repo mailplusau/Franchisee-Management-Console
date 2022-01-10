@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2021-12-30T08:57:08+11:00
+ * @Last modified time: 2021-12-30T15:15:25+11:00
  */
 
 
@@ -33,6 +33,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
     var suburb = '';
     var state = '';
     var postcode = '';
+    var interestedZees = []
+    var listedForSaleZees = []
 
     var baseURL = 'https://1048144.app.netsuite.com';
     if (runtime.EnvType == "SANDBOX") {
@@ -129,6 +131,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         fieldId: 'custpage_zeeleadid'
       }));
 
+      $('.ui.dropdown').dropdown();
+
       //Google Dropdown for the address2 field
       $(document).on('focus', '#address2', function(event) {
         // alert('onfocus')
@@ -163,6 +167,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         postcode = $('#postcode').val();
         suburb = $('#city').val();
 
+        interestedZees = $('#zeeList').val()
+        listedForSaleZees = $('#zeeListedSale').val()
+
         if (validate()) {
           document.getElementById('submitter').click();
         }
@@ -172,23 +179,61 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       $(document).on("change", "#franchiseeTypeOfOwner", function(e) {
         franchiseeTypeOfOwner = $('#franchiseeTypeOfOwner').val();
 
-        if(franchiseeTypeOfOwner == 2 || franchiseeTypeOfOwner == 3){
-          $(".employment_section").toggleClass("hide");
-          $(".vehicle_section").toggleClass("hide");
-          $(".finance_main_section").toggleClass("hide");
-          $(".finance_section").toggleClass("hide");
-          $(".investment_section").toggleClass("hide");
-          $('.franchiseeTypeOfOwner_section').addClass('col-xs-12').removeClass('col-xs-6');
-          $('.experience_section').addClass('col-xs-12').removeClass('col-xs-6');
-        } else if(franchiseeTypeOfOwner == 4){
-          $(".employment_section").toggleClass("hide");
-          $(".vehicle_section").toggleClass("hide");
-          $(".finance_main_section").toggleClass("hide");
-          $(".finance_section").toggleClass("hide");
-          $(".investment_section").toggleClass("hide");
-          $('.franchiseeTypeOfOwner_section').addClass('col-xs-6').removeClass('col-xs-12');
-          $('.experience_section').addClass('col-xs-6').removeClass('col-xs-12');
+        if (franchiseeTypeOfOwner == 2 || franchiseeTypeOfOwner == 3) {
+          $(".employment_section").addClass("hide");
+          $(".vehicle_section").addClass("hide");
+          $(".finance_main_section").removeClass("hide");
+          $(".finance_section").removeClass("hide");
+          $(".investment_section").removeClass("hide");
+          $(".potentialZees_section").removeClass("hide");
+          $(".zee_section").removeClass("hide");
+          $(".zeeListedSale_section").removeClass("hide");
+          $('.franchiseeTypeOfOwner_section').addClass('col-xs-12').removeClass(
+            'col-xs-6');
+          $('.experience_section').addClass('col-xs-12').removeClass(
+            'col-xs-6');
+        } else if (franchiseeTypeOfOwner == 4) {
+          $(".employment_section").removeClass("hide");
+          $(".vehicle_section").removeClass("hide");
+          $(".finance_main_section").addClass("hide");
+          $(".finance_section").addClass("hide");
+          $(".investment_section").addClass("hide");
+          $(".potentialZees_section").addClass("hide");
+          $(".zee_section").addClass("hide");
+          $(".zeeListedSale_section").addClass("hide");
+          $('.franchiseeTypeOfOwner_section').addClass('col-xs-6').removeClass(
+            'col-xs-12');
+          $('.experience_section').addClass('col-xs-6').removeClass(
+            'col-xs-12');
         }
+
+      });
+
+      $(document).on('click', '.stageNewLead', function(e) {
+        zeeleadid = $(this).attr("data-id");
+
+        var zeeSalesLeadRecord = record.load({
+          type: 'customrecord_zee_sales_leads',
+          id: zeeleadid
+        });
+
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_zee_lead_stage',
+          value: 1
+        });
+
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_date_qualified_lead',
+          value: null
+        });
+
+
+        zeeSalesLeadRecord.save();
+
+        var url = baseURL +
+          '/app/site/hosting/scriptlet.nl?script=1411&deploy=1&zeeleadid=' +
+          zeeleadid;
+        window.location.href = url;
 
       });
 
@@ -210,10 +255,16 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           value: getDateToday()
         });
 
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_date_opportunity',
+          value: null
+        });
+
         zeeSalesLeadRecord.save();
 
         var url = baseURL +
-          '/app/site/hosting/scriptlet.nl?script=1411&deploy=1&zeeleadid=' + zeeleadid;
+          '/app/site/hosting/scriptlet.nl?script=1411&deploy=1&zeeleadid=' +
+          zeeleadid;
         window.location.href = url;
 
       });
@@ -239,9 +290,117 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         zeeSalesLeadRecord.save();
 
         var url = baseURL +
-          '/app/site/hosting/scriptlet.nl?script=1411&deploy=1&zeeleadid=' + zeeleadid;
+          '/app/site/hosting/scriptlet.nl?script=1411&deploy=1&zeeleadid=' +
+          zeeleadid;
         window.location.href = url;
 
+      });
+
+      $("#zeeLeadLost").click(function() {
+          zeeleadid = $(this).attr("data-id");
+          $('.input-group').removeClass('input-group');
+          $('.reason_input_group').addClass('input-group');
+          console.log('inside modal')
+          console.log(zeeleadid)
+          $("#zeeleadid").val(zeeleadid);
+
+          $("#myModal").show();
+
+
+        })
+        //On click of close icon in the modal
+      $('.close').click(function() {
+        location.reload();
+      });
+      //Update the customer record on click of the button in the modal
+      $('#leadLost').click(function() {
+        zeeleadid = $("#zeeleadid").val();
+
+        var zeeSalesLeadRecord = record.load({
+          type: 'customrecord_zee_sales_leads',
+          id: zeeleadid
+        });
+
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_zee_lead_lost_reason',
+          value: $("#lostReason").val()
+        });
+
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_zee_lead_stage',
+          value: 3
+        });
+
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_date_lead_lost',
+          value: getDateToday()
+        });
+
+        zeeSalesLeadRecord.save();
+
+        var url = baseURL +
+          '/app/site/hosting/scriptlet.nl?script=1409&deploy=1'
+        window.location.href = url;
+      });
+
+      $('#zeeNoTerritory').click(function() {
+        zeeleadid = $(this).attr("data-id");
+
+        var zeeSalesLeadRecord = record.load({
+          type: 'customrecord_zee_sales_leads',
+          id: zeeleadid
+        });
+
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_zee_lead_lost_reason',
+          value: 3
+        });
+
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_zee_lead_stage',
+          value: 4
+        });
+
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_date_qualified_no_territory',
+          value: getDateToday()
+        });
+
+        zeeSalesLeadRecord.save();
+
+        var url = baseURL +
+          '/app/site/hosting/scriptlet.nl?script=1409&deploy=1'
+        window.location.href = url;
+      });
+
+      $('#opportunityDenied').click(function() {
+        zeeleadid = $(this).attr("data-id");
+
+        var zeeSalesLeadRecord = record.load({
+          type: 'customrecord_zee_sales_leads',
+          id: zeeleadid
+        });
+
+        // zeeSalesLeadRecord.setValue({
+        //   fieldId: 'custrecord_zee_lead_lost_reason',
+        //   value: $("#lostReason").val()
+        // });
+
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_zee_lead_stage',
+          value: 6
+        });
+
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_date_opportunity_denied',
+          value: getDateToday()
+        });
+
+        zeeSalesLeadRecord.save();
+
+        var url = baseURL +
+          '/app/site/hosting/scriptlet.nl?script=1409&deploy=1'
+        window.location.href = url;
       });
     }
 
@@ -261,7 +420,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       document.documentElement.scrollTop = 0;
       setTimeout(function() {
         $('#alert').hide();
-      }, 100000);
+      }, 5000);
     }
 
     function validate() {
@@ -284,6 +443,12 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       if (isNullorEmpty(franchiseeTypeOfOwner)) {
         errorMessage += 'Please Select Type of Owner</br>';
+      } else {
+        if(franchiseeTypeOfOwner != 4){
+          if(isNullorEmpty(interestedZees) && isNullorEmpty(listedForSaleZees)){
+            errorMessage += 'Please Select Interested Franchisees</br>';
+          }
+        }
       }
 
       if (isNullorEmpty(state) || isNullorEmpty(postcode)) {
@@ -302,6 +467,17 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       console.log('inside save function')
       console.log('zeeleadid: ' + zeeleadid)
+
+      var combinedInterestedZees = [];
+      if(!isNullorEmpty(listedForSaleZees) && !isNullorEmpty(interestedZees)){
+      combinedInterestedZees = listedForSaleZees.concat(interestedZees)
+    } else if(isNullorEmpty(listedForSaleZees) && !isNullorEmpty(interestedZees)){
+      combinedInterestedZees = interestedZees
+    } else if(!isNullorEmpty(listedForSaleZees) && isNullorEmpty(interestedZees)){
+      combinedInterestedZees = listedForSaleZees
+    }
+
+      console.log(combinedInterestedZees)
 
       if (isNullorEmpty(zeeleadid)) {
         console.log('create record')
@@ -400,6 +576,13 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         });
         console.log('set employment')
       }
+      if (!isNullorEmpty(combinedInterestedZees)) {
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_zee_leads_interested_zees',
+          value: combinedInterestedZees
+        });
+        console.log('set interested zees')
+      }
       zeeSalesLeadRecord.setValue({
         fieldId: 'custrecord_comments',
         value: comments
@@ -423,7 +606,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       zeeSalesLeadRecord.save();
 
-      // return true;
+      return true;
 
     }
 

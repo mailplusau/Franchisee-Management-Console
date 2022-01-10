@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T08:26:00+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2021-12-30T08:52:45+11:00
+ * @Last modified time: 2021-12-30T15:27:04+11:00
  */
 
 
@@ -39,6 +39,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     var dateOpportunity = '';
     var dateQualifiedNoTerritory = ''
     var dateOpportunityDenied = ''
+    var interestedZees = [];
 
     function onRequest(context) {
       var baseURL = 'https://system.na2.netsuite.com';
@@ -64,7 +65,18 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
         //INITIALIZATION OF JQUERY AND BOOTSTRAP
         var inlineHtml =
-          '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css"><script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA92XGDo8rx11izPYT7z2L-YPMMJ6Ih1s0&callback=initMap&libraries=places"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&c=1048144&h=9ee6accfd476c9cae718&_xt=.css"/><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&c=1048144&h=ef2cda20731d146b5e98&_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&c=1048144&h=a0ef6ac4e28f91203dfe&_xt=.css"><script src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"><script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/drilldown.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/export-data.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script><style>.mandatory{color:red;}.clearfix:after {clear: both;content: "";display: block;height: 0;}.wrapper {vertical-align: middle;}.nav {margin-top: 40px;}.pull-right {float: right;}a, a:active {color: #212121;text-decoration: none;}a:hover {color: #999;}.arrow-steps .step {font-size: 14px;text-align: center;color: #fff;cursor: default;margin: 0 3px;padding: 10px 10px 10px 30px;float: left;position: relative;background-color: #379e8f;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none; transition: background-color 0.2s ease;}.arrow-steps .step:after,.arrow-steps .step:before {content: " ";position: absolute;top: 0;right: -17px;width: 0;height: 40px;border-top: 19px solid transparent;border-bottom: 17px solid transparent;border-left: 17px solid #379e8f;	z-index: 2;transition: border-color 0.2s ease;}.arrow-steps .step:before {right: auto;left: 0;border-left: 17px solid #fff;	z-index: 0;}.arrow-steps .step:first-child:before {border: none;}.arrow-steps .step:first-child {border-top-left-radius: 4px;border-bottom-left-radius: 4px;}.arrow-steps .step span {position: relative;}.arrow-steps .step span:before {opacity: 0;content: "✔";position: absolute;top: -2px;left: -20px;color: #06ac77;}.arrow-steps .step.done span:before {opacity: 1;-webkit-transition: opacity 0.3s ease 0.5s;-moz-transition: opacity 0.3s ease 0.5s;-ms-transition: opacity 0.3s ease 0.5s;transition: opacity 0.3s ease 0.5s;}.arrow-steps .step.current {color: #103d39;font-weight: bold;background-color: #fbea51;}.arrow-steps .step.current:after {border-left: 17px solid #fbea51;	}.nav > li.active > a, .nav > li.active > a:focus, .nav > li.active > a:hover { background-color: #379E8F; color: #fff }.nav > li > a, .nav > li > a:focus, .nav > li > a:hover { margin-left: 5px; margin-right: 5px; border: 2px solid #379E8F; color: #379E8F; }</style>';
+          '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css"><script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA92XGDo8rx11izPYT7z2L-YPMMJ6Ih1s0&callback=initMap&libraries=places"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&c=1048144&h=9ee6accfd476c9cae718&_xt=.css"/><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&c=1048144&h=ef2cda20731d146b5e98&_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&c=1048144&h=a0ef6ac4e28f91203dfe&_xt=.css"><script src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"><script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/drilldown.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/export-data.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script>';
+        inlineHtml +=
+          '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">';
+        inlineHtml +=
+          '<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>';
+        // Semantic Select
+        inlineHtml +=
+          '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css">';
+        inlineHtml +=
+          '<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.js"></script>';
+        inlineHtml +=
+          '<style>.mandatory{color:red;}.clearfix:after {clear: both;content: "";display: block;height: 0;}.wrapper {vertical-align: middle;}.nav {margin-top: 40px;}.pull-right {float: right;}a, a:active {color: #212121;text-decoration: none;}a:hover {color: #999;}.arrow-steps .step {font-size: 14px;text-align: center;color: #fff;cursor: default;margin: 0 3px;padding: 10px 10px 10px 30px;float: left;position: relative;background-color: #379e8f;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none; transition: background-color 0.2s ease;}.arrow-steps .step:after,.arrow-steps .step:before {content: " ";position: absolute;top: 0;right: -17px;width: 0;height: 40px;border-top: 19px solid transparent;border-bottom: 17px solid transparent;border-left: 17px solid #379e8f;	z-index: 2;transition: border-color 0.2s ease;}.arrow-steps .step:before {right: auto;left: 0;border-left: 17px solid #fff;	z-index: 0;}.arrow-steps .step:first-child:before {border: none;}.arrow-steps .step:first-child {border-top-left-radius: 4px;border-bottom-left-radius: 4px;}.arrow-steps .step span {position: relative;}.arrow-steps .step span:before {opacity: 0;content: "✔";position: absolute;top: -2px;left: -20px;color: #06ac77;}.arrow-steps .step.done span:before {opacity: 1;-webkit-transition: opacity 0.3s ease 0.5s;-moz-transition: opacity 0.3s ease 0.5s;-ms-transition: opacity 0.3s ease 0.5s;transition: opacity 0.3s ease 0.5s;}.arrow-steps .step.current {color: #103d39;font-weight: bold;background-color: #fbea51;}.arrow-steps .step.current:after {border-left: 17px solid #fbea51;	}.nav > li.active > a, .nav > li.active > a:focus, .nav > li.active > a:hover { background-color: #379E8F; color: #fff }.nav > li > a, .nav > li > a:focus, .nav > li > a:hover { margin-left: 5px; margin-right: 5px; border: 2px solid #379E8F; color: #379E8F; }</style>';
 
         form.addField({
           id: 'custpage_table_csv',
@@ -125,6 +137,10 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             fieldId: 'custrecord_comments'
           });
 
+          interestedZees = zeeSalesLeadRecord.getValue({
+            fieldId: 'custrecord_zee_leads_interested_zees'
+          });
+
 
           suburb = zeeSalesLeadRecord.getValue({
             fieldId: 'custrecord_areas_of_interest_suburb'
@@ -174,9 +190,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           }).defaultValue = '0'
         }
 
+        inlineHtml += lostZeeLeadModal();
+
         //Loading Section that gets displayed when the page is being loaded
         inlineHtml +=
           '<div class="se-pre-con"></div><div ng-app="myApp" ng-controller="myCtrl">';
+
         inlineHtml += '<div id="container"></div>'
         inlineHtml += spacing();
         inlineHtml += progressBar(salesStage, classification);
@@ -185,9 +204,11 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         //ERROR SECTION
         inlineHtml +=
           '<div class="container" ><div id="alert" class="alert alert-danger fade in"></div></div>';
+
         inlineHtml += zeeSalesMainLead();
         inlineHtml += operationsSection();
         inlineHtml += areasOfInterestSection();
+        inlineHtml += potentialZeesSection();
         inlineHtml += financeSection();
         inlineHtml += salesWFDateDetails();
         inlineHtml += line();
@@ -210,6 +231,11 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         context.response.writePage(form);
 
       } else {
+
+        redirect.toSuitelet({
+          scriptId: 'customscript_sl2_zee_new_leads_list',
+          deploymentId: 'customdeploy1',
+        });
 
       }
     }
@@ -286,6 +312,39 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     }
 
     /*
+     * PURPOSE : HTML code to generate the Modal Pop-up
+     *  PARAMS :  -
+     * RETURNS : HTML
+     *   NOTES :
+     */
+    function lostZeeLeadModal() {
+
+      var inlineHtml =
+        '<div id="myModal" class="modal" style="display: none; position: fixed; z-index: 1; padding-top: 100px;left: 0;top: 0;width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.4); "><div class="modal-content" style="position: absolute;transform: translate(-50%, -50%);background-color: #fefefe;/* margin: auto; *//* padding: 0; */border: 1px solid #888;/* width: 80%; */left: 50%;top: 50%;/* box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19); */-webkit-animation-name: animatetop;-webkit-animation-duration: 0.4s;animation-name: animatetop;animation-duration: 0.4s;"><div class="modal-header" style="padding: 2px 16px;text-align: center;"><span class="close" style="color: black;float: right;font-size: 28px;font-weight: bold;"">&times;</span><h3 class="modal-title" id="modal-title">Franchisee Lead Lost</h3></div>';
+
+      inlineHtml +=
+        '<div class="modal-body" style="padding: 2px 16px;">';
+      inlineHtml +=
+        '<div class="form-group container zee_lead_section">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-4 zee_lead"><input type="text" id="zeeleadid" value="' +
+        zeeleadid +
+        '" hidden/><div class="input-group reason_input_group"><span class="input-group-addon" id="reason_text">REASON </span><select id="lostReason" class="form-control lostReason">';
+      inlineHtml +=
+        '<option value=0></option><option value=1>Price</option><option value=2>Finance</option><option value=3 selected>Location</option>';
+
+      inlineHtml += '</select></div></div>';
+      inlineHtml += '</div></div>';
+
+      inlineHtml +=
+        '</div><div class="modal-footer" style="padding: 2px 16px;"><input type="button" value="LEAD LOST" class="form-control btn-danger" id="leadLost" style="" /></div></div></div>';
+
+      return inlineHtml;
+
+    }
+
+    /*
      * PURPOSE : BUTTONS SECTION AT THE END OF THE PAGE.
      *  PARAMS : USER ROLE
      * RETURNS : INLINEHTML
@@ -308,17 +367,22 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml += '<div class="row">';
         if (salesStage == 2) {
           inlineHtml +=
-            '<div class="col-xs-6 zeeLeadLost"><input type="button" value="LEAD LOST" class="form-control btn btn-danger" id="zeeLeadLost" /></div>'
+            '<div class="col-xs-6 zeeLeadLost"><input type="button" value="LEAD LOST" class="form-control btn btn-danger" id="zeeLeadLost" data-id="' +
+            zeeleadid + '" /></div>'
           inlineHtml +=
-            '<div class="col-xs-6 zeeNoTerritory"><input type="button" value="NO TERRITORY" class="form-control btn btn-warning" id="zeeNoTerritory" /></div>'
+            '<div class="col-xs-6 zeeNoTerritory"><input type="button" value="NO TERRITORY" class="form-control btn btn-warning" id="zeeNoTerritory" data-id="' +
+            zeeleadid + '"/></div>'
         } else if (salesStage == 5) {
           inlineHtml +=
-            '<div class="col-xs-6 zeeLeadLost"><input type="button" value="LEAD LOST" class="form-control btn btn-danger" id="zeeLeadLost" /></div>'
+            '<div class="col-xs-6 zeeLeadLost"><input type="button" value="LEAD LOST" class="form-control btn btn-danger" id="zeeLeadLost" data-id="' +
+            zeeleadid + '"/></div>'
           inlineHtml +=
-            '<div class="col-xs-6 zeeLeadLost"><input type="button" value="OPPORTUNITY DENIED" class="form-control btn btn-danger" id="zeeLeadLost" /></div>'
+            '<div class="col-xs-6 zeeLeadLost"><input type="button" value="OPPORTUNITY DENIED" class="form-control btn btn-danger" id="opportunityDenied" data-id="' +
+            zeeleadid + '"/></div>'
         } else {
           inlineHtml +=
-            '<div class="col-xs-12 zeeLeadLost"><input type="button" value="LEAD LOST" class="form-control btn btn-danger" id="zeeLeadLost" /></div>'
+            '<div class="col-xs-12 zeeLeadLost"><input type="button" value="LEAD LOST" class="form-control btn btn-danger" id="zeeLeadLost" data-id="' +
+            zeeleadid + '"/></div>'
         }
 
         inlineHtml += '</div>';
@@ -429,14 +493,14 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     function potentialZeesSection() {
 
       if (franchiseeTypeOfOwner != 4) {
-        var defaultHideClass = 'hide';
+        var defaultHideClass = '';
       } else {
-        var defaultHideClass = ''
+        var defaultHideClass = 'hide'
       }
 
-      //NetSuite Search: Zee Management Console - Franchisees
+      //NetSuite Search: Interested Franchisees - Franchisees
       var searchZees = search.load({
-        id: 'customsearch_zee_management_console_zee',
+        id: 'customsearch_zee_management_console_ze_2',
         type: 'partner'
       });
 
@@ -463,7 +527,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '<div class="row">';
       inlineHtml +=
         '<div class="col-xs-4 zee_section ' + defaultHideClass +
-        '"><div class="input-group"><span class="input-group-addon" id="zee_text">FRANCHISEE </span><select id="zeeList" class="form-control zeeList" data-old=""><option value=0></option>';
+        '"><div class="input-group"><span class="input-group-addon" id="zee_text">FRANCHISEE </span><select id="zeeList" class="form-control ui fluid search dropdown zeeList" data-old="" json="" multiple="" style="font-size: 12px;"><option value=0></option>';
 
       resultSetZees.each(function(searchResultZees) {
         zeeId = searchResultZees.getValue('internalid');
@@ -471,8 +535,17 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         franchiseeListedForSale = searchResultZees.getValue(
           'custentity_listed_for_sale');
 
-        inlineHtml +=
-          '<option value=' + zeeId + '>' + franchiseeName + '</option>';
+        var indexValue = interestedZees.indexOf(zeeId);
+
+        if (indexValue != -1) {
+          inlineHtml += '<option value=' + zeeId + ' selected>' +
+            franchiseeName + '</option>';
+        } else {
+          inlineHtml += '<option value=' + zeeId + '>' + franchiseeName +
+            '</option>';
+        }
+
+
 
         return true;
       });
@@ -480,14 +553,21 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '</select></div></div>';
       inlineHtml +=
         '<div class="col-xs-8 zeeListedSale_section ' + defaultHideClass +
-        '"><div class="input-group"><span class="input-group-addon" id="zeeListedSale">FRANCHISEES LISTED FOR SALE </span><select id="zeeListedSale" class="form-control zeeListedSale" data-old=""><option value=0></option>';
+        '"><div class="input-group"><span class="input-group-addon" id="zeeListedSale_text">FRANCHISEES LISTED FOR SALE </span><select id="zeeListedSale" class="form-control ui fluid search dropdown zeeListedSale" data-old="" json="" multiple="" style="font-size: 12px"><option value=0></option>';
 
       resultSetZeesListed.each(function(searchResultZeesListed) {
         zeeId = searchResultZeesListed.getValue('internalid');
         franchiseeName = searchResultZeesListed.getValue('companyname');
 
-        inlineHtml +=
-          '<option value=' + zeeId + '>' + franchiseeName + '</option>';
+        var indexValue = interestedZees.indexOf(zeeId);
+
+        if (indexValue != -1) {
+          inlineHtml += '<option value=' + zeeId + ' selected>' +
+            franchiseeName + '</option>';
+        } else {
+          inlineHtml += '<option value=' + zeeId + '>' + franchiseeName +
+            '</option>';
+        }
 
         return true;
       });
