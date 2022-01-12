@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2021-12-30T20:56:53+11:00
+ * @Last modified time: 2022-01-11T10:30:12+11:00
  */
 
 
@@ -396,7 +396,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
               '" class="deniedZeeLead" style="cursor: pointer !important;color: white;">OPPORTUNITY DENIED</a></button>';
           } else if (zeeSalesLeads_row.stageID == 4) {
             var linkURL =
-              '<button class="form-control btn btn-xs btn-danger" style="cursor: not-allowed !important;width: fit-content;" disabled><a data-id="' +
+              '<button class="form-control btn btn-xs btn-primary" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
+              zeeSalesLeads_row.internalID +
+              '" class="viewZeeLead" style="cursor: pointer !important;color: white;">VIEW</a></button> <button class="form-control btn btn-xs btn-danger" style="cursor: not-allowed !important;width: fit-content;" disabled><a data-id="' +
               zeeSalesLeads_row.internalID +
               '" class="" style="cursor: pointer !important;color: white;" disabled>NO TERRITORY</a></button> <button class="form-control btn btn-xs btn-success" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
               zeeSalesLeads_row.internalID +

@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T08:26:00+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2021-12-30T15:27:04+11:00
+ * @Last modified time: 2022-01-11T16:03:51+11:00
  */
 
 
@@ -278,28 +278,40 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
      */
     function progressBar(salesStage, classification) {
       var inlineHtml =
-        '<div class="form-group progress_section" style="  margin: auto;width: 50%;padding: 10px;">';
+        '<div class="form-group progress_section" style="  margin: auto;width: 85%;padding: 10px;">';
       inlineHtml += '<div class="row">';
       if (salesStage == 1) {
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step current"> <span>NEW LEAD</span> </div><div class="step"> <span><a data-id="' +
           zeeleadid +
-          '" class="stageQualified" style="cursor: pointer !important;color: white;">QUALIFIED LEAD</a></span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span>APPROVED</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div></div>';
+          '" class="stageQualified" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>QUALIFIED LEAD</b></a></span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>CONVERT TO FRANCHISE</span> </div></div>';
       } else if (salesStage == 2) {
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span><a data-id="' +
           zeeleadid +
-          '" class="stageNewLead" style="cursor: pointer !important;color: white;">NEW LEAD</a></span> </div><div class="step current"> <span>QUALIFIED LEAD</span> </div><div class="step"> <span><a data-id="' +
+          '" class="stageNewLead" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>NEW LEAD</b></a></span> </div><div class="step current"> <span>QUALIFIED LEAD</span> </div><div class="step"> <span><a data-id="' +
           zeeleadid +
-          '" class="stageOpportunity" style="cursor: pointer !important;color: white;">OPPORTUNITY</a></span> </div><div class="step"> <span>APPROVED</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div></div>';
+          '" class="stageOpportunity" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>OPPORTUNITY</b></a></span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>CONVERT TO FRANCHISE</span> </div></div>';
+      } else if (salesStage == 4) {
+        inlineHtml +=
+          '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span><a data-id="' +
+          zeeleadid +
+          '" class="stageNewLead" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>NEW LEAD</b></a></span> </div><div class="step current"> <span>QUALIFIED LEAD - NO TERRITORY</span> </div><div class="step"> <span><a data-id="' +
+          zeeleadid +
+          '" class="stageOpportunity" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>OPPORTUNITY</b></a></span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>CONVERT TO FRANCHISE</span> </div></div>';
       } else if (salesStage == 5) {
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span><a data-id="' +
           zeeleadid +
-          '" class="stageQualified" style="cursor: pointer !important;color: white;">QUALIFIED LEAD</a></span> </div><div class="step current"> <span>OPPORTUNITY</span> </div><div class="step"> <span>APPROVED</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div></div>';
+          '" class="stageQualified" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>QUALIFIED LEAD</b></a></span> </div><div class="step current"> <span>OPPORTUNITY</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>CONVERT TO FRANCHISE</span> </div></div>';
+      } else if (salesStage == 6) {
+        inlineHtml +=
+          '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span><a data-id="' +
+          zeeleadid +
+          '" class="stageQualified" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>QUALIFIED LEAD</b></a></span> </div><div class="step current"> <span>OPPORTUNITY - DENIED</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>CONVERT TO FRANCHISE</span> </div></div>';
       } else {
         inlineHtml +=
-          '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step current"> <span>NEW LEAD</span> </div><div class="step"> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span>APPROVED</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div></div>';
+          '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step current"> <span>NEW LEAD</span> </div><div class="step"> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>CONVERT TO FRANCHISE</span> </div></div>';
       }
 
       // inlineHtml += '<div class="nav clearfix" style="margin-top: 10px !important;"><a href="#" class="prev btn btn-sm btn-info" style="border-radius: 15px !important;background-color: #103D39;border-color: transparent;">Previous Stage</a><a href="#" class="next pull-right btn btn-sm btn-info" style="border-radius: 15px !important;background-color: #103D39;border-color: transparent;">Next Stage</a></div></div></div>'
@@ -367,17 +379,21 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml += '<div class="row">';
         if (salesStage == 2) {
           inlineHtml +=
-            '<div class="col-xs-6 zeeLeadLost"><input type="button" value="LEAD LOST" class="form-control btn btn-danger" id="zeeLeadLost" data-id="' +
-            zeeleadid + '" /></div>'
-          inlineHtml +=
             '<div class="col-xs-6 zeeNoTerritory"><input type="button" value="NO TERRITORY" class="form-control btn btn-warning" id="zeeNoTerritory" data-id="' +
             zeeleadid + '"/></div>'
-        } else if (salesStage == 5) {
           inlineHtml +=
             '<div class="col-xs-6 zeeLeadLost"><input type="button" value="LEAD LOST" class="form-control btn btn-danger" id="zeeLeadLost" data-id="' +
+            zeeleadid + '" /></div>'
+
+        } else if (salesStage == 5) {
+          inlineHtml +=
+            '<div class="col-xs-4 zeeLeadLost"><input type="button" value="SEND EOI" class="form-control btn btn-info" id="zeeLeadLost" data-id="' +
             zeeleadid + '"/></div>'
           inlineHtml +=
-            '<div class="col-xs-6 zeeLeadLost"><input type="button" value="OPPORTUNITY DENIED" class="form-control btn btn-danger" id="opportunityDenied" data-id="' +
+            '<div class="col-xs-4 zeeLeadLost"><input type="button" value="OPPORTUNITY DENIED" class="form-control btn btn-danger" id="opportunityDenied" data-id="' +
+            zeeleadid + '"/></div>'
+          inlineHtml +=
+            '<div class="col-xs-4 zeeLeadLost"><input type="button" value="LEAD LOST" class="form-control btn btn-danger" id="zeeLeadLost" data-id="' +
             zeeleadid + '"/></div>'
         } else {
           inlineHtml +=
@@ -639,9 +655,11 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml +=
           '<option value=0></option><option value=1>Full-Time</option><option value=2 selected>Part-Time</option><option value=3>Contract</option><option value=4>Casual</option>';
       } else if (employment == 3) {
-        '<option value=0></option><option value=1>Full-Time</option><option value=2>Part-Time</option><option value=3 selected>Contract</option><option value=4>Casual</option>';
+        inlineHtml +=
+          '<option value=0></option><option value=1>Full-Time</option><option value=2>Part-Time</option><option value=3 selected>Contract</option><option value=4>Casual</option>';
       } else if (employment == 4) {
-        '<option value=0></option><option value=1>Full-Time</option><option value=2>Part-Time</option><option value=3>Contract</option><option value=4 selected>Casual</option>';
+        inlineHtml +=
+          '<option value=0></option><option value=1>Full-Time</option><option value=2>Part-Time</option><option value=3>Contract</option><option value=4 selected>Casual</option>';
       }
       inlineHtml += '</select></div></div>';
       inlineHtml += '</div>';

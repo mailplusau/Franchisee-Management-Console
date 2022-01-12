@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2021-12-30T15:15:25+11:00
+ * @Last modified time: 2022-01-11T10:30:10+11:00
  */
 
 
@@ -226,6 +226,22 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           fieldId: 'custrecord_date_qualified_lead',
           value: null
         });
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_date_qualified_no_territory',
+          value: null
+        });
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_date_opportunity',
+          value: null
+        });
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_date_lead_lost',
+          value: null
+        });
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_date_opportunity_denied',
+          value: null
+        });
 
 
         zeeSalesLeadRecord.save();
@@ -257,6 +273,23 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
         zeeSalesLeadRecord.setValue({
           fieldId: 'custrecord_date_opportunity',
+          value: null
+        });
+
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_date_qualified_no_territory',
+          value: null
+        });
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_date_opportunity',
+          value: null
+        });
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_date_lead_lost',
+          value: null
+        });
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_date_opportunity_denied',
           value: null
         });
 
@@ -444,8 +477,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       if (isNullorEmpty(franchiseeTypeOfOwner)) {
         errorMessage += 'Please Select Type of Owner</br>';
       } else {
-        if(franchiseeTypeOfOwner != 4){
-          if(isNullorEmpty(interestedZees) && isNullorEmpty(listedForSaleZees)){
+        if (franchiseeTypeOfOwner != 4) {
+          if (isNullorEmpty(interestedZees) && isNullorEmpty(
+              listedForSaleZees)) {
             errorMessage += 'Please Select Interested Franchisees</br>';
           }
         }
@@ -469,13 +503,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       console.log('zeeleadid: ' + zeeleadid)
 
       var combinedInterestedZees = [];
-      if(!isNullorEmpty(listedForSaleZees) && !isNullorEmpty(interestedZees)){
-      combinedInterestedZees = listedForSaleZees.concat(interestedZees)
-    } else if(isNullorEmpty(listedForSaleZees) && !isNullorEmpty(interestedZees)){
-      combinedInterestedZees = interestedZees
-    } else if(!isNullorEmpty(listedForSaleZees) && isNullorEmpty(interestedZees)){
-      combinedInterestedZees = listedForSaleZees
-    }
+      if (!isNullorEmpty(listedForSaleZees) && !isNullorEmpty(interestedZees)) {
+        combinedInterestedZees = listedForSaleZees.concat(interestedZees)
+      } else if (isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
+          interestedZees)) {
+        combinedInterestedZees = interestedZees
+      } else if (!isNullorEmpty(listedForSaleZees) && isNullorEmpty(
+          interestedZees)) {
+        combinedInterestedZees = listedForSaleZees
+      }
 
       console.log(combinedInterestedZees)
 
