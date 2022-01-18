@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-01-11T10:30:12+11:00
+ * @Last modified time: 2022-01-18T16:07:33+11:00
  */
 
 
@@ -26,6 +26,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
     var userName = runtime.getCurrentUser().name;
     var userId = runtime.getCurrentUser().id;
     var currRec = currentRecord.get();
+    var myRecord = currentRecord.get();
 
     var tollUploadSet = [];
 
@@ -286,11 +287,24 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
     function loadZeeSalesLeadSearch() {
 
+      var dateFrom = myRecord.getValue({
+        fieldId: 'custpage_date_from'
+      });
+
       //NetSuite Search: Franchisee Sales Leads - Website
       var searchZeeLeadsList = search.load({
         id: 'customsearch_zee_sales_lead_list',
         type: 'customrecord_zee_sales_leads'
       });
+
+      if (!isNullorEmpty(dateFrom)) {
+        searchZeeLeadsList.filters.push(search.createFilter({
+          name: 'custrecord_zee_lead_date_entered',
+          join: null,
+          operator: search.Operator.ONORAFTER,
+          values: dateFrom
+        }));
+      }
 
       searchZeeLeadsList.run().each(function(
         tzeeLeadsListResultSet) {

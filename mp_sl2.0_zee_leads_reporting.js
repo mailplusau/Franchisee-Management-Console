@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T08:26:00+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-01-19T07:47:09+11:00
+ * @Last modified time: 2022-01-18T15:43:54+11:00
  */
 
 
@@ -23,12 +23,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       userId = runtime.getCurrentUser().id;
       role = runtime.getCurrentUser().role;
 
-      var dateFrom = null;
-
       if (context.request.method === 'GET') {
 
         zee = context.request.parameters.zee;
-        dateFrom = context.request.parameters.date_from;
 
         var form = ui.createForm({
           title: 'Franchisee New Leads'
@@ -47,23 +44,15 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           displayType: ui.FieldDisplayType.HIDDEN
         })
 
-        form.addField({
-          id: 'custpage_date_from',
-          type: ui.FieldType.TEXT,
-          label: 'Date From'
-        }).updateDisplayType({
-          displayType: ui.FieldDisplayType.HIDDEN
-        }).defaultValue = dateFrom
-
         inlineHtml += lostZeeLeadModal();
         //Loading Section that gets displayed when the page is being loaded
         inlineHtml +=
           '<div class="se-pre-con"></div><div ng-app="myApp" ng-controller="myCtrl">';
-        inlineHtml += '<div id="container"></div>'
+        // inlineHtml += '<div id="container"></div>'
         inlineHtml += spacing()
-        inlineHtml += mainButtons(role)
-        inlineHtml += line();
-        inlineHtml += dataTable();
+
+        // inlineHtml += dataTable();
+        inlineHtml += tabsSection();
         inlineHtml += line();
         inlineHtml += '</div>';
 
@@ -78,7 +67,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         }).defaultValue = inlineHtml;
 
 
-        form.clientScriptFileId = 5400652
+        form.clientScriptFileId = 5449428
         context.response.writePage(form);
 
       } else {
@@ -167,28 +156,100 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
     }
 
-    /*
-     * PURPOSE : Table of the list of Franchisee Sales Leads
-     *  PARAMS :
-     * RETURNS :  @return  {String}    inlineHtml
-     *   NOTES :
-     */
-    function dataTable() {
-      var inlineHtml =
-        '<style>table#zee_leads_list_preview {color: #103D39 !important; font-size: 12px;text-align: center;border: none;}.dataTables_wrapper {font-size: 14px;}table#zee_leads_list_preview th{text-align: center;} .bolded{font-weight: bold;}</style>';
+    function tabsSection() {
+      var inlineHtml = '<div >';
+
+      // Tabs headers
       inlineHtml +=
-        '<table id="zee_leads_list_preview" class="table table-responsive table-striped customer tablesorter hide" style="width: 100%;">';
+        '<style>.nav > li.active > a, .nav > li.active > a:focus, .nav > li.active > a:hover { background-color: #379E8F; color: #fff }';
+      inlineHtml +=
+        '.nav > li > a, .nav > li > a:focus, .nav > li > a:hover { margin-left: 5px; margin-right: 5px; border: 2px solid #379E8F; color: #379E8F; }';
+      inlineHtml += '</style>';
+
+      inlineHtml +=
+        '<div style="width: 95%; margin:auto; margin-bottom: 30px"><ul class="nav nav-pills nav-justified main-tabs-sections " style="margin:0%; ">';
+
+      inlineHtml +=
+        '<li role="presentation" class="active"><a data-toggle="tab" href="#type"><b>LEAD COUNT - BY TYPE</b></a></li>';
+      inlineHtml +=
+        '<li role="presentation" class=""><a data-toggle="tab" href="#state"><b>LEAD COUNT - BY STATE</b></a></li>';
+
+      inlineHtml += '</ul></div>';
+
+
+      inlineHtml += line();
+
+      // Tabs content
+      inlineHtml += '<div class="tab-content">';
+
+      inlineHtml += '<div role="tabpanel" class="tab-pane active" id="type">';
+      inlineHtml += '<figure class="highcharts-figure">';
+      inlineHtml += '<div id="container"></div>';
+      inlineHtml += '</figure><br></br>';
+      inlineHtml += dataTable('zee_leads_list_preview');
+      inlineHtml += '</div>';
+
+      inlineHtml += '<div role="tabpanel" class="tab-pane" id="state">';
+      inlineHtml += '<figure class="highcharts-figure">';
+      inlineHtml += '<div id="container5"></div>';
+      inlineHtml += '</figure><br></br>';
+      inlineHtml += dataTable('state_table');
+      inlineHtml += '</div>';
+
+      inlineHtml += '</div></div>';
+
+      return inlineHtml;
+    }
+
+    /**
+     * The table that will display the differents invoices linked to the
+     * franchisee and the time period.
+     *
+     * @return {String} inlineHtml
+     */
+    function dataTable(name) {
+      var inlineHtml = '<style>table#' +
+        name +
+        ' {color: #103D39 !important; font-size: 12px;text-align: center;border: none;}.dataTables_wrapper {font-size: 14px;}table#mpexusage-' +
+        name +
+        ' th{text-align: center;} .bolded{font-weight: bold;}</style>';
+      inlineHtml += '<table id="' +
+        name +
+        '" class="table table-responsive table-striped customer tablesorter" style="width: 100%;">';
       inlineHtml += '<thead style="color: white;background-color: #379E8F;">';
       inlineHtml += '<tr class="text-center">';
+
       inlineHtml += '</tr>';
       inlineHtml += '</thead>';
 
-      inlineHtml +=
-        '<tbody id="result_zee_leads_list" class="result-zee_leads_list"></tbody>';
+      inlineHtml += '<tbody id="result_usage_' + name + '" ></tbody>';
 
       inlineHtml += '</table>';
       return inlineHtml;
     }
+
+    // /*
+    //  * PURPOSE : Table of the list of Franchisee Sales Leads
+    //  *  PARAMS :
+    //  * RETURNS :  @return  {String}    inlineHtml
+    //  *   NOTES :
+    //  */
+    // function dataTable() {
+    //   var inlineHtml =
+    //     '<style>table#zee_leads_list_preview {color: #103D39 !important; font-size: 12px;text-align: center;border: none;}.dataTables_wrapper {font-size: 14px;}table#zee_leads_list_preview th{text-align: center;} .bolded{font-weight: bold;}</style>';
+    //   inlineHtml +=
+    //     '<table id="zee_leads_list_preview" class="table table-responsive table-striped customer tablesorter hide" style="width: 100%;">';
+    //   inlineHtml += '<thead style="color: white;background-color: #379E8F;">';
+    //   inlineHtml += '<tr class="text-center">';
+    //   inlineHtml += '</tr>';
+    //   inlineHtml += '</thead>';
+    //
+    //   inlineHtml +=
+    //     '<tbody id="result_zee_leads_list" class="result-zee_leads_list"></tbody>';
+    //
+    //   inlineHtml += '</table>';
+    //   return inlineHtml;
+    // }
 
     function isNullorEmpty(strVal) {
       return (strVal == null || strVal == '' || strVal == 'null' || strVal ==
