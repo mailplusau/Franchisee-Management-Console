@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-11-15T07:25:50+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2021-12-22T10:40:44+11:00
+ * @Last modified time: 2022-01-18T13:27:42+11:00
  */
 
 define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
@@ -900,6 +900,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         if (franchiseeListedForSale != 1) {
           inlineHtml +=
             '<div class="col-xs-6 listForSale"><input type="button" value="LIST FOR SALE" class="form-control btn btn-success" id="listForSale" /></div>'
+        } else {
+          inlineHtml +=
+            '<div class="col-xs-6 listForSale"><input type="button" value="LISTED FOR SALE" class="form-control btn btn-success" id="" disabled/></div>'
         }
 
         inlineHtml += '</div>';
@@ -926,6 +929,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         if (franchiseeListedForSale != 1) {
           inlineHtml +=
             '<div class="col-xs-6 listForSale"><input type="button" value="LIST FOR SALE" class="form-control btn btn-success" id="listForSale" /></div>'
+        } else {
+          inlineHtml +=
+            '<div class="col-xs-6 listForSale"><input type="button" value="LISTED FOR SALE" class="form-control btn btn-success" id="" disabled/></div>'
         }
         inlineHtml += '</div>';
         inlineHtml += '</div>';
@@ -952,9 +958,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         '<li role="presentation" class=""><a data-toggle="tab" href="#operatorDetails"><b>OPERATION DETAILS</b></a></li>';
       inlineHtml +=
         '<li role="presentation" class=""><a data-toggle="tab" href="#tollMPEX"><b>PICKUP & LODGEMENT LOCATIONS</b></a></li>';
-      inlineHtml +=
-        '<li role="presentation" class=""><a data-toggle="tab" href="#zeeAgreements"><b>AGREEMENTS</b></a></li>';
       if (role != 1000) {
+        inlineHtml +=
+          '<li role="presentation" class=""><a data-toggle="tab" href="#zeeAgreements"><b>AGREEMENTS</b></a></li>';
         inlineHtml +=
           '<li role="presentation" class=""><a data-toggle="tab" href="#breachDetails"><b>BREACH & TERMINATION DETAILS</b></a></li>';
       }
