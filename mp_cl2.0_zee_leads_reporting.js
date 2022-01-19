@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-01-18T15:51:02+11:00
+ * @Last modified time: 2022-01-20T10:45:38+11:00
  */
 
 
@@ -68,12 +68,13 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       submitSearch();
 
       $(".viewZeeLead").click(function() {
-          var dateFrom = $(this).attr("data-id");
-          var url = baseURL +
-            '/app/site/hosting/scriptlet.nl?script=1409&deploy=1&date_from=' + dateFrom
-          window.location.href = url;
+        var dateFrom = $(this).attr("data-id");
+        var url = baseURL +
+          '/app/site/hosting/scriptlet.nl?script=1409&deploy=1&date_from=' +
+          dateFrom
+        window.location.href = url;
 
-        })
+      })
 
       $(".lostZeeLead").click(function() {
           var zeeLeadInternalID = $(this).attr("data-id");
@@ -346,7 +347,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           summary: "GROUP",
         });
 
-        if(old_date != null && old_date != date){
+        if (old_date != null && old_date != date) {
           zeeSalesLeadSet.push({
             leadCount: total_count,
             investorCount: investorCount,
@@ -359,25 +360,25 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           ownerCount = 0;
           employmentCount = 0;
 
-          if(typeId == 2){ // Investor/Manager
+          if (typeId == 2) { // Investor/Manager
             investorCount = investorCount + leadCount
             total_count = total_count + parseInt(leadCount);
-          } else if(typeId == 3){ // Owner/Operator
+          } else if (typeId == 3) { // Owner/Operator
             ownerCount = ownerCount + leadCount
             total_count = total_count + parseInt(leadCount);
-          } else if(typeId == 4){// Seeking Employment
+          } else if (typeId == 4) { // Seeking Employment
             employmentCount = employmentCount + leadCount
             total_count = total_count + parseInt(leadCount);
           }
         } else {
 
-          if(typeId == 2){ // Investor/Manager
+          if (typeId == 2) { // Investor/Manager
             investorCount = investorCount + leadCount
             total_count = total_count + parseInt(leadCount);
-          } else if(typeId == 3){ // Owner/Operator
+          } else if (typeId == 3) { // Owner/Operator
             ownerCount = ownerCount + leadCount
             total_count = total_count + parseInt(leadCount);
-          } else if(typeId == 4){// Seeking Employment
+          } else if (typeId == 4) { // Seeking Employment
             employmentCount = employmentCount + leadCount
             total_count = total_count + parseInt(leadCount);
           }
@@ -389,7 +390,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         return true;
       });
 
-      if(count > 0){
+      if (count > 0) {
         zeeSalesLeadSet.push({
           leadCount: total_count,
           investorCount: investorCount,
@@ -436,7 +437,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         });
 
 
-        if(old_date2 != null && old_date2 != date){
+        if (old_date2 != null && old_date2 != date) {
           zeeSalesLeadSetByState.push({
             date: old_date2,
             leadCount: total_count2,
@@ -458,50 +459,50 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           qldCount = 0;
           tasCount = 0;
 
-          if(state == 'ACT'){
+          if (state == 'ACT') {
             actCount = actCount + leadCount
             total_count2 = total_count2 + parseInt(leadCount);
-          } else if(state == 'NSW'){
+          } else if (state == 'NSW') {
             nswCount = nswCount + leadCount
             total_count2 = total_count2 + parseInt(leadCount);
-          } else if(state == 'SA'){
+          } else if (state == 'SA') {
             saCount = saCount + leadCount
             total_count2 = total_count2 + parseInt(leadCount);
-          }else if(state == 'WA'){
+          } else if (state == 'WA') {
             waCount = waCount + leadCount
             total_count2 = total_count2 + parseInt(leadCount);
-          }else if(state == 'TAS'){
+          } else if (state == 'TAS') {
             tasCount = tasCount + leadCount
             total_count2 = total_count2 + parseInt(leadCount);
-          }else if(state == 'QLD'){
+          } else if (state == 'QLD') {
             qldCount = qldCount + leadCount
             total_count2 = total_count2 + parseInt(leadCount);
-          }else if(state == 'VIC'){
+          } else if (state == 'VIC') {
             vicCount = vicCount + leadCount
             total_count2 = total_count2 + parseInt(leadCount);
           }
 
         } else {
 
-          if(state == 'ACT'){
+          if (state == 'ACT') {
             actCount = actCount + leadCount
             total_count2 = total_count2 + parseInt(leadCount);
-          } else if(state == 'NSW'){
+          } else if (state == 'NSW') {
             nswCount = nswCount + leadCount
             total_count2 = total_count2 + parseInt(leadCount);
-          } else if(state == 'SA'){
+          } else if (state == 'SA') {
             saCount = saCount + leadCount
             total_count2 = total_count2 + parseInt(leadCount);
-          }else if(state == 'WA'){
+          } else if (state == 'WA') {
             waCount = waCount + leadCount
             total_count2 = total_count2 + parseInt(leadCount);
-          }else if(state == 'TAS'){
+          } else if (state == 'TAS') {
             tasCount = tasCount + leadCount
             total_count2 = total_count2 + parseInt(leadCount);
-          }else if(state == 'QLD'){
+          } else if (state == 'QLD') {
             qldCount = qldCount + leadCount
             total_count2 = total_count2 + parseInt(leadCount);
-          }else if(state == 'VIC'){
+          } else if (state == 'VIC') {
             vicCount = vicCount + leadCount
             total_count2 = total_count2 + parseInt(leadCount);
           }
@@ -513,7 +514,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         return true;
       });
 
-      if(count2 > 0){
+      if (count2 > 0) {
         zeeSalesLeadSetByState.push({
           date: old_date2,
           leadCount: total_count2,
@@ -547,9 +548,12 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           var linkURL =
             '<button class="form-control btn btn-xs btn-primary" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
             zeeSalesLeads_row.date +
-            '" class="viewZeeLead" style="cursor: pointer !important;color: white;">VIEW</a></button>';
+            '" class="viewZeeLead" style="cursor: pointer !important;color: white;">LIST VIEW</a></button>';
 
-          zeeSalesLeadDataSet.push([linkURL, zeeSalesLeads_row.date, parseInt(zeeSalesLeads_row.investorCount), parseInt(zeeSalesLeads_row.ownerCount), parseInt(zeeSalesLeads_row.employmentCount),
+          zeeSalesLeadDataSet.push([linkURL, zeeSalesLeads_row.date,
+            parseInt(zeeSalesLeads_row.investorCount), parseInt(
+              zeeSalesLeads_row.ownerCount), parseInt(
+              zeeSalesLeads_row.employmentCount),
             zeeSalesLeads_row.leadCount
           ]);
         });
@@ -574,14 +578,23 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
        */
 
       if (!isNullorEmpty(zeeSalesLeadSetByState_rows)) {
-        zeeSalesLeadSetByState_rows.forEach(function(zeeSalesLeadSetByState_row, index) {
+        zeeSalesLeadSetByState_rows.forEach(function(
+          zeeSalesLeadSetByState_row, index) {
 
           var linkURL =
             '<button class="form-control btn btn-xs btn-primary" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
             zeeSalesLeadSetByState_row.date +
-            '" class="viewZeeLead" style="cursor: pointer !important;color: white;">VIEW</a></button>';
+            '" class="viewZeeLead" style="cursor: pointer !important;color: white;">LIST VIEW</a></button>';
 
-          zeeSalesLeadDataSetByState.push([linkURL, zeeSalesLeadSetByState_row.date, parseInt(zeeSalesLeadSetByState_row.actCount), parseInt(zeeSalesLeadSetByState_row.nswCount), parseInt(zeeSalesLeadSetByState_row.saCount), parseInt(zeeSalesLeadSetByState_row.qldCount), parseInt(zeeSalesLeadSetByState_row.vicCount), parseInt(zeeSalesLeadSetByState_row.waCount), parseInt(zeeSalesLeadSetByState_row.tasCount),
+          zeeSalesLeadDataSetByState.push([linkURL,
+            zeeSalesLeadSetByState_row.date, parseInt(
+              zeeSalesLeadSetByState_row.actCount), parseInt(
+              zeeSalesLeadSetByState_row.nswCount), parseInt(
+              zeeSalesLeadSetByState_row.saCount), parseInt(
+              zeeSalesLeadSetByState_row.qldCount), parseInt(
+              zeeSalesLeadSetByState_row.vicCount), parseInt(
+              zeeSalesLeadSetByState_row.waCount), parseInt(
+              zeeSalesLeadSetByState_row.tasCount),
             zeeSalesLeadSetByState_row.leadCount
           ]);
         });
@@ -689,153 +702,159 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         categores2.push(item)
       });
 
-      plotChart(series_data, categores, series_data2, series_data3, series_data4)
-      plotChart2(series_data_act, series_data_nsw, series_data_sa, series_data_qld, series_data_vic, series_data_wa, series_data_tas, categores2)
+      plotChart(series_data, categores, series_data2, series_data3,
+        series_data4)
+      plotChart2(series_data_act, series_data_nsw, series_data_sa,
+        series_data_qld, series_data_vic, series_data_wa, series_data_tas,
+        categores2)
 
       return true;
     }
 
-    function plotChart(series_data, categores, series_data2, series_data3, series_data4) {
+    function plotChart(series_data, categores, series_data2, series_data3,
+      series_data4) {
       // console.log(series_data)
       Highcharts.chart('container', {
-						chart: {
-              backgroundColor: '#CFE0CE',
-							type: 'column'
-						},
-						xAxis: {
-							categories: categores,
-							crosshair: true,
-							style: {
-								fontWeight: 'bold',
-							}
-						},
-						yAxis: {
-							min: 0,
-							title: {
-								text: 'Total Lead Count'
-							},
-							stackLabels: {
-								enabled: true,
-								style: {
-									fontWeight: 'bold'
-								}
-							}
-						},
-						tooltip: {
-							headerFormat: '<b>{point.x}</b><br/>',
-							pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-						},
-						plotOptions: {
-							column: {
-								stacking: 'normal',
-								dataLabels: {
-									enabled: true
-								}
-							}
-						},
+        chart: {
+          backgroundColor: '#CFE0CE',
+          type: 'column'
+        },
+        xAxis: {
+          categories: categores,
+          crosshair: true,
+          style: {
+            fontWeight: 'bold',
+          }
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            text: 'Total Lead Count'
+          },
+          stackLabels: {
+            enabled: true,
+            style: {
+              fontWeight: 'bold'
+            }
+          }
+        },
+        tooltip: {
+          headerFormat: '<b>{point.x}</b><br/>',
+          pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+        },
+        plotOptions: {
+          column: {
+            stacking: 'normal',
+            dataLabels: {
+              enabled: true
+            }
+          }
+        },
         series: [{
-							name: 'Investor/Manager',
-							data: series_data2,
-							style: {
-								fontWeight: 'bold',
-							}
-						}, {
-							name: 'Owner/Operator',
-							data: series_data3,
-							style: {
-								fontWeight: 'bold',
-							}
-						}, {
-							name: 'Seeking Employment',
-							data: series_data4,
-							style: {
-								fontWeight: 'bold',
-							}
-						}]
+          name: 'Investor/Manager',
+          data: series_data2,
+          style: {
+            fontWeight: 'bold',
+          }
+        }, {
+          name: 'Owner/Operator',
+          data: series_data3,
+          style: {
+            fontWeight: 'bold',
+          }
+        }, {
+          name: 'Seeking Employment',
+          data: series_data4,
+          style: {
+            fontWeight: 'bold',
+          }
+        }]
       });
     }
 
-    function plotChart2(series_data_act, series_data_nsw, series_data_sa, series_data_qld, series_data_vic, series_data_wa, series_data_tas, categores2) {
+    function plotChart2(series_data_act, series_data_nsw, series_data_sa,
+      series_data_qld, series_data_vic, series_data_wa, series_data_tas,
+      categores2) {
       // console.log(series_data)
       Highcharts.chart('container5', {
-						chart: {
-              backgroundColor: '#CFE0CE',
-							type: 'column'
-						},
-						xAxis: {
-							categories: categores2,
-							crosshair: true,
-							style: {
-								fontWeight: 'bold',
-							}
-						},
-						yAxis: {
-							min: 0,
-							title: {
-								text: 'Total Lead Count'
-							},
-							stackLabels: {
-								enabled: true,
-								style: {
-									fontWeight: 'bold'
-								}
-							}
-						},
-						tooltip: {
-							headerFormat: '<b>{point.x}</b><br/>',
-							pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-						},
-						plotOptions: {
-							column: {
-								stacking: 'normal',
-								dataLabels: {
-									enabled: true
-								}
-							}
-						},
+        chart: {
+          backgroundColor: '#CFE0CE',
+          type: 'column'
+        },
+        xAxis: {
+          categories: categores2,
+          crosshair: true,
+          style: {
+            fontWeight: 'bold',
+          }
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            text: 'Total Lead Count'
+          },
+          stackLabels: {
+            enabled: true,
+            style: {
+              fontWeight: 'bold'
+            }
+          }
+        },
+        tooltip: {
+          headerFormat: '<b>{point.x}</b><br/>',
+          pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+        },
+        plotOptions: {
+          column: {
+            stacking: 'normal',
+            dataLabels: {
+              enabled: true
+            }
+          }
+        },
         series: [{
-							name: 'ACT',
-							data: series_data_act,
-							style: {
-								fontWeight: 'bold',
-							}
-						}, {
-							name: 'NSW',
-							data: series_data_nsw,
-							style: {
-								fontWeight: 'bold',
-							}
-						}, {
-							name: 'QLD',
-							data: series_data_qld,
-							style: {
-								fontWeight: 'bold',
-							}
-						}, {
-							name: 'SA',
-							data: series_data_sa,
-							style: {
-								fontWeight: 'bold',
-							}
-						}, {
-							name: 'TAS',
-							data: series_data_tas,
-							style: {
-								fontWeight: 'bold',
-							}
-						}, {
-							name: 'VIC',
-							data: series_data_vic,
-							style: {
-								fontWeight: 'bold',
-							}
-						}, {
-							name: 'WA',
-							data: series_data_wa,
-							style: {
-								fontWeight: 'bold',
-							}
-						}]
+          name: 'ACT',
+          data: series_data_act,
+          style: {
+            fontWeight: 'bold',
+          }
+        }, {
+          name: 'NSW',
+          data: series_data_nsw,
+          style: {
+            fontWeight: 'bold',
+          }
+        }, {
+          name: 'QLD',
+          data: series_data_qld,
+          style: {
+            fontWeight: 'bold',
+          }
+        }, {
+          name: 'SA',
+          data: series_data_sa,
+          style: {
+            fontWeight: 'bold',
+          }
+        }, {
+          name: 'TAS',
+          data: series_data_tas,
+          style: {
+            fontWeight: 'bold',
+          }
+        }, {
+          name: 'VIC',
+          data: series_data_vic,
+          style: {
+            fontWeight: 'bold',
+          }
+        }, {
+          name: 'WA',
+          data: series_data_wa,
+          style: {
+            fontWeight: 'bold',
+          }
+        }]
       });
     }
 

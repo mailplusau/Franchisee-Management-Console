@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T08:26:00+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-01-18T15:43:54+11:00
+ * @Last modified time: 2022-01-20T09:41:20+11:00
  */
 
 
@@ -28,7 +28,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         zee = context.request.parameters.zee;
 
         var form = ui.createForm({
-          title: 'Franchisee New Leads'
+          title: 'Franchisee New Leads - Weekly Reporting'
         });
 
 
