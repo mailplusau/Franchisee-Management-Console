@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-11-15T07:25:50+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-01-25T15:43:38+11:00
+ * @Last modified time: 2022-01-25T16:09:53+11:00
  */
 
 define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
@@ -791,9 +791,16 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
 
         //ADD/UPDATE ADDRESS
-        if (!isNullorEmpty(addressidsArrays)) {
+        if (!isNullorEmptyExcZero(addressidsArrays)) {
           for (var x = 0; x < addressidsArrays.length; x++) {
-            if (addressidsArrays[x] == 0) {
+            log.debug({
+              title: 'addressidsArrays[x]',
+              details: addressidsArrays[x]
+            })
+            if (addressidsArrays[x] == 0 || addressidsArrays[x] == '0') {
+              log.debug({
+                title: 'inside new'
+              })
               zeeRecord.insertLine({
                 sublistId: 'addressbook',
                 line: 0
@@ -2881,6 +2888,11 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         undefined || strVal == 'undefined' || strVal == '- None -' ||
         strVal ==
         '0');
+    }
+
+    function isNullorEmptyExcZero(strVal) {
+      return (strVal == null || strVal == '' || strVal == 'null' || strVal ==
+        undefined || strVal == 'undefined' || strVal == '- None -');
     }
 
     /**
