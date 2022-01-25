@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-11-02T08:24:43+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2021-12-22T10:35:57+11:00
+ * @Last modified time: 2022-01-25T14:51:52+11:00
  */
 
 
@@ -655,18 +655,22 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         var operatorName = $('.operatorName').val();
         var operatorEmail = $('.operatorEmail').val();
         var operatorMobile = $('.operatorMobile').val();
-        var operatorRoleID = $('.operatorRole').val();
+        var operatorRoleID = $('.operatorRole option:selected').val();
         var operatorRoleText = $('.operatorRole option:selected').text();
-        var operatorEmploymentTypeID = $('.operatorEmploymentType').val();
+        var operatorEmploymentTypeID = $(
+          '.operatorEmploymentType option:selected').val();
         var operatorEmploymentTypeText = $(
           '.operatorEmploymentType option:selected').text();
-        var operatorDDSID = $('.operatorPrimaryOperator').val();
+        var operatorDDSID = $('.operatorPrimaryOperator option:selected')
+          .val();
         var operatorDDSText = $(
           '.operatorPrimaryOperator option:selected').text();
-        var operatorPrimaryOperatorID = $('.operatorContingency').val();
+        var operatorPrimaryOperatorID = $(
+          '.operatorContingency option:selected').val();
         var operatorPrimaryOperatorText = $(
           '.operatorContingency option:selected').text();
-        var operatorMobileDevID = $('.operatorMobileDev').val();
+        var operatorMobileDevID = $('.operatorMobileDev option:selected')
+          .val();
         var operatorMobileDevText = $(
           '.operatorMobileDev option:selected').text();
 
@@ -1190,42 +1194,80 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
           "operatorMobileDevID");
 
         var operatorIdsArray = []
+        var operatorNewIdsArray = []
         var operatorNameArray = []
+        var operatorNewNameArray = []
         var operatorEmailArray = []
+        var operatorNewEmailArray = []
         var operatorMobileArray = []
+        var operatorNewMobileArray = []
         var operatorRoleArray = []
+        var operatorNewRoleArray = []
         var operatorEmploymentTypeArray = []
+        var operatorNewEmploymentTypeArray = []
         var operatorDDSArray = []
+        var operatorNewDDSArray = []
         var operatorPrimaryArray = []
+        var operatorNewPrimaryArray = []
         var operatorMobileDevArray = []
+        var operatorNewMobileDevArray = []
 
         for (var i = 0; i < edit_operator_elem.length; ++i) {
           var row_operator_id = edit_operator_elem[i].getAttribute(
             'data-id');
           var row_operator_changed = edit_operator_elem[i].getAttribute(
             'data-changed');
-
-          if (row_operator_changed == "changed") {
-            operatorIdsArray[operatorIdsArray.length] = row_operator_id
-            operatorNameArray[operatorNameArray.length] = edit_name_elem[
+          console.log('row_operator_id: ' + row_operator_id);
+          if (!isNullorEmpty(row_operator_id)) {
+            if (row_operator_changed == "changed") {
+              operatorIdsArray[operatorIdsArray.length] = row_operator_id
+              operatorNameArray[operatorNameArray.length] =
+                edit_name_elem[
+                  i]
+                .value
+              operatorEmailArray[operatorEmailArray.length] =
+                operator_email_elem[i].value
+              operatorMobileArray[operatorMobileArray.length] =
+                operator_phone_elem[i].value
+              operatorRoleArray[operatorRoleArray.length] =
+                operator_roleid_elem[i].value
+              operatorEmploymentTypeArray[operatorEmploymentTypeArray.length] =
+                operator_typeid_elem[i].value
+              operatorDDSArray[operatorDDSArray.length] =
+                operator_ddsid_elem[
+                  i].value
+              operatorPrimaryArray[operatorPrimaryArray.length] =
+                operator_primaryid_elem[i].value
+              operatorMobileDevArray[operatorMobileDevArray.length] =
+                operator_mobdevid_elem[i].value
+            }
+          } else {
+            operatorNewIdsArray[operatorNewIdsArray.length] =
+              edit_name_elem[
                 i]
               .value
-            operatorEmailArray[operatorEmailArray.length] =
+            operatorNewNameArray[operatorNewNameArray.length] =
+              edit_name_elem[
+                i]
+              .value
+            operatorNewEmailArray[operatorNewEmailArray.length] =
               operator_email_elem[i].value
-            operatorMobileArray[operatorMobileArray.length] =
+            operatorNewMobileArray[operatorNewMobileArray.length] =
               operator_phone_elem[i].value
-            operatorRoleArray[operatorRoleArray.length] =
+            operatorNewRoleArray[operatorNewRoleArray.length] =
               operator_roleid_elem[i].value
-            operatorEmploymentTypeArray[operatorEmploymentTypeArray.length] =
+            operatorNewEmploymentTypeArray[operatorNewEmploymentTypeArray
+                .length] =
               operator_typeid_elem[i].value
-            operatorDDSArray[operatorDDSArray.length] =
+            operatorNewDDSArray[operatorNewDDSArray.length] =
               operator_ddsid_elem[
                 i].value
-            operatorPrimaryArray[operatorPrimaryArray.length] =
+            operatorNewPrimaryArray[operatorNewPrimaryArray.length] =
               operator_primaryid_elem[i].value
-            operatorMobileDevArray[operatorMobileDevArray.length] =
+            operatorNewMobileDevArray[operatorNewMobileDevArray.length] =
               operator_mobdevid_elem[i].value
           }
+
         }
 
         //FLEET SECTION
@@ -1269,34 +1311,76 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         var vehicleOwnerArray = []
         var vehicleOperatorArray = []
 
+        var vehicleNewIdsArray = []
+        var vehicleNewRegoArray = []
+        var vehicleNewModelArray = []
+        var vehicleNewMakeArray = []
+        var vehicleNewColorArray = []
+        var vehicleNewYearArray = []
+        var vehicleNewSignageArray = []
+        var vehicleNewCargoCageArray = []
+        var vehicleNewOwnerArray = []
+        var vehicleNewOperatorArray = []
+
         for (var i = 0; i < edit_fleet_elem.length; ++i) {
           var row_fleet_id = edit_fleet_elem[i].getAttribute(
             'data-id');
           var row_fleet_changed = edit_fleet_elem[i].getAttribute(
             'data-changed');
-          if (row_fleet_changed == "changed") {
-            vehicleIdsArray[vehicleIdsArray.length] = row_fleet_id
-            vehicleRegoArray[vehicleRegoArray.length] = vehicle_rego_elem[
+          console.log('row_fleet_id: ' + row_fleet_id);
+          if (!isNullorEmpty(row_fleet_id)) {
+            if (row_fleet_changed == "changed") {
+              vehicleIdsArray[vehicleIdsArray.length] = row_fleet_id
+              vehicleRegoArray[vehicleRegoArray.length] =
+                vehicle_rego_elem[
+                  i]
+                .value
+              vehicleModelArray[vehicleModelArray.length] =
+                vehicle_model_elem[i].value
+              vehicleMakeArray[vehicleMakeArray.length] =
+                vehicle_make_elem[i].value
+              vehicleColorArray[vehicleColorArray.length] =
+                vehicle_color_elem[i].value
+              vehicleYearArray[vehicleYearArray.length] =
+                vehicle_year_elem[i].value
+              vehicleSignageArray[vehicleSignageArray.length] =
+                vehicle_signageid_elem[
+                  i].value
+              vehicleCargoCageArray[vehicleCargoCageArray.length] =
+                vehicle_cargocageid_elem[i].value
+              vehicleOwnerArray[vehicleOwnerArray.length] =
+                vehicle_ownerid_elem[i].value
+              vehicleOperatorArray[vehicleOperatorArray.length] =
+                vehicle_operatorid_elem[i].value
+            }
+          } else {
+            vehicleNewIdsArray[vehicleNewIdsArray.length] =
+              vehicle_rego_elem[
                 i]
               .value
-            vehicleModelArray[vehicleModelArray.length] =
+            vehicleNewRegoArray[vehicleNewRegoArray.length] =
+              vehicle_rego_elem[
+                i]
+              .value
+            vehicleNewModelArray[vehicleNewModelArray.length] =
               vehicle_model_elem[i].value
-            vehicleMakeArray[vehicleMakeArray.length] =
+            vehicleNewMakeArray[vehicleNewMakeArray.length] =
               vehicle_make_elem[i].value
-            vehicleColorArray[vehicleColorArray.length] =
+            vehicleNewColorArray[vehicleNewColorArray.length] =
               vehicle_color_elem[i].value
-            vehicleYearArray[vehicleYearArray.length] =
+            vehicleNewYearArray[vehicleNewYearArray.length] =
               vehicle_year_elem[i].value
-            vehicleSignageArray[vehicleSignageArray.length] =
+            vehicleNewSignageArray[vehicleNewSignageArray.length] =
               vehicle_signageid_elem[
                 i].value
-            vehicleCargoCageArray[vehicleCargoCageArray.length] =
+            vehicleNewCargoCageArray[vehicleNewCargoCageArray.length] =
               vehicle_cargocageid_elem[i].value
-            vehicleOwnerArray[vehicleOwnerArray.length] =
+            vehicleNewOwnerArray[vehicleNewOwnerArray.length] =
               vehicle_ownerid_elem[i].value
-            vehicleOperatorArray[vehicleOperatorArray.length] =
+            vehicleNewOperatorArray[vehicleNewOperatorArray.length] =
               vehicle_operatorid_elem[i].value
           }
+
         }
 
         //Validation of the franchisee main details
@@ -1405,6 +1489,44 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
             value: operatorMobileDevArray.toString()
           });
 
+          //New Operator Details
+          myRecord.setValue({
+            fieldId: 'custpage_new_operatorids',
+            value: operatorNewIdsArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_operatorname',
+            value: operatorNewNameArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_operatoremail',
+            value: operatorNewEmailArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_operatormobile',
+            value: operatorNewMobileArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_operatorrole',
+            value: operatorNewRoleArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_operatoremploymentype',
+            value: operatorNewEmploymentTypeArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_operatordds',
+            value: operatorNewDDSArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_operatorprimary',
+            value: operatorNewPrimaryArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_operatormobiledev',
+            value: operatorNewMobileDevArray.toString()
+          });
+
           myRecord.setValue({
             fieldId: 'custpage_fleetids',
             value: vehicleIdsArray.toString()
@@ -1444,6 +1566,48 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
           myRecord.setValue({
             fieldId: 'custpage_operator',
             value: vehicleOperatorArray.toString()
+          });
+
+          //New Fleet Details
+          myRecord.setValue({
+            fieldId: 'custpage_new_fleetids',
+            value: vehicleNewIdsArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_fleetrego',
+            value: vehicleNewRegoArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_fleetmodel',
+            value: vehicleNewModelArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_fleetmake',
+            value: vehicleNewMakeArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_fleetcolor',
+            value: vehicleNewColorArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_fleetyear',
+            value: vehicleNewYearArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_fleetsignage',
+            value: vehicleNewSignageArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_caregocage',
+            value: vehicleNewCargoCageArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_owner',
+            value: vehicleNewOwnerArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_operator',
+            value: vehicleNewOperatorArray.toString()
           });
 
           document.getElementById('submitter').click();
@@ -1533,42 +1697,80 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
           "operatorMobileDevID");
 
         var operatorIdsArray = []
+        var operatorNewIdsArray = []
         var operatorNameArray = []
+        var operatorNewNameArray = []
         var operatorEmailArray = []
+        var operatorNewEmailArray = []
         var operatorMobileArray = []
+        var operatorNewMobileArray = []
         var operatorRoleArray = []
+        var operatorNewRoleArray = []
         var operatorEmploymentTypeArray = []
+        var operatorNewEmploymentTypeArray = []
         var operatorDDSArray = []
+        var operatorNewDDSArray = []
         var operatorPrimaryArray = []
+        var operatorNewPrimaryArray = []
         var operatorMobileDevArray = []
+        var operatorNewMobileDevArray = []
 
         for (var i = 0; i < edit_operator_elem.length; ++i) {
           var row_operator_id = edit_operator_elem[i].getAttribute(
             'data-id');
           var row_operator_changed = edit_operator_elem[i].getAttribute(
             'data-changed');
-
-          if (row_operator_changed == "changed") {
-            operatorIdsArray[operatorIdsArray.length] = row_operator_id
-            operatorNameArray[operatorNameArray.length] = edit_name_elem[
+          console.log('row_operator_id: ' + row_operator_id);
+          if (!isNullorEmpty(row_operator_id)) {
+            if (row_operator_changed == "changed") {
+              operatorIdsArray[operatorIdsArray.length] = row_operator_id
+              operatorNameArray[operatorNameArray.length] =
+                edit_name_elem[
+                  i]
+                .value
+              operatorEmailArray[operatorEmailArray.length] =
+                operator_email_elem[i].value
+              operatorMobileArray[operatorMobileArray.length] =
+                operator_phone_elem[i].value
+              operatorRoleArray[operatorRoleArray.length] =
+                operator_roleid_elem[i].value
+              operatorEmploymentTypeArray[operatorEmploymentTypeArray.length] =
+                operator_typeid_elem[i].value
+              operatorDDSArray[operatorDDSArray.length] =
+                operator_ddsid_elem[
+                  i].value
+              operatorPrimaryArray[operatorPrimaryArray.length] =
+                operator_primaryid_elem[i].value
+              operatorMobileDevArray[operatorMobileDevArray.length] =
+                operator_mobdevid_elem[i].value
+            }
+          } else {
+            operatorNewIdsArray[operatorNewIdsArray.length] =
+              edit_name_elem[
                 i]
               .value
-            operatorEmailArray[operatorEmailArray.length] =
+            operatorNewNameArray[operatorNewNameArray.length] =
+              edit_name_elem[
+                i]
+              .value
+            operatorNewEmailArray[operatorNewEmailArray.length] =
               operator_email_elem[i].value
-            operatorMobileArray[operatorMobileArray.length] =
+            operatorNewMobileArray[operatorNewMobileArray.length] =
               operator_phone_elem[i].value
-            operatorRoleArray[operatorRoleArray.length] =
+            operatorNewRoleArray[operatorNewRoleArray.length] =
               operator_roleid_elem[i].value
-            operatorEmploymentTypeArray[operatorEmploymentTypeArray.length] =
+            operatorNewEmploymentTypeArray[operatorNewEmploymentTypeArray
+                .length] =
               operator_typeid_elem[i].value
-            operatorDDSArray[operatorDDSArray.length] =
+            operatorNewDDSArray[operatorNewDDSArray.length] =
               operator_ddsid_elem[
                 i].value
-            operatorPrimaryArray[operatorPrimaryArray.length] =
+            operatorNewPrimaryArray[operatorNewPrimaryArray.length] =
               operator_primaryid_elem[i].value
-            operatorMobileDevArray[operatorMobileDevArray.length] =
+            operatorNewMobileDevArray[operatorNewMobileDevArray.length] =
               operator_mobdevid_elem[i].value
           }
+
         }
 
         //FLEET SECTION
@@ -1612,34 +1814,76 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         var vehicleOwnerArray = []
         var vehicleOperatorArray = []
 
+        var vehicleNewIdsArray = []
+        var vehicleNewRegoArray = []
+        var vehicleNewModelArray = []
+        var vehicleNewMakeArray = []
+        var vehicleNewColorArray = []
+        var vehicleNewYearArray = []
+        var vehicleNewSignageArray = []
+        var vehicleNewCargoCageArray = []
+        var vehicleNewOwnerArray = []
+        var vehicleNewOperatorArray = []
+
         for (var i = 0; i < edit_fleet_elem.length; ++i) {
           var row_fleet_id = edit_fleet_elem[i].getAttribute(
             'data-id');
           var row_fleet_changed = edit_fleet_elem[i].getAttribute(
             'data-changed');
-          if (row_fleet_changed == "changed") {
-            vehicleIdsArray[vehicleIdsArray.length] = row_fleet_id
-            vehicleRegoArray[vehicleRegoArray.length] = vehicle_rego_elem[
+          console.log('row_fleet_id: ' + row_fleet_id);
+          if (!isNullorEmpty(row_fleet_id)) {
+            if (row_fleet_changed == "changed") {
+              vehicleIdsArray[vehicleIdsArray.length] = row_fleet_id
+              vehicleRegoArray[vehicleRegoArray.length] =
+                vehicle_rego_elem[
+                  i]
+                .value
+              vehicleModelArray[vehicleModelArray.length] =
+                vehicle_model_elem[i].value
+              vehicleMakeArray[vehicleMakeArray.length] =
+                vehicle_make_elem[i].value
+              vehicleColorArray[vehicleColorArray.length] =
+                vehicle_color_elem[i].value
+              vehicleYearArray[vehicleYearArray.length] =
+                vehicle_year_elem[i].value
+              vehicleSignageArray[vehicleSignageArray.length] =
+                vehicle_signageid_elem[
+                  i].value
+              vehicleCargoCageArray[vehicleCargoCageArray.length] =
+                vehicle_cargocageid_elem[i].value
+              vehicleOwnerArray[vehicleOwnerArray.length] =
+                vehicle_ownerid_elem[i].value
+              vehicleOperatorArray[vehicleOperatorArray.length] =
+                vehicle_operatorid_elem[i].value
+            }
+          } else {
+            vehicleNewIdsArray[vehicleNewIdsArray.length] =
+              vehicle_rego_elem[
                 i]
               .value
-            vehicleModelArray[vehicleModelArray.length] =
+            vehicleNewRegoArray[vehicleNewRegoArray.length] =
+              vehicle_rego_elem[
+                i]
+              .value
+            vehicleNewModelArray[vehicleNewModelArray.length] =
               vehicle_model_elem[i].value
-            vehicleMakeArray[vehicleMakeArray.length] =
+            vehicleNewMakeArray[vehicleNewMakeArray.length] =
               vehicle_make_elem[i].value
-            vehicleColorArray[vehicleColorArray.length] =
+            vehicleNewColorArray[vehicleNewColorArray.length] =
               vehicle_color_elem[i].value
-            vehicleYearArray[vehicleYearArray.length] =
+            vehicleNewYearArray[vehicleNewYearArray.length] =
               vehicle_year_elem[i].value
-            vehicleSignageArray[vehicleSignageArray.length] =
+            vehicleNewSignageArray[vehicleNewSignageArray.length] =
               vehicle_signageid_elem[
                 i].value
-            vehicleCargoCageArray[vehicleCargoCageArray.length] =
+            vehicleNewCargoCageArray[vehicleNewCargoCageArray.length] =
               vehicle_cargocageid_elem[i].value
-            vehicleOwnerArray[vehicleOwnerArray.length] =
+            vehicleNewOwnerArray[vehicleNewOwnerArray.length] =
               vehicle_ownerid_elem[i].value
-            vehicleOperatorArray[vehicleOperatorArray.length] =
+            vehicleNewOperatorArray[vehicleNewOperatorArray.length] =
               vehicle_operatorid_elem[i].value
           }
+
         }
 
         //Validation of the franchisee main details
@@ -1748,6 +1992,44 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
             value: operatorMobileDevArray.toString()
           });
 
+          //New Operator Details
+          myRecord.setValue({
+            fieldId: 'custpage_new_operatorids',
+            value: operatorNewIdsArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_operatorname',
+            value: operatorNewNameArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_operatoremail',
+            value: operatorNewEmailArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_operatormobile',
+            value: operatorNewMobileArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_operatorrole',
+            value: operatorNewRoleArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_operatoremploymentype',
+            value: operatorNewEmploymentTypeArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_operatordds',
+            value: operatorNewDDSArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_operatorprimary',
+            value: operatorNewPrimaryArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_operatormobiledev',
+            value: operatorNewMobileDevArray.toString()
+          });
+
           myRecord.setValue({
             fieldId: 'custpage_fleetids',
             value: vehicleIdsArray.toString()
@@ -1789,9 +2071,46 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
             value: vehicleOperatorArray.toString()
           });
 
+          //New Fleet Details
           myRecord.setValue({
-            fieldId: 'custpage_listforsale',
-            value: 'T'
+            fieldId: 'custpage_new_fleetids',
+            value: vehicleNewIdsArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_fleetrego',
+            value: vehicleNewRegoArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_fleetmodel',
+            value: vehicleNewModelArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_fleetmake',
+            value: vehicleNewMakeArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_fleetcolor',
+            value: vehicleNewColorArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_fleetyear',
+            value: vehicleNewYearArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_fleetsignage',
+            value: vehicleNewSignageArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_caregocage',
+            value: vehicleNewCargoCageArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_owner',
+            value: vehicleNewOwnerArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_operator',
+            value: vehicleNewOperatorArray.toString()
           });
 
           document.getElementById('submitter').click();

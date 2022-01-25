@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-11-15T07:25:50+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-01-18T13:27:42+11:00
+ * @Last modified time: 2022-01-25T15:43:38+11:00
  */
 
 define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
@@ -298,6 +298,78 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           displayType: ui.FieldDisplayType.HIDDEN
         });
 
+        //New Operator Table Hidden Fields
+        form.addField({
+          id: 'custpage_new_operatorids',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_new_operatorids_delete',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_new_operatorname',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_new_operatoremail',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_new_operatormobile',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_new_operatorrole',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_new_operatoremploymentype',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_new_operatordds',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_new_operatorprimary',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_new_operatormobiledev',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+
         //Fleet Table Hidden Details
         form.addField({
           id: 'custpage_fleetids',
@@ -376,6 +448,86 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         }).updateDisplayType({
           displayType: ui.FieldDisplayType.HIDDEN
         });
+
+        //New Fleet DETAILS
+        form.addField({
+          id: 'custpage_new_fleetids',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_new_fleetids_delete',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_new_fleetrego',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_new_fleetmodel',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_new_fleetmake',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_new_fleetcolor',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_new_fleetyear',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_new_fleetsignage',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_new_caregocage',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_new_owner',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+        form.addField({
+          id: 'custpage_new_operator',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+
 
         form.addField({
           id: 'custpage_listforsale',
@@ -493,6 +645,30 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var operatorprimaryArrys = operatorprimary.split(',')
         var operatormobiledevArrys = operatormobiledev.split(',')
 
+        //New operator
+        var newoperatorids = context.request.parameters.custpage_new_operatorids;
+        var newoperatorids_delete = context.request.parameters.custpage_new_operatorids_delete;
+        var newoperatorname = context.request.parameters.custpage_new_operatorname;
+        var newoperatoremail = context.request.parameters.custpage_new_operatoremail;
+        var newoperatormobile = context.request.parameters.custpage_new_operatormobile;
+        var newoperatorrole = context.request.parameters.custpage_new_operatorrole;
+        var newoperatoremploymentype = context.request.parameters.custpage_new_operatoremploymentype;
+        var newoperatordds = context.request.parameters.custpage_new_operatordds;
+        var newoperatorprimary = context.request.parameters.custpage_new_operatorprimary;
+        var newoperatormobiledev = context.request.parameters.custpage_new_operatormobiledev;
+
+        var newoperatoridsArrys = newoperatorids.split(',')
+        var newoperatoridsdeleteArrys = newoperatorids_delete.split(',')
+        var newoperatornameArrys = newoperatorname.split(',')
+        var newoperatoremailArrys = newoperatoremail.split(',')
+        var newoperatormobileArrys = newoperatormobile.split(',')
+        var newoperatorroleArrys = newoperatorrole.split(',')
+        var newoperatoremploymentypeArrys = newoperatoremploymentype.split(
+          ',')
+        var newoperatorddsArrys = newoperatordds.split(',')
+        var newoperatorprimaryArrys = newoperatorprimary.split(',')
+        var newoperatormobiledevArrys = newoperatormobiledev.split(',')
+
         var fleetids = context.request.parameters.custpage_fleetids;
         var fleetids_delete = context.request.parameters.custpage_fleetids_delete;
         var fleetrego = context.request.parameters.custpage_fleetrego;
@@ -516,6 +692,31 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var caregocageArrys = caregocage.split(',')
         var ownerArrys = owner.split(',')
         var operatorArrys = operator.split(',')
+
+        //New Fleet details
+        var newfleetids = context.request.parameters.custpage_new_fleetids;
+        var newfleetids_delete = context.request.parameters.custpage_new_fleetids_delete;
+        var newfleetrego = context.request.parameters.custpage_new_fleetrego;
+        var newfleetmodel = context.request.parameters.custpage_new_fleetmodel;
+        var newfleetmake = context.request.parameters.custpage_new_fleetmake;
+        var newfleetcolor = context.request.parameters.custpage_new_fleetcolor;
+        var newfleetyear = context.request.parameters.custpage_new_fleetyear;
+        var newfleetsignage = context.request.parameters.custpage_new_fleetsignage;
+        var newcaregocage = context.request.parameters.custpage_new_caregocage;
+        var newowner = context.request.parameters.custpage_new_owner;
+        var newoperator = context.request.parameters.custpage_new_operator;
+
+        var newfleetidsArrys = newfleetids.split(',')
+        var newfleetidsdeleteArrys = newfleetids_delete.split(',')
+        var newfleetregoArrys = newfleetrego.split(',')
+        var newfleetmodelArrys = newfleetmodel.split(',')
+        var newfleetmakeArrys = newfleetmake.split(',')
+        var newfleetcolorArrys = newfleetcolor.split(',')
+        var newfleetyearArrys = newfleetyear.split(',')
+        var newfleetsignageArrys = newfleetsignage.split(',')
+        var newcaregocageArrys = newcaregocage.split(',')
+        var newownerArrys = newowner.split(',')
+        var newoperatorArrys = newoperator.split(',')
 
         var dobArray = FranchiseeDOB.split('-')
         var dobString = dobArray[1] + '/' + dobArray[2] + '/' + dobArray[0]
@@ -687,6 +888,17 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
               id: operatoridsArrys[y]
             });
 
+            var spliName = operatornameArrys[y].split(" ");
+
+            operatorRecord.setValue({
+              fieldId: 'custrecord_operator_givennames',
+              value: spliName[0]
+            })
+            operatorRecord.setValue({
+              fieldId: 'custrecord_operator_surname',
+              value: spliName[1]
+            })
+
             operatorRecord.setValue({
               fieldId: 'name',
               value: operatornameArrys[y]
@@ -694,6 +906,10 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             operatorRecord.setValue({
               fieldId: 'custrecord_operator_email',
               value: operatoremailArrys[y]
+            })
+            operatorRecord.setValue({
+              fieldId: 'custrecord_operator_date_reviewed',
+              value: getDateToday()
             })
             operatorRecord.setValue({
               fieldId: 'custrecord_operator_phone',
@@ -715,12 +931,121 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
               fieldId: 'custrecord_primary_operator',
               value: operatorprimaryArrys[y]
             })
-            operatorRecord.setValue({
-              fieldId: 'custrecord_operator_mobdev_platform',
-              value: operatormobiledevArrys[y]
-            })
+            if (!isNullorEmpty(operatormobiledevArrys[y])) {
+              operatorRecord.setValue({
+                fieldId: 'custrecord_operator_mobdev_platform',
+                value: operatormobiledevArrys[y]
+              })
+            }
 
             operatorRecord.save()
+          }
+        }
+
+        //NEW OPERATOR DETAILS
+        if (!isNullorEmpty(newoperatoridsArrys)) {
+          log.debug({
+            title: 'newoperatoridsArrys.length',
+            details: newoperatoridsArrys.length
+          })
+          for (var y = 0; y < newoperatoridsArrys.length; y++) {
+            var operatorRecord = record.create({
+              type: 'customrecord_operator'
+            });
+
+            if (!isNullorEmpty(newoperatornameArrys[y])) {
+              var spliName = newoperatornameArrys[y].split(" ");
+              operatorRecord.setValue({
+                fieldId: 'custrecord_operator_givennames',
+                value: spliName[0]
+              })
+              operatorRecord.setValue({
+                fieldId: 'custrecord_operator_surname',
+                value: spliName[1]
+              })
+            }
+
+
+            operatorRecord.setValue({
+              fieldId: 'name',
+              value: newoperatornameArrys[y]
+            })
+
+            operatorRecord.setValue({
+              fieldId: 'custrecord_operator_email',
+              value: newoperatoremailArrys[y]
+            })
+            operatorRecord.setValue({
+              fieldId: 'custrecord_operator_franchisee',
+              value: zeeRecordId
+            })
+            operatorRecord.setValue({
+              fieldId: 'custrecord_operator_franchisee2',
+              value: zeeRecordId
+            })
+            operatorRecord.setValue({
+              fieldId: 'custrecord_operator_salutation',
+              value: 1
+            })
+            operatorRecord.setValue({
+              fieldId: 'custrecord_operator_status',
+              value: 4
+            })
+            operatorRecord.setValue({
+              fieldId: 'custrecord_operator_app_date_link_sent',
+              value: getDateToday()
+            })
+            operatorRecord.setValue({
+              fieldId: 'custrecord_operator_date_reviewed',
+              value: getDateToday()
+            })
+            operatorRecord.setValue({
+              fieldId: 'custrecord_operator_phone',
+              value: newoperatormobileArrys[y]
+            })
+            operatorRecord.setValue({
+              fieldId: 'custrecord_operator_role',
+              value: newoperatorroleArrys[y]
+            })
+            operatorRecord.setValue({
+              fieldId: 'custrecord_operator_employment',
+              value: newoperatoremploymentypeArrys[y]
+            })
+            operatorRecord.setValue({
+              fieldId: 'custrecord_dds_operator',
+              value: newoperatorddsArrys[y]
+            })
+            operatorRecord.setValue({
+              fieldId: 'custrecord_primary_operator',
+              value: newoperatorprimaryArrys[y]
+            })
+            if (!isNullorEmpty(operatormobiledevArrys[y])) {
+              operatorRecord.setValue({
+                fieldId: 'custrecord_operator_mobdev_platform',
+                value: newoperatormobiledevArrys[y]
+              })
+            }
+
+            var operatorIdNew = operatorRecord.save()
+
+            var email_body = ' New Operator NS ID: ' + operatorIdNew +
+              '</br> New Operator Name: ' + newoperatornameArrys[y] +
+              '</br> New Operator Email: ' + newoperatoremailArrys[y] +
+              '</br> New Operator Mobile: ' + newoperatormobileArrys[y] +
+              '</br> Franchisee NS ID: ' + zeeRecordId;
+
+            email.send({
+              author: 112209,
+              recipients: ['mailplussupport@protechly.com'],
+              subject: 'MP Operator Access - New Operator',
+              body: email_body,
+              cc: ['raine.giderson@mailplus.com.au',
+                'ankith.ravindran@mailplus.com.au',
+                'fiona.harrison@mailplus.com.au',
+                'popie.popie@mailplus.com.au'
+              ]
+            });
+
           }
         }
 
@@ -736,7 +1061,25 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
               value: true
             })
 
-            deleteOperatorRecord.save()
+            deleteOperatorRecord.save();
+
+            var email_body = ' Delete Operator NS ID: ' +
+              operatoridsdeleteArrys[y] +
+              '</br> Franchisee NS ID: ' + zeeRecordId;
+
+            email.send({
+              author: 112209,
+              recipients: ['mailplussupport@protechly.com'],
+              subject: 'MP Operator Access - Delete/Inactive Operator',
+              body: email_body,
+              cc: ['raine.giderson@mailplus.com.au',
+                'ankith.ravindran@mailplus.com.au',
+                'fiona.harrison@mailplus.com.au',
+                'popie.popie@mailplus.com.au'
+              ]
+            });
+
+
           }
         }
 
@@ -794,6 +1137,76 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             var operatorRecord = record.load({
               type: 'customrecord_operator',
               id: operatorArrys[w]
+            });
+
+            operatorRecord.setValue({
+              fieldId: 'custrecord_operator_vehicle',
+              value: newFleetID
+            })
+            operatorRecord.save();
+
+
+          }
+        }
+
+        //CREATE NEW FLEET DETAILS
+        if (!isNullorEmpty(newfleetidsArrys)) {
+          for (var w = 0; w < newfleetidsArrys.length; w++) {
+            var vehicleRecord = record.create({
+              type: 'customrecord_vehicle'
+            });
+
+            vehicleRecord.setValue({
+              fieldId: 'name',
+              value: newfleetregoArrys[w]
+            })
+            vehicleRecord.setValue({
+              fieldId: 'custrecord_vehicle_franchisee',
+              value: zeeRecordId
+            })
+            vehicleRecord.setValue({
+              fieldId: 'custrecord_vehicle_model_text',
+              value: newfleetmodelArrys[w]
+            })
+            vehicleRecord.setValue({
+              fieldId: 'custrecord_vehicle_make',
+              value: newfleetmakeArrys[w]
+            })
+            vehicleRecord.setValue({
+              fieldId: 'custrecord_vehicle_colour',
+              value: newfleetcolorArrys[w]
+            })
+            vehicleRecord.setValue({
+              fieldId: 'custrecord_vehicle_year',
+              value: newfleetyearArrys[w]
+            })
+
+            if (newfleetsignageArrys[w] == 1 || newfleetsignageArrys[w] ==
+              '1') {
+              vehicleRecord.setValue({
+                fieldId: 'custrecord_vehicle_signage',
+                value: true
+              })
+            }
+            vehicleRecord.setValue({
+              fieldId: 'custrecord_cargo_cage',
+              value: newcaregocageArrys[w]
+            })
+            vehicleRecord.setValue({
+              fieldId: 'custrecord_vehicle_owner',
+              value: newownerArrys[w]
+            })
+            vehicleRecord.setValue({
+              fieldId: 'custrecord_vehicle_date_reviewed',
+              value: getDateToday()
+            })
+
+            var newFleetID = vehicleRecord.save()
+
+            //SAVE FLEET DETAILS ON THE OPERATOR RECORD
+            var operatorRecord = record.load({
+              type: 'customrecord_operator',
+              id: newoperatorArrys[w]
             });
 
             operatorRecord.setValue({
