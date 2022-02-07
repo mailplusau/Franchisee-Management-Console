@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-01-18T16:07:33+11:00
+ * @Last modified time: 2022-01-27T11:29:39+11:00
  */
 
 
@@ -31,13 +31,11 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
     var tollUploadSet = [];
 
     function pageLoad() {
-
       $('.loading_section').removeClass('hide');
     }
 
     function afterSubmit() {
       $(".se-pre-con").fadeOut("slow");
-
 
       if (!isNullorEmpty($('#result_zee_leads_list').val())) {
         $('#zee_leads_list_preview').removeClass('hide');
@@ -53,7 +51,6 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       $('#zee_leads_list_preview').show();
     }
 
-
     function pageInit() {
 
       $("#NS_MENU_ID0-item0").css("background-color", "#CFE0CE");
@@ -61,10 +58,18 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       $("#body").css("background-color", "#CFE0CE");
 
       zeeSalesLeadDataSet = [];
+      zeeSalesLeadDataSet2 = [];
       zeeSalesLeadSet = [];
+      zeeSalesLeadSet2 = [];
 
       // pageLoad();
       submitSearch();
+
+      $("#reportingPage").click(function() {
+        var url = baseURL +
+          '/app/site/hosting/scriptlet.nl?script=1415&deploy=1'
+        window.location.href = url;
+      });
 
       $(".lostZeeLead").click(function() {
           var zeeLeadInternalID = $(this).attr("data-id");
@@ -239,8 +244,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
     //Initialise the DataTable with headers.
     function submitSearch() {
 
-
-      dataTable = $('#zee_leads_list_preview').DataTable({
+      dataTable = $('#investor_owner_table').DataTable({
         destroy: true,
         data: zeeSalesLeadDataSet,
         pageLength: 1000,
@@ -274,6 +278,46 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         }, {
           className: "col-sm-2",
           "targets": [0]
+        }, {
+          className: "text-center",
+          targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        }],
+        rowCallback: function(row, data, index) {}
+      });
+
+      dataTable2 = $('#seeking_employment_table').DataTable({
+        destroy: true,
+        data: zeeSalesLeadDataSet2,
+        pageLength: 1000,
+        order: [],
+        columns: [{
+          title: 'LINK'
+        }, {
+          title: 'Date Lead Entered'
+        }, {
+          title: 'First Name'
+        }, {
+          title: 'Last Name'
+        }, {
+          title: 'Mobile'
+        }, {
+          title: 'Email'
+        }, {
+          title: 'Postcode of Intesrest'
+        }, {
+          title: 'State of Intesrest'
+        }, {
+          title: 'Sales Stage'
+        }],
+        columnDefs: [{
+          targets: [1, 6, 8],
+          className: 'bolded'
+        }, {
+          className: "col-sm-2",
+          "targets": [0]
+        }, {
+          className: "text-center",
+          targets: [0, 1, 2, 3, 4, 5, 6, 7, 8]
         }],
         rowCallback: function(row, data, index) {}
       });
@@ -363,16 +407,92 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
         return true;
       });
-      console.log(zeeSalesLeadSet)
 
-      loadDatatable(zeeSalesLeadSet);
+      //NetSuite Search: Seeking Employment Leads - Website
+      var searchZeeLeadsList2 = search.load({
+        id: 'customsearch_zee_sales_lead_list_3',
+        type: 'customrecord_zee_sales_leads'
+      });
+
+      if (!isNullorEmpty(dateFrom)) {
+        searchZeeLeadsList2.filters.push(search.createFilter({
+          name: 'custrecord_zee_lead_date_entered',
+          join: null,
+          operator: search.Operator.ONORAFTER,
+          values: dateFrom
+        }));
+      }
+
+      searchZeeLeadsList2.run().each(function(
+        tzeeLeadsListResultSet) {
+
+        var internalID = tzeeLeadsListResultSet.getValue({
+          name: 'internalid'
+        });
+        var date = tzeeLeadsListResultSet.getValue({
+          name: 'custrecord_zee_lead_date_entered'
+        });
+        var fname = tzeeLeadsListResultSet.getValue({
+          name: 'custrecord_zee_leads_fname'
+        });
+        var lname = tzeeLeadsListResultSet.getValue({
+          name: 'custrecord_zee_leads_lname'
+        });
+        var mobile = tzeeLeadsListResultSet.getValue({
+          name: 'custrecord_zee_lead_mobile'
+        });
+        var email = tzeeLeadsListResultSet.getValue({
+          name: 'custrecord_zee_lead_email'
+        });
+        var type = tzeeLeadsListResultSet.getText({
+          name: 'custrecord_type_of_owner'
+        });
+        var suburb = tzeeLeadsListResultSet.getValue({
+          name: 'custrecord_areas_of_interest_suburb'
+        });
+        var postcode = tzeeLeadsListResultSet.getValue({
+          name: 'custrecord_areas_of_interest_postcode'
+        });
+        var state = tzeeLeadsListResultSet.getText({
+          name: 'custrecord_areas_of_interest_state'
+        });
+        var stage = tzeeLeadsListResultSet.getText({
+          name: 'custrecord_zee_lead_stage'
+        });
+        var stageID = tzeeLeadsListResultSet.getValue({
+          name: 'custrecord_zee_lead_stage'
+        });
+
+        zeeSalesLeadSet2.push({
+          internalID: internalID,
+          date: date,
+          fname: fname,
+          lname: lname,
+          mobile: mobile,
+          email: email,
+          type: type,
+          suburb: suburb,
+          postcode: postcode,
+          state: state,
+          stage: stage,
+          stageID: stageID
+        });
+
+        return true;
+      });
+      console.log(zeeSalesLeadSet)
+      console.log(zeeSalesLeadSet2)
+
+      loadDatatable(zeeSalesLeadSet, zeeSalesLeadSet2);
       zeeSalesLeadSet = [];
+      zeeSalesLeadSet2 = [];
 
     }
 
-    function loadDatatable(zeeSalesLeads_rows) {
+    function loadDatatable(zeeSalesLeads_rows, zeeSalesLeads2_rows) {
 
       zeeSalesLeadDataSet = [];
+      zeeSalesLeadDataSet2 = [];
       csvSet = [];
 
       if (!isNullorEmpty(zeeSalesLeads_rows)) {
@@ -424,8 +544,6 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
               '" class="" style="cursor: pointer !important;color: white;" disabled>OPPORTUNITY DENIED</a></button>';
           }
 
-
-
           zeeSalesLeadDataSet.push([linkURL, zeeSalesLeads_row.date,
             zeeSalesLeads_row.fname,
             zeeSalesLeads_row.lname, zeeSalesLeads_row.mobile,
@@ -435,11 +553,36 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           ]);
         });
       }
-
-      var datatable = $('#zee_leads_list_preview').DataTable();
+      console.log(zeeSalesLeadDataSet)
+      var datatable = $('#investor_owner_table').DataTable();
       datatable.clear();
       datatable.rows.add(zeeSalesLeadDataSet);
       datatable.draw();
+
+      if (!isNullorEmpty(zeeSalesLeads2_rows)) {
+        zeeSalesLeads2_rows.forEach(function(zeeSalesLeads2_row, index) {
+
+          var linkURL =
+            '<button class="form-control btn btn-xs btn-primary" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
+            zeeSalesLeads2_row.internalID +
+            '" class="viewZeeLead" style="cursor: pointer !important;color: white;">VIEW</a></button> <button class="form-control btn btn-xs btn-danger" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
+            zeeSalesLeads2_row.internalID +
+            '" class="lostZeeLead" style="cursor: pointer !important;color: white;">LOST</a></button>';
+
+          zeeSalesLeadDataSet2.push([linkURL, zeeSalesLeads2_row.date,
+            zeeSalesLeads2_row.fname,
+            zeeSalesLeads2_row.lname, zeeSalesLeads2_row.mobile,
+            zeeSalesLeads2_row.email, zeeSalesLeads2_row.postcode,
+            zeeSalesLeads2_row.state, zeeSalesLeads2_row.stage
+          ]);
+        });
+      }
+
+      console.log(zeeSalesLeadDataSet2)
+      var datatable2 = $('#seeking_employment_table').DataTable();
+      datatable2.clear();
+      datatable2.rows.add(zeeSalesLeadDataSet2);
+      datatable2.draw();
 
       return true;
     }
@@ -461,7 +604,6 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       return date;
     }
 
-
     function formatDate(testDate) {
       console.log('testDate: ' + testDate);
       var responseDate = format.format({
@@ -475,73 +617,6 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
     function replaceAll(string) {
       return string.split("/").join("-");
     }
-
-    function stateIDPublicHolidaysRecord(state) {
-      switch (state) {
-        case 1:
-          return 1; //NSW
-          break;
-        case 2:
-          return 6; //QLD
-          break;
-        case 3:
-          return 5; //VIC
-          break;
-        case 4:
-          return 3; //SA
-          break;
-        case 5:
-          return 7; //TAS
-          break;
-        case 6:
-          return 4; //ACT
-          break;
-        case 7:
-          return 2; //WA
-          break;
-        case 8:
-          return 8; //NT
-          break;
-        default:
-          return null;
-          break;
-      }
-    }
-
-    function stateID(state) {
-      state = state.toUpperCase();
-      switch (state) {
-        case 'ACT':
-          return 6
-          break;
-        case 'NSW':
-          return 1
-          break;
-        case 'NT':
-          return 8
-          break;
-        case 'QLD':
-          return 2
-          break;
-        case 'SA':
-          return 4
-          break;
-        case 'TAS':
-          return 5
-          break;
-        case 'VIC':
-          return 3
-          break;
-        case 'WA':
-          return 7
-          break;
-        default:
-          return 0;
-          break;
-      }
-    }
-
-
 
     function isNullorEmpty(val) {
       if (val == '' || val == null) {

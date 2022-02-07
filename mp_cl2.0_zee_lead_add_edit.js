@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-01-17T16:28:47+11:00
+ * @Last modified time: 2022-01-27T09:34:58+11:00
  */
 
 
@@ -150,6 +150,12 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       afterLoad();
 
+      $(document).on("click", '#backButton', function(e) {
+        var url = baseURL +
+          '/app/site/hosting/scriptlet.nl?script=1409&deploy=1'
+        window.location.href = url;
+      });
+
       $(document).on("click", "#saveZeeLead", function(e) {
 
         firstName = $('#firstName').val();
@@ -214,145 +220,207 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       $(document).on('click', '.stageNewLead', function(e) {
         zeeleadid = $(this).attr("data-id");
 
-        var zeeSalesLeadRecord = record.load({
-          type: 'customrecord_zee_sales_leads',
-          id: zeeleadid
-        });
+        firstName = $('#firstName').val();
+        lastName = $('#lastName').val();
+        mobile = $('#mobile').val();
+        email = $('#email').val();
+        franchiseeTypeOfOwner = $('#franchiseeTypeOfOwner').val();
+        vehicle = $('#vehicle').val();
+        experience = $('#experience').val();
+        employment = $('#employment').val();
+        finance = $('#finance').val();
+        investment = $('#investment').val();
+        comments = $('#comments').val();
+        state = $('#state').val();
+        postcode = $('#postcode').val();
+        suburb = $('#city').val();
 
-        zeeSalesLeadRecord.setValue({
-          fieldId: 'custrecord_zee_lead_stage',
-          value: 1
-        });
+        interestedZees = $('#zeeList').val()
+        listedForSaleZees = $('#zeeListedSale').val()
 
-        zeeSalesLeadRecord.setValue({
-          fieldId: 'custrecord_date_qualified_lead',
-          value: null
-        });
-        zeeSalesLeadRecord.setValue({
-          fieldId: 'custrecord_date_qualified_no_territory',
-          value: null
-        });
-        zeeSalesLeadRecord.setValue({
-          fieldId: 'custrecord_date_opportunity',
-          value: null
-        });
-        zeeSalesLeadRecord.setValue({
-          fieldId: 'custrecord_date_lead_lost',
-          value: null
-        });
-        zeeSalesLeadRecord.setValue({
-          fieldId: 'custrecord_date_opportunity_denied',
-          value: null
-        });
+        if (validate()) {
+          var zeeSalesLeadRecord = record.load({
+            type: 'customrecord_zee_sales_leads',
+            id: zeeleadid
+          });
+
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_zee_lead_stage',
+            value: 1
+          });
+
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_date_qualified_lead',
+            value: null
+          });
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_date_qualified_no_territory',
+            value: null
+          });
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_date_opportunity',
+            value: null
+          });
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_date_lead_lost',
+            value: null
+          });
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_date_opportunity_denied',
+            value: null
+          });
 
 
-        zeeSalesLeadRecord.save();
+          zeeSalesLeadRecord.save();
 
-        var url = baseURL +
-          '/app/site/hosting/scriptlet.nl?script=1411&deploy=1&zeeleadid=' +
-          zeeleadid;
-        window.location.href = url;
+          var url = baseURL +
+            '/app/site/hosting/scriptlet.nl?script=1411&deploy=1&zeeleadid=' +
+            zeeleadid;
+          window.location.href = url;
+        }
 
       });
 
       $(document).on('click', '.stageQualified', function(e) {
         zeeleadid = $(this).attr("data-id");
 
-        var zeeSalesLeadRecord = record.load({
-          type: 'customrecord_zee_sales_leads',
-          id: zeeleadid
-        });
+        firstName = $('#firstName').val();
+        lastName = $('#lastName').val();
+        mobile = $('#mobile').val();
+        email = $('#email').val();
+        franchiseeTypeOfOwner = $('#franchiseeTypeOfOwner').val();
+        vehicle = $('#vehicle').val();
+        experience = $('#experience').val();
+        employment = $('#employment').val();
+        finance = $('#finance').val();
+        investment = $('#investment').val();
+        comments = $('#comments').val();
+        state = $('#state').val();
+        postcode = $('#postcode').val();
+        suburb = $('#city').val();
 
-        zeeSalesLeadRecord.setValue({
-          fieldId: 'custrecord_zee_lead_stage',
-          value: 2
-        });
+        interestedZees = $('#zeeList').val()
+        listedForSaleZees = $('#zeeListedSale').val()
 
-        zeeSalesLeadRecord.setValue({
-          fieldId: 'custrecord_date_qualified_lead',
-          value: getDateToday()
-        });
+        if (validate()) {
 
-        zeeSalesLeadRecord.setValue({
-          fieldId: 'custrecord_date_opportunity',
-          value: null
-        });
+          var zeeSalesLeadRecord = record.load({
+            type: 'customrecord_zee_sales_leads',
+            id: zeeleadid
+          });
 
-        zeeSalesLeadRecord.setValue({
-          fieldId: 'custrecord_date_qualified_no_territory',
-          value: null
-        });
-        zeeSalesLeadRecord.setValue({
-          fieldId: 'custrecord_date_opportunity',
-          value: null
-        });
-        zeeSalesLeadRecord.setValue({
-          fieldId: 'custrecord_date_lead_lost',
-          value: null
-        });
-        zeeSalesLeadRecord.setValue({
-          fieldId: 'custrecord_date_opportunity_denied',
-          value: null
-        });
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_zee_lead_stage',
+            value: 2
+          });
 
-        zeeSalesLeadRecord.save();
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_date_qualified_lead',
+            value: getDateToday()
+          });
 
-        var url = baseURL +
-          '/app/site/hosting/scriptlet.nl?script=1411&deploy=1&zeeleadid=' +
-          zeeleadid;
-        window.location.href = url;
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_date_opportunity',
+            value: null
+          });
+
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_date_qualified_no_territory',
+            value: null
+          });
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_date_opportunity',
+            value: null
+          });
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_date_lead_lost',
+            value: null
+          });
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_date_opportunity_denied',
+            value: null
+          });
+
+          zeeSalesLeadRecord.save();
+
+          var url = baseURL +
+            '/app/site/hosting/scriptlet.nl?script=1411&deploy=1&zeeleadid=' +
+            zeeleadid;
+          window.location.href = url;
+        }
 
       });
 
       $(document).on('click', '.stageOpportunity', function(e) {
         zeeleadid = $(this).attr("data-id");
 
+        firstName = $('#firstName').val();
+        lastName = $('#lastName').val();
+        mobile = $('#mobile').val();
+        email = $('#email').val();
+        franchiseeTypeOfOwner = $('#franchiseeTypeOfOwner').val();
+        vehicle = $('#vehicle').val();
+        experience = $('#experience').val();
+        employment = $('#employment').val();
+        finance = $('#finance').val();
+        investment = $('#investment').val();
+        comments = $('#comments').val();
+        state = $('#state').val();
+        postcode = $('#postcode').val();
+        suburb = $('#city').val();
+
         interestedZees = $('#zeeList').val()
         listedForSaleZees = $('#zeeListedSale').val()
 
-        var errorMessage = '';
+        if (validate()) {
 
-        var combinedInterestedZees = [];
-        if (!isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
-            interestedZees)) {
-          combinedInterestedZees = listedForSaleZees.concat(
-            interestedZees)
-        } else if (isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
-            interestedZees)) {
-          combinedInterestedZees = interestedZees
-        } else if (!isNullorEmpty(listedForSaleZees) && isNullorEmpty(
-            interestedZees)) {
-          combinedInterestedZees = listedForSaleZees
-        } else if (isNullorEmpty(listedForSaleZees) && isNullorEmpty(
-            interestedZees)) {
-          errorMessage += 'Please Select potential franchisees</br>';
-          if (!isNullorEmpty(errorMessage)) {
-            showAlert(errorMessage);
-            return false;
+          interestedZees = $('#zeeList').val()
+          listedForSaleZees = $('#zeeListedSale').val()
+
+          var errorMessage = '';
+
+          var combinedInterestedZees = [];
+          if (!isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
+              interestedZees)) {
+            combinedInterestedZees = listedForSaleZees.concat(
+              interestedZees)
+          } else if (isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
+              interestedZees)) {
+            combinedInterestedZees = interestedZees
+          } else if (!isNullorEmpty(listedForSaleZees) && isNullorEmpty(
+              interestedZees)) {
+            combinedInterestedZees = listedForSaleZees
+          } else if (isNullorEmpty(listedForSaleZees) && isNullorEmpty(
+              interestedZees)) {
+            errorMessage += 'Please Select potential franchisees</br>';
+            if (!isNullorEmpty(errorMessage)) {
+              showAlert(errorMessage);
+              return false;
+            }
           }
+
+          var zeeSalesLeadRecord = record.load({
+            type: 'customrecord_zee_sales_leads',
+            id: zeeleadid
+          });
+
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_zee_lead_stage',
+            value: 5
+          });
+
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_date_opportunity',
+            value: getDateToday()
+          });
+
+          zeeSalesLeadRecord.save();
+
+          var url = baseURL +
+            '/app/site/hosting/scriptlet.nl?script=1411&deploy=1&zeeleadid=' +
+            zeeleadid;
+          window.location.href = url;
         }
-
-        var zeeSalesLeadRecord = record.load({
-          type: 'customrecord_zee_sales_leads',
-          id: zeeleadid
-        });
-
-        zeeSalesLeadRecord.setValue({
-          fieldId: 'custrecord_zee_lead_stage',
-          value: 5
-        });
-
-        zeeSalesLeadRecord.setValue({
-          fieldId: 'custrecord_date_opportunity',
-          value: getDateToday()
-        });
-
-        zeeSalesLeadRecord.save();
-
-        var url = baseURL +
-          '/app/site/hosting/scriptlet.nl?script=1411&deploy=1&zeeleadid=' +
-          zeeleadid;
-        window.location.href = url;
 
       });
 
@@ -375,6 +443,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       //Update the customer record on click of the button in the modal
       $('#leadLost').click(function() {
         zeeleadid = $("#zeeleadid").val();
+
+
 
         var zeeSalesLeadRecord = record.load({
           type: 'customrecord_zee_sales_leads',

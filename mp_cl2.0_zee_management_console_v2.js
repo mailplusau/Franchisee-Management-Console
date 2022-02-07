@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-11-02T08:24:43+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-01-25T16:09:54+11:00
+ * @Last modified time: 2022-02-03T11:18:57+11:00
  */
 
 
@@ -118,6 +118,8 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       $("#NS_MENU_ID0-item0").css("background-color", "#CFE0CE");
       $("#NS_MENU_ID0-item0 a").css("background-color", "#CFE0CE");
       $("#body").css("background-color", "#CFE0CE");
+
+      $('#tbl_submitter').css('display', 'none');
 
       //Hide the alert section on the page
       $('#alert').hide();
@@ -365,7 +367,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       //On click of Add Operator, unhide the fields
       $(document).on("click", "#addOperator", function(e) {
         $('.row_operator_details').removeClass('hide');
-        $('.operatorRole').removeClass('hide');
+        $('.row_operatorRole').removeClass('hide');
         $('.saveoperator_section').removeClass('hide');
 
       });
@@ -532,7 +534,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
 
         //Unhide the fields
         $('.row_operator_details').removeClass('hide');
-        $('.operatorRole').removeClass('hide');
+        $('.row_operatorRole').removeClass('hide');
         $('.saveoperator_section').removeClass('hide');
       });
 
@@ -843,7 +845,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
 
           //Hide the FIELDS
           $('.row_operator_details').addClass('hide');
-          $('.operatorRole').addClass('hide');
+          $('.row_operatorRole').addClass('hide');
           $('.saveoperator_section').addClass('hide');
         }
       });
@@ -2179,6 +2181,10 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       }
       if (isNullorEmpty(personalEmail)) {
         errorMessage += 'Please Enter Personal Email</br>';
+
+      }
+      if (isNullorEmpty(dob)) {
+        errorMessage += 'Please Select Date of Birth</br>';
 
       }
       if (isNullorEmpty(vaccinationStatus)) {

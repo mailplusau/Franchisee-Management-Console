@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T08:26:00+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-01-14T09:59:14+11:00
+ * @Last modified time: 2022-01-27T11:25:04+11:00
  */
 
 
@@ -16,7 +16,6 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     var color_array = ['blue', 'red', 'green', 'orange', 'black'];
 
     var zeeleadid = 0;
-
     var firstName = '';
     var lastName = '';
     var mobile = '';
@@ -197,7 +196,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           '<div class="se-pre-con"></div><div ng-app="myApp" ng-controller="myCtrl">';
 
         inlineHtml += '<div id="container"></div>'
-        inlineHtml += spacing();
+        inlineHtml += backButton();
+        inlineHtml += line();
         inlineHtml += progressBar(salesStage, classification);
         inlineHtml += spacing();
         inlineHtml += line();
@@ -362,6 +362,27 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
       return inlineHtml;
 
+    }
+
+    /*
+     * PURPOSE : BUTTONS ON TOP OF THE PAGE TO GO BACK
+     *  PARAMS : USER ROLE
+     * RETURNS : INLINEHTML
+     *   NOTES :
+     */
+    function backButton(role) {
+
+      var inlineHtml = ''
+      inlineHtml +=
+        '<div class="form-group back_buttons_section">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-1 backButton"><input type="button" value="BACK" class="form-control btn btn-primary" id="backButton" /></div>'
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+
+      return inlineHtml
     }
 
     /*
@@ -551,7 +572,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '<div class="row">';
       inlineHtml +=
         '<div class="col-xs-4 zee_section ' + defaultHideClass +
-        '"><div class="input-group"><span class="input-group-addon" id="zee_text">FRANCHISEE </span><select id="zeeList" class="form-control ui fluid search dropdown zeeList" data-old="" json="" multiple="" style="font-size: 12px;"><option value=0></option>';
+        '"><div class="input-group"><span class="input-group-addon" id="zee_text">TERRITORIES OF INTEREST </span><select id="zeeList" class="form-control ui fluid search dropdown zeeList" data-old="" json="" multiple="" style="font-size: 12px;"><option value=0></option>';
 
       resultSetZees.each(function(searchResultZees) {
         zeeId = searchResultZees.getValue('internalid');
@@ -577,7 +598,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '</select></div></div>';
       inlineHtml +=
         '<div class="col-xs-8 zeeListedSale_section ' + defaultHideClass +
-        '"><div class="input-group"><span class="input-group-addon" id="zeeListedSale_text">FRANCHISEES LISTED FOR SALE </span><select id="zeeListedSale" class="form-control ui fluid search dropdown zeeListedSale" data-old="" json="" multiple="" style="font-size: 12px"><option value=0></option>';
+        '"><div class="input-group"><span class="input-group-addon" id="zeeListedSale_text">TERRITORIES AVAILABLE </span><select id="zeeListedSale" class="form-control ui fluid search dropdown zeeListedSale" data-old="" json="" multiple="" style="font-size: 12px"><option value=0></option>';
 
       resultSetZeesListed.each(function(searchResultZeesListed) {
         zeeId = searchResultZeesListed.getValue('internalid');

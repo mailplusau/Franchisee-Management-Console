@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-11-15T07:25:50+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-01-25T16:09:53+11:00
+ * @Last modified time: 2022-02-03T11:18:56+11:00
  */
 
 define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
@@ -966,10 +966,18 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                 fieldId: 'custrecord_operator_givennames',
                 value: spliName[0]
               })
-              operatorRecord.setValue({
-                fieldId: 'custrecord_operator_surname',
-                value: spliName[1]
-              })
+              if (isNullorEmpty(spliName[1])) {
+                operatorRecord.setValue({
+                  fieldId: 'custrecord_operator_surname',
+                  value: spliName[0]
+                })
+              } else {
+                operatorRecord.setValue({
+                  fieldId: 'custrecord_operator_surname',
+                  value: spliName[1]
+                })
+              }
+
             }
 
 
@@ -1067,12 +1075,25 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
               fieldId: 'isinactive',
               value: true
             })
+            deleteOperatorRecord.setValue({
+              fieldId: 'custrecord_operator_status',
+              value: 3
+            })
+
+            var getOperatorEmail = deleteOperatorRecord.getValue({
+              fieldId: 'custrecord_operator_email'
+            })
+            var getOperatorName = deleteOperatorRecord.getValue({
+              fieldId: 'name'
+            })
 
             deleteOperatorRecord.save();
 
             var email_body = ' Delete Operator NS ID: ' +
               operatoridsdeleteArrys[y] +
-              '</br> Franchisee NS ID: ' + zeeRecordId;
+              '</br> Franchisee NS ID: ' + zeeRecordId +
+              '</br> Operator Name: ' + getOperatorName +
+              '</br> Operator Email: ' + getOperatorEmail;
 
             email.send({
               author: 112209,
@@ -1647,7 +1668,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml +=
         '<div class="form-group container company_name_section">';
       inlineHtml += '<div class="row">';
-      var dobArray = dob.split('/')
+      var dobArray = dob.split('/');
+      if (dobArray[1] < 10) {
+        dobArray[1] = '0' + dobArray[1];
+      }
+      if (dobArray[0] < 10) {
+        dobArray[0] = '0' + dobArray[0];
+      }
       var formattedDOB = dobArray[2] + '-' + dobArray[1] + '-' + dobArray[0]
       inlineHtml +=
         '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">DATE OF BIRTH <span class="mandatory">*</span></span><input id="dob" type="date" class="form-control dob" value="' +
@@ -2341,7 +2368,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
 
       inlineHtml +=
-        '<div class="form-group container operatorRole hide">'
+        '<div class="form-group container row_operatorRole hide">'
       inlineHtml += '<div class="row">';
       /*
         Driver	               2
@@ -2927,10 +2954,6 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
     function getDate(inputDate) {
       var date = new Date(inputDate);
-      log.debug({
-        title: 'date',
-        details: date
-      })
       format.format({
         value: date,
         type: format.Type.DATE,

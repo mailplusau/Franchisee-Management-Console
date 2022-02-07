@@ -3,8 +3,9 @@
  * @NScriptType Suitelet
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T08:26:00+11:00
+ * @Description: List of Franchisee leads synced from the MailPlus Website - Split into 2 tabs (Investor or Owner & Seeking Employment).
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-01-19T07:47:09+11:00
+ * @Last modified time: 2022-01-27T11:03:17+11:00
  */
 
 
@@ -34,11 +35,11 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           title: 'Franchisee New Leads'
         });
 
-
         //INITIALIZATION OF JQUERY AND BOOTSTRAP
         var inlineHtml =
           '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css"><script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&c=1048144&h=9ee6accfd476c9cae718&_xt=.css"/><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&c=1048144&h=ef2cda20731d146b5e98&_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&c=1048144&h=a0ef6ac4e28f91203dfe&_xt=.css"><script src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"><script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/modules/data.js"></script><script src="https://code.highcharts.com/modules/drilldown.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/export-data.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script><style>.mandatory{color:red;} .body{background-color: #CFE0CE !important;} @-webkit-keyframes animatetop {from {top:-300px; opacity:0} to {top:0; opacity:1}}@keyframes animatetop {from {top:-300px; opacity:0}to {top:0; opacity:1}}</style>';
 
+        //HIDDEN FIELDS
         form.addField({
           id: 'custpage_table_csv',
           type: ui.FieldType.TEXT,
@@ -59,15 +60,14 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         //Loading Section that gets displayed when the page is being loaded
         inlineHtml +=
           '<div class="se-pre-con"></div><div ng-app="myApp" ng-controller="myCtrl">';
+
         inlineHtml += '<div id="container"></div>'
         inlineHtml += spacing()
         inlineHtml += mainButtons(role)
         inlineHtml += line();
-        inlineHtml += dataTable();
+        inlineHtml += tabsSection();
         inlineHtml += line();
         inlineHtml += '</div>';
-
-
 
         form.addField({
           id: 'preview_table',
@@ -129,7 +129,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         '<div class="form-group container zee_available_buttons_section">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="col-xs-12 createLead"><input type="button" value="CREATE NEW LEAD" class="form-control btn btn-primary" id="updateDetails" /></div>'
+        '<div class="col-xs-6"><input type="button" value="REPORTING PAGE" class="form-control btn btn-primary" id="reportingPage" /></div>'
+      inlineHtml +=
+        '<div class="col-xs-6 createLead"><input type="button" value="CREATE NEW LEAD" class="form-control btn btn-primary" id="updateDetails" /></div>'
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
@@ -168,27 +170,83 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     }
 
     /*
+     * PURPOSE : TABS SECTION TO CREATE 2 TABS - INVESTOR OR OWNER & SEEKING EMPLOYMENT
+     *  PARAMS :
+     * RETURNS : INLINEHTML
+     *   NOTES :
+     */
+    function tabsSection() {
+      var inlineHtml = '<div >';
+
+      // Tabs headers
+      inlineHtml +=
+        '<style>.nav > li.active > a, .nav > li.active > a:focus, .nav > li.active > a:hover { background-color: #379E8F; color: #fff }';
+      inlineHtml +=
+        '.nav > li > a, .nav > li > a:focus, .nav > li > a:hover { margin-left: 5px; margin-right: 5px; border: 2px solid #379E8F; color: #379E8F; }';
+      inlineHtml += '</style>';
+
+      inlineHtml +=
+        '<div style="width: 95%; margin:auto; margin-bottom: 30px"><ul class="nav nav-pills nav-justified main-tabs-sections " style="margin:0%; ">';
+
+      inlineHtml +=
+        '<li role="presentation" class="active"><a data-toggle="tab" href="#type_investor_owner"><b>TYPE OF OWNER - INVESTOR OR OWNER</b></a></li>';
+      inlineHtml +=
+        '<li role="presentation" class=""><a data-toggle="tab" href="#employment_investor_owner"><b>SEEKING EMPLOYMENT</b></a></li>';
+
+      inlineHtml += '</ul></div>';
+
+      // Tabs content
+      inlineHtml += '<div class="tab-content">';
+      inlineHtml +=
+        '<div role="tabpanel" class="tab-pane active" id="type_investor_owner">';
+      inlineHtml += '<br></br>';
+      inlineHtml += dataTable('investor_owner_table');
+      inlineHtml += '</div>';
+
+      inlineHtml +=
+        '<div role="tabpanel" class="tab-pane" id="employment_investor_owner">';
+      inlineHtml += '<br></br>';
+      inlineHtml += dataTable('seeking_employment_table');
+      inlineHtml += '</div>';
+
+      inlineHtml += '</div></div>';
+
+      return inlineHtml;
+    }
+
+    /*
      * PURPOSE : Table of the list of Franchisee Sales Leads
      *  PARAMS :
      * RETURNS :  @return  {String}    inlineHtml
      *   NOTES :
      */
-    function dataTable() {
-      var inlineHtml =
-        '<style>table#zee_leads_list_preview {color: #103D39 !important; font-size: 12px;text-align: center;border: none;}.dataTables_wrapper {font-size: 14px;}table#zee_leads_list_preview th{text-align: center;} .bolded{font-weight: bold;}</style>';
-      inlineHtml +=
-        '<table id="zee_leads_list_preview" class="table table-responsive table-striped customer tablesorter hide" style="width: 100%;">';
+    function dataTable(name) {
+      var inlineHtml = '<style>table#' +
+        name +
+        ' {color: #103D39 !important; font-size: 12px;text-align: center;border: none;}.dataTables_wrapper {font-size: 14px;}table#mpexusage-' +
+        name +
+        ' th{text-align: center;} .bolded{font-weight: bold;}</style>';
+      inlineHtml += '<table id="' +
+        name +
+        '" class="table table-responsive table-striped customer tablesorter" style="width: 100%;">';
       inlineHtml += '<thead style="color: white;background-color: #379E8F;">';
       inlineHtml += '<tr class="text-center">';
+
       inlineHtml += '</tr>';
       inlineHtml += '</thead>';
 
-      inlineHtml +=
-        '<tbody id="result_zee_leads_list" class="result-zee_leads_list"></tbody>';
+      inlineHtml += '<tbody id="result_usage_' + name + '" ></tbody>';
 
       inlineHtml += '</table>';
       return inlineHtml;
     }
+
+    /*
+     * PURPOSE : CHECK IF PARAM IS NULL OR EMPTY BASED ON BELOW CRITERIAS
+     *  PARAMS :  -
+     * RETURNS :  BOOL
+     *   NOTES :
+     */
 
     function isNullorEmpty(strVal) {
       return (strVal == null || strVal == '' || strVal == 'null' || strVal ==
@@ -212,6 +270,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       return inlineHtml;
     }
 
+    /*
+     * PURPOSE : GET TODAYS DATE
+     *  PARAMS :  -
+     * RETURNS :  -
+     *   NOTES :
+     */
+
     function getDateToday() {
       var date = new Date();
       log.debug({
@@ -226,6 +291,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
       return date;
     }
+
 
     function getDate(inputDate) {
       var date = new Date(inputDate);
