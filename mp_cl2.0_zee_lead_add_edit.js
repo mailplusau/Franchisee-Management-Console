@@ -4,15 +4,15 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-01-27T09:34:58+11:00
+ * @Last modified time: 2022-02-09T14:43:10+11:00
  */
 
 
 define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
-    'N/error', 'N/url', 'N/format', 'N/currentRecord'
+    'N/error', 'N/url', 'N/format', 'N/currentRecord', 'N/https'
   ],
   function(email, runtime, search, record, http, log, error, url, format,
-    currentRecord) {
+    currentRecord, https) {
     var zee = '0';
     var userId = 0;
     var role = 0;
@@ -20,7 +20,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
     var firstName = '';
     var lastName = '';
     var mobile = '';
-    var email = '';
+    var leadEmail = '';
     var franchiseeTypeOfOwner = '0';
     var vehicle = '0';
     var experience = '0';
@@ -33,8 +33,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
     var suburb = '';
     var state = '';
     var postcode = '';
-    var interestedZees = []
-    var listedForSaleZees = []
+    var interestedZees = [];
+    var listedForSaleZees = [];
+    var eoiSent = 0
 
     var baseURL = 'https://1048144.app.netsuite.com';
     if (runtime.EnvType == "SANDBOX") {
@@ -130,6 +131,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       zeeleadid = (myRecord.getValue({
         fieldId: 'custpage_zeeleadid'
       }));
+      eoiSent = (myRecord.getValue({
+        fieldId: 'custpage_eoisent'
+      }));
 
       $('.ui.dropdown').dropdown();
 
@@ -156,12 +160,78 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         window.location.href = url;
       });
 
+      $(document).on("click", "#sendEOI", function(e) {
+
+        firstName = $('#firstName').val();
+        lastName = $('#lastName').val();
+        mobile = $('#mobile').val();
+        leadEmail = $('#email').val();
+        franchiseeTypeOfOwner = $('#franchiseeTypeOfOwner').val();
+        vehicle = $('#vehicle').val();
+        experience = $('#experience').val();
+        employment = $('#employment').val();
+        finance = $('#finance').val();
+        investment = $('#investment').val();
+        comments = $('#comments').val();
+        state = $('#state').val();
+        postcode = $('#postcode').val();
+        suburb = $('#city').val();
+        interestedZees = $('#zeeList').val()
+        listedForSaleZees = $('#zeeListedSale').val()
+
+        if (validate()) {
+          var zeeSalesLeadRecord = record.load({
+            type: 'customrecord_zee_sales_leads',
+            id: zeeleadid
+          });
+
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_eoi_sent',
+            value: 1
+          });
+
+          zeeSalesLeadRecord.save();
+          createUpdateRecord();
+
+          var suiteletUrl =
+            'https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=395&deploy=1'
+
+          suiteletUrl += '&rectype=customer&template=130';
+          suiteletUrl += '&recid=1646178&salesrep=409635&dear=' + '' +
+            '&contactid=' + null + '&userid=' + userId;
+
+          console.log(suiteletUrl);
+
+          var response = https.get({
+            url: suiteletUrl
+          });
+
+          var emailHtml = response.body;
+
+          console.log(emailHtml);
+
+          email.send({
+            author: 112209,
+            body: emailHtml,
+            recipients: leadEmail,
+            subject: 'MailPlus Expression of Interest Form'
+          });
+
+
+          var url = baseURL +
+            '/app/site/hosting/scriptlet.nl?script=1411&deploy=1&zeeleadid=' +
+            zeeleadid;
+          window.location.href = url;
+        }
+
+      });
+
       $(document).on("click", "#saveZeeLead", function(e) {
 
         firstName = $('#firstName').val();
         lastName = $('#lastName').val();
         mobile = $('#mobile').val();
-        email = $('#email').val();
+        leadEmail = $('#email').val();
         franchiseeTypeOfOwner = $('#franchiseeTypeOfOwner').val();
         vehicle = $('#vehicle').val();
         experience = $('#experience').val();
@@ -188,17 +258,22 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         if (franchiseeTypeOfOwner == 2 || franchiseeTypeOfOwner == 3) {
           $(".progress_section").removeClass("hide");
           $(".employment_section").addClass("hide");
-          $(".vehicle_section").addClass("hide");
+          if (franchiseeTypeOfOwner == 2) {
+            $(".vehicle_section").addClass("hide");
+          }
           $(".finance_main_section").removeClass("hide");
           $(".finance_section").removeClass("hide");
           $(".investment_section").removeClass("hide");
           $(".potentialZees_section").removeClass("hide");
           $(".zee_section").removeClass("hide");
           $(".zeeListedSale_section").removeClass("hide");
+
           $('.franchiseeTypeOfOwner_section').addClass('col-xs-12').removeClass(
             'col-xs-6');
-          $('.experience_section').addClass('col-xs-12').removeClass(
-            'col-xs-6');
+          if (franchiseeTypeOfOwner == 2) {
+            $('.experience_section').addClass('col-xs-12').removeClass(
+              'col-xs-6');
+          }
         } else if (franchiseeTypeOfOwner == 4) {
           $(".progress_section").addClass("hide");
           $(".employment_section").removeClass("hide");
@@ -223,7 +298,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         firstName = $('#firstName').val();
         lastName = $('#lastName').val();
         mobile = $('#mobile').val();
-        email = $('#email').val();
+        leadEmail = $('#email').val();
         franchiseeTypeOfOwner = $('#franchiseeTypeOfOwner').val();
         vehicle = $('#vehicle').val();
         experience = $('#experience').val();
@@ -269,9 +344,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             fieldId: 'custrecord_date_opportunity_denied',
             value: null
           });
-
-
           zeeSalesLeadRecord.save();
+
+          createUpdateRecord();
 
           var url = baseURL +
             '/app/site/hosting/scriptlet.nl?script=1411&deploy=1&zeeleadid=' +
@@ -287,7 +362,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         firstName = $('#firstName').val();
         lastName = $('#lastName').val();
         mobile = $('#mobile').val();
-        email = $('#email').val();
+        leadEmail = $('#email').val();
         franchiseeTypeOfOwner = $('#franchiseeTypeOfOwner').val();
         vehicle = $('#vehicle').val();
         experience = $('#experience').val();
@@ -343,6 +418,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
           zeeSalesLeadRecord.save();
 
+          createUpdateRecord();
+
           var url = baseURL +
             '/app/site/hosting/scriptlet.nl?script=1411&deploy=1&zeeleadid=' +
             zeeleadid;
@@ -357,7 +434,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         firstName = $('#firstName').val();
         lastName = $('#lastName').val();
         mobile = $('#mobile').val();
-        email = $('#email').val();
+        leadEmail = $('#email').val();
         franchiseeTypeOfOwner = $('#franchiseeTypeOfOwner').val();
         vehicle = $('#vehicle').val();
         experience = $('#experience').val();
@@ -416,11 +493,177 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
           zeeSalesLeadRecord.save();
 
+          createUpdateRecord();
+
           var url = baseURL +
             '/app/site/hosting/scriptlet.nl?script=1411&deploy=1&zeeleadid=' +
             zeeleadid;
           window.location.href = url;
         }
+
+      });
+
+      $(document).on('click', '.eoiApprovedMichael', function(e) {
+        zeeleadid = $(this).attr("data-id");
+
+        firstName = $('#firstName').val();
+        lastName = $('#lastName').val();
+        mobile = $('#mobile').val();
+        leadEmail = $('#email').val();
+        franchiseeTypeOfOwner = $('#franchiseeTypeOfOwner').val();
+        vehicle = $('#vehicle').val();
+        experience = $('#experience').val();
+        employment = $('#employment').val();
+        finance = $('#finance').val();
+        investment = $('#investment').val();
+        comments = $('#comments').val();
+        state = $('#state').val();
+        postcode = $('#postcode').val();
+        suburb = $('#city').val();
+
+        interestedZees = $('#zeeList').val()
+        listedForSaleZees = $('#zeeListedSale').val()
+        var errorMessage = '';
+        if (eoiSent == 1 || eoiSent == '1') {
+          if (validate()) {
+
+            interestedZees = $('#zeeList').val()
+            listedForSaleZees = $('#zeeListedSale').val()
+
+            var combinedInterestedZees = [];
+            if (!isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
+                interestedZees)) {
+              combinedInterestedZees = listedForSaleZees.concat(
+                interestedZees)
+            } else if (isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
+                interestedZees)) {
+              combinedInterestedZees = interestedZees
+            } else if (!isNullorEmpty(listedForSaleZees) && isNullorEmpty(
+                interestedZees)) {
+              combinedInterestedZees = listedForSaleZees
+            } else if (isNullorEmpty(listedForSaleZees) && isNullorEmpty(
+                interestedZees)) {
+              errorMessage += 'Please Select potential franchisees</br>';
+              if (!isNullorEmpty(errorMessage)) {
+                showAlert(errorMessage);
+                return false;
+              }
+            }
+
+            var zeeSalesLeadRecord = record.load({
+              type: 'customrecord_zee_sales_leads',
+              id: zeeleadid
+            });
+
+            zeeSalesLeadRecord.setValue({
+              fieldId: 'custrecord_zee_lead_stage',
+              value: 7
+            });
+
+            zeeSalesLeadRecord.setValue({
+              fieldId: 'custrecord_date_michael_approved',
+              value: getDateToday()
+            });
+
+            zeeSalesLeadRecord.save();
+
+            createUpdateRecord();
+
+            var url = baseURL +
+              '/app/site/hosting/scriptlet.nl?script=1411&deploy=1&zeeleadid=' +
+              zeeleadid;
+            window.location.href = url;
+          }
+        } else {
+          errorMessage += 'Please Send Expression of Interest.</br>';
+          if (!isNullorEmpty(errorMessage)) {
+            showAlert(errorMessage);
+            return false;
+          }
+        }
+
+
+      });
+
+      $(document).on('click', '.eoiApprovedChris', function(e) {
+        zeeleadid = $(this).attr("data-id");
+
+        firstName = $('#firstName').val();
+        lastName = $('#lastName').val();
+        mobile = $('#mobile').val();
+        leadEmail = $('#email').val();
+        franchiseeTypeOfOwner = $('#franchiseeTypeOfOwner').val();
+        vehicle = $('#vehicle').val();
+        experience = $('#experience').val();
+        employment = $('#employment').val();
+        finance = $('#finance').val();
+        investment = $('#investment').val();
+        comments = $('#comments').val();
+        state = $('#state').val();
+        postcode = $('#postcode').val();
+        suburb = $('#city').val();
+
+        interestedZees = $('#zeeList').val()
+        listedForSaleZees = $('#zeeListedSale').val()
+        var errorMessage = '';
+        if (eoiSent == 1 || eoiSent == '1') {
+          if (validate()) {
+
+            interestedZees = $('#zeeList').val()
+            listedForSaleZees = $('#zeeListedSale').val()
+
+            var combinedInterestedZees = [];
+            if (!isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
+                interestedZees)) {
+              combinedInterestedZees = listedForSaleZees.concat(
+                interestedZees)
+            } else if (isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
+                interestedZees)) {
+              combinedInterestedZees = interestedZees
+            } else if (!isNullorEmpty(listedForSaleZees) && isNullorEmpty(
+                interestedZees)) {
+              combinedInterestedZees = listedForSaleZees
+            } else if (isNullorEmpty(listedForSaleZees) && isNullorEmpty(
+                interestedZees)) {
+              errorMessage += 'Please Select potential franchisees</br>';
+              if (!isNullorEmpty(errorMessage)) {
+                showAlert(errorMessage);
+                return false;
+              }
+            }
+
+            var zeeSalesLeadRecord = record.load({
+              type: 'customrecord_zee_sales_leads',
+              id: zeeleadid
+            });
+
+            zeeSalesLeadRecord.setValue({
+              fieldId: 'custrecord_zee_lead_stage',
+              value: 8
+            });
+
+            zeeSalesLeadRecord.setValue({
+              fieldId: 'custrecord_date_chris_approved',
+              value: getDateToday()
+            });
+
+            zeeSalesLeadRecord.save();
+
+            createUpdateRecord();
+
+            var url = baseURL +
+              '/app/site/hosting/scriptlet.nl?script=1411&deploy=1&zeeleadid=' +
+              zeeleadid;
+            window.location.href = url;
+          }
+        } else {
+          errorMessage += 'Please Send Expression of Interest.</br>';
+          if (!isNullorEmpty(errorMessage)) {
+            showAlert(errorMessage);
+            return false;
+          }
+        }
+
 
       });
 
@@ -444,7 +687,22 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       $('#leadLost').click(function() {
         zeeleadid = $("#zeeleadid").val();
 
-
+        firstName = $('#firstName').val();
+        lastName = $('#lastName').val();
+        mobile = $('#mobile').val();
+        leadEmail = $('#email').val();
+        franchiseeTypeOfOwner = $('#franchiseeTypeOfOwner').val();
+        vehicle = $('#vehicle').val();
+        experience = $('#experience').val();
+        employment = $('#employment').val();
+        finance = $('#finance').val();
+        investment = $('#investment').val();
+        comments = $('#comments').val();
+        state = $('#state').val();
+        postcode = $('#postcode').val();
+        suburb = $('#city').val();
+        interestedZees = $('#zeeList').val()
+        listedForSaleZees = $('#zeeListedSale').val()
 
         var zeeSalesLeadRecord = record.load({
           type: 'customrecord_zee_sales_leads',
@@ -468,6 +726,32 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
         zeeSalesLeadRecord.save();
 
+        createUpdateRecord();
+
+        var suiteletUrl =
+          'https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=395&deploy=1'
+
+        suiteletUrl += '&rectype=customer&template=131';
+        suiteletUrl += '&recid=1646178&salesrep=409635&dear=' + '' +
+          '&contactid=' + null + '&userid=' + userId;
+
+        console.log(suiteletUrl);
+
+        var response = https.get({
+          url: suiteletUrl
+        });
+
+        var emailHtml = response.body;
+
+        console.log(emailHtml);
+
+        email.send({
+          author: 112209,
+          body: emailHtml,
+          recipients: leadEmail,
+          subject: 'Your MailPlus enquiry is now closed.'
+        });
+
         var url = baseURL +
           '/app/site/hosting/scriptlet.nl?script=1409&deploy=1'
         window.location.href = url;
@@ -475,6 +759,23 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       $('#zeeNoTerritory').click(function() {
         zeeleadid = $(this).attr("data-id");
+
+        firstName = $('#firstName').val();
+        lastName = $('#lastName').val();
+        mobile = $('#mobile').val();
+        leadEmail = $('#email').val();
+        franchiseeTypeOfOwner = $('#franchiseeTypeOfOwner').val();
+        vehicle = $('#vehicle').val();
+        experience = $('#experience').val();
+        employment = $('#employment').val();
+        finance = $('#finance').val();
+        investment = $('#investment').val();
+        comments = $('#comments').val();
+        state = $('#state').val();
+        postcode = $('#postcode').val();
+        suburb = $('#city').val();
+        interestedZees = $('#zeeList').val()
+        listedForSaleZees = $('#zeeListedSale').val()
 
         var zeeSalesLeadRecord = record.load({
           type: 'customrecord_zee_sales_leads',
@@ -498,6 +799,33 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
         zeeSalesLeadRecord.save();
 
+        createUpdateRecord();
+
+        var suiteletUrl =
+          'https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=395&deploy=1'
+
+        suiteletUrl += '&rectype=customer&template=132';
+        suiteletUrl += '&recid=1646178&salesrep=409635&dear=' + '' +
+          '&contactid=' + null + '&userid=' + userId;
+
+        console.log(suiteletUrl);
+
+        var response = https.get({
+          url: suiteletUrl
+        });
+
+        var emailHtml = response.body;
+
+        console.log(emailHtml);
+
+        email.send({
+          author: 112209,
+          body: emailHtml,
+          recipients: leadEmail,
+          subject: 'Your MailPlus Franchise enquiry'
+        });
+
+
         var url = baseURL +
           '/app/site/hosting/scriptlet.nl?script=1409&deploy=1'
         window.location.href = url;
@@ -505,6 +833,23 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       $('#opportunityDenied').click(function() {
         zeeleadid = $(this).attr("data-id");
+
+        firstName = $('#firstName').val();
+        lastName = $('#lastName').val();
+        mobile = $('#mobile').val();
+        leadEmail = $('#email').val();
+        franchiseeTypeOfOwner = $('#franchiseeTypeOfOwner').val();
+        vehicle = $('#vehicle').val();
+        experience = $('#experience').val();
+        employment = $('#employment').val();
+        finance = $('#finance').val();
+        investment = $('#investment').val();
+        comments = $('#comments').val();
+        state = $('#state').val();
+        postcode = $('#postcode').val();
+        suburb = $('#city').val();
+        interestedZees = $('#zeeList').val()
+        listedForSaleZees = $('#zeeListedSale').val()
 
         var zeeSalesLeadRecord = record.load({
           type: 'customrecord_zee_sales_leads',
@@ -527,6 +872,32 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         });
 
         zeeSalesLeadRecord.save();
+
+        createUpdateRecord();
+
+        var suiteletUrl =
+          'https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=395&deploy=1'
+
+        suiteletUrl += '&rectype=customer&template=133';
+        suiteletUrl += '&recid=1646178&salesrep=409635&dear=' + '' +
+          '&contactid=' + null + '&userid=' + userId;
+
+        console.log(suiteletUrl);
+
+        var response = https.get({
+          url: suiteletUrl
+        });
+
+        var emailHtml = response.body;
+
+        console.log(emailHtml);
+
+        email.send({
+          author: 112209,
+          body: emailHtml,
+          recipients: leadEmail,
+          subject: 'MailPlus EOI outcome '
+        });
 
         var url = baseURL +
           '/app/site/hosting/scriptlet.nl?script=1409&deploy=1'
@@ -567,7 +938,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         errorMessage += 'Please Enter Mobile No.</br>';
       }
 
-      if (isNullorEmpty(email)) {
+      if (isNullorEmpty(leadEmail)) {
         errorMessage += 'Please Enter Email Address</br>';
       }
 
@@ -594,11 +965,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       }
     }
 
-    function saveRecord() {
-
-      console.log('inside save function')
-      console.log('zeeleadid: ' + zeeleadid)
-
+    function createUpdateRecord() {
       var combinedInterestedZees = [];
       if (!isNullorEmpty(listedForSaleZees) && !isNullorEmpty(interestedZees)) {
         combinedInterestedZees = listedForSaleZees.concat(interestedZees)
@@ -664,7 +1031,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       console.log('set mobile')
       zeeSalesLeadRecord.setValue({
         fieldId: 'custrecord_zee_lead_email',
-        value: email
+        value: leadEmail
       });
       console.log('set email')
       if (!isNullorEmpty(finance)) {
@@ -738,6 +1105,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       console.log('set postcode')
 
       zeeSalesLeadRecord.save();
+
+    }
+
+    function saveRecord() {
+
+      console.log('inside save function')
+      console.log('zeeleadid: ' + zeeleadid)
+
+      createUpdateRecord();
 
       return true;
 

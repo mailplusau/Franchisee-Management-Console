@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T08:26:00+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-01-27T11:25:04+11:00
+ * @Last modified time: 2022-02-09T14:36:17+11:00
  */
 
 
@@ -39,6 +39,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     var dateQualifiedNoTerritory = ''
     var dateOpportunityDenied = ''
     var interestedZees = [];
+    var eoiSent = '2';
 
     function onRequest(context) {
       var baseURL = 'https://system.na2.netsuite.com';
@@ -178,6 +179,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           dateOpportunityDenied = zeeSalesLeadRecord.getValue({
             fieldId: 'custrecord_date_opportunity_denied'
           });
+          eoiSent = zeeSalesLeadRecord.getValue({
+            fieldId: 'custrecord_eoi_sent'
+          });
 
         } else {
           form.addField({
@@ -188,6 +192,14 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             displayType: ui.FieldDisplayType.HIDDEN
           }).defaultValue = '0'
         }
+
+        form.addField({
+          id: 'custpage_eoisent',
+          type: ui.FieldType.TEXT,
+          label: 'Table CSV'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        }).defaultValue = eoiSent
 
         inlineHtml += lostZeeLeadModal();
 
@@ -311,12 +323,26 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span><a data-id="' +
           zeeleadid +
-          '" class="stageQualified" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>QUALIFIED LEAD</b></a></span> </div><div class="step current"> <span>OPPORTUNITY</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+          '" class="stageQualified" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>QUALIFIED LEAD</b></a></span> </div><div class="step current"> <span>OPPORTUNITY</span> </div><div class="step"> <span><a data-id="' +
+          zeeleadid +
+          '" class="eoiApprovedMichael" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>EOI APPROVED - MICHAEL</b></a></span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
       } else if (salesStage == 6) {
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span><a data-id="' +
           zeeleadid +
           '" class="stageQualified" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>QUALIFIED LEAD</b></a></span> </div><div class="step current"> <span>OPPORTUNITY - DENIED</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+      } else if (salesStage == 7) {
+        inlineHtml +=
+          '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span>QUALIFIED LEAD</span> </div><div class="step"> <span><a data-id="' +
+          zeeleadid +
+          '" class="stageOpportunity" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>OPPORTUNITY</b></a></span> </div><div class="step current"> <span><b>EOI APPROVED - MICHAEL</b></span> </div><div class="step"> <span><a data-id="' +
+          zeeleadid +
+          '" class="eoiApprovedChris" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>EOI APPROVED - CHRIS</b></a></span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+      } else if (salesStage == 8) {
+        inlineHtml +=
+          '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span><a data-id="' +
+          zeeleadid +
+          '" class="eoiApprovedMichael" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>EOI APPROVED - MICHAEL</b></a></span> </div><div class="step current"> <span><b>EOI APPROVED - CHRIS</b></span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
       } else {
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step current"> <span>NEW LEAD</span> </div><div class="step"> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
@@ -393,6 +419,16 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
      */
     function mainButtons(role) {
 
+      if (eoiSent == 1 || eoiSent == '1') {
+        var disableEOIButton = 'disabled';
+        var eoiButtonLabel = 'EOI SENT'
+        var eoiButtonClass = 'btn-light'
+      } else {
+        var disableEOIButton = '';
+        var eoiButtonLabel = 'SEND EOI';
+        var eoiButtonClass = 'btn-info'
+      }
+
       var inlineHtml = ''
       inlineHtml +=
         '<div class="form-group container zee_available_buttons_section">';
@@ -416,10 +452,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
         } else if (salesStage == 5) {
           inlineHtml +=
-            '<div class="col-xs-4 zeeLeadLost"><input type="button" value="SEND EOI" class="form-control btn btn-info" id="zeeLeadLost" data-id="' +
-            zeeleadid + '"/></div>'
+            '<div class="col-xs-4 sendEOI"><input type="button" value="' +
+            eoiButtonLabel + '" class="form-control btn ' + eoiButtonClass +
+            '" id="sendEOI" data-id="' +
+            zeeleadid + '" ' + disableEOIButton + '/></div>'
           inlineHtml +=
-            '<div class="col-xs-4 zeeLeadLost"><input type="button" value="OPPORTUNITY DENIED" class="form-control btn btn-danger" id="opportunityDenied" data-id="' +
+            '<div class="col-xs-4 opportunityDenied"><input type="button" value="OPPORTUNITY DENIED" class="form-control btn btn-danger" id="opportunityDenied" data-id="' +
             zeeleadid + '"/></div>'
           inlineHtml +=
             '<div class="col-xs-4 zeeLeadLost"><input type="button" value="LEAD LOST" class="form-control btn btn-danger" id="zeeLeadLost" data-id="' +
@@ -694,23 +732,29 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
+      if (franchiseeTypeOfOwner != 2) {
+        inlineHtml += '<div class="form-group container">';
+        inlineHtml += '<div class="row">';
+
+        inlineHtml +=
+          '<div class=" vehicle_section"><div class="input-group"><span class="input-group-addon">OWN A VEHICLE? </span><select id="vehicle" class="form-control vehicle" data-old="' +
+          vehicle + '">';
+        if (vehicle == 0 || isNullorEmpty(vehicle)) {
+          inlineHtml +=
+            '<option value=0></option><option value=1>Yes</option><option value=2>No</option>';
+        } else if (vehicle == 1) {
+          inlineHtml +=
+            '<option value=0></option><option value=1 selected>Yes</option><option value=2>No</option>';
+        } else if (vehicle == 2) {
+          inlineHtml +=
+            '<option value=0></option><option value=1>Yes</option><option value=2 selected>No</option>';
+        }
+        inlineHtml += '</select></div></div>';
+        inlineHtml += '</div>';
+        inlineHtml += '</div>';
+      }
       inlineHtml += '<div class="form-group container">';
       inlineHtml += '<div class="row">';
-      inlineHtml +=
-        '<div class="' + defaultHideClass +
-        ' vehicle_section"><div class="input-group"><span class="input-group-addon">OWN A VEHICLE? </span><select id="vehicle" class="form-control vehicle" data-old="' +
-        vehicle + '">';
-      if (vehicle == 0 || isNullorEmpty(vehicle)) {
-        inlineHtml +=
-          '<option value=0></option><option value=1>Yes</option><option value=2>No</option>';
-      } else if (vehicle == 1) {
-        inlineHtml +=
-          '<option value=0></option><option value=1 selected>Yes</option><option value=2>No</option>';
-      } else if (vehicle == 2) {
-        inlineHtml +=
-          '<option value=0></option><option value=1>Yes</option><option value=2 selected>No</option>';
-      }
-      inlineHtml += '</select></div></div>';
       inlineHtml +=
         '<div class="' + defaultColSpan +
         ' experience_section"><div class="input-group"><span class="input-group-addon">YEARS OF EXPERIENCE </span><select id="experience" class="form-control experience" data-old="' +
@@ -725,9 +769,11 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml +=
           '<option value=0></option><option value=1>0-1 Years</option><option value=2 selected>1-3 Years</option><option value=3>3-5 Years</option><option value=4>5+ Years</option>';
       } else if (experience == 3) {
-        '<option value=0></option><option value=1>0-1 Years</option><option value=2>1-3 Years</option><option value=3 selected>3-5 Years</option><option value=4>5+ Years</option>';
+        inlineHtml +=
+          '<option value=0></option><option value=1>0-1 Years</option><option value=2>1-3 Years</option><option value=3 selected>3-5 Years</option><option value=4>5+ Years</option>';
       } else if (experience == 4) {
-        '<option value=0></option><option value=1>0-1 Years</option><option value=2>1-3 Years</option><option value=3>3-5 Years</option><option value=4 selected>5+ Years</option>';
+        inlineHtml +=
+          '<option value=0></option><option value=1>0-1 Years</option><option value=2>1-3 Years</option><option value=3>3-5 Years</option><option value=4 selected>5+ Years</option>';
       }
       inlineHtml += '</select></div></div>';
       inlineHtml += '</div>';
