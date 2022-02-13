@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-02-09T14:43:10+11:00
+ * @Last modified time: 2022-02-10T18:14:33+11:00
  */
 
 
@@ -36,6 +36,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
     var interestedZees = [];
     var listedForSaleZees = [];
     var eoiSent = 0
+    var salePrice = 0;
+    var incGST = 0;
+    var totalSalePrice = 0.0;
 
     var baseURL = 'https://1048144.app.netsuite.com';
     if (runtime.EnvType == "SANDBOX") {
@@ -246,10 +249,42 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         interestedZees = $('#zeeList').val()
         listedForSaleZees = $('#zeeListedSale').val()
 
+        salePrice = $('#salePrice').val()
+        incGST = $('#incGST').val()
+        totalSalePrice = $('#totalPrice').val()
+
         if (validate()) {
           document.getElementById('submitter').click();
         }
 
+      });
+
+      $('#salePrice').focusout(function(e) {
+        salePrice = $('#salePrice').val()
+        incGST = $('#incGST').val()
+
+        if (incGST == 1) {
+          totalSalePrice = parseFloat(salePrice) + (parseFloat(salePrice) *
+            0.1);
+        } else {
+          totalSalePrice = parseFloat(salePrice);
+        }
+
+        $('#totalPrice').val(totalSalePrice)
+      });
+
+      $(document).on("change", "#incGST", function(e) {
+        salePrice = $('#salePrice').val()
+        incGST = $('#incGST').val()
+
+        if (incGST == 1) {
+          totalSalePrice = parseFloat(salePrice) + (parseFloat(salePrice) *
+            0.1);
+        } else {
+          totalSalePrice = parseFloat(salePrice);
+        }
+
+        $('#totalPrice').val(totalSalePrice)
       });
 
       $(document).on("change", "#franchiseeTypeOfOwner", function(e) {
@@ -655,6 +690,185 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
               '/app/site/hosting/scriptlet.nl?script=1411&deploy=1&zeeleadid=' +
               zeeleadid;
             window.location.href = url;
+          }
+        } else {
+          errorMessage += 'Please Send Expression of Interest.</br>';
+          if (!isNullorEmpty(errorMessage)) {
+            showAlert(errorMessage);
+            return false;
+          }
+        }
+
+
+      });
+
+      $(document).on('click', '.uploadEOI', function(e) {
+        zeeleadid = $(this).attr("data-id");
+
+        firstName = $('#firstName').val();
+        lastName = $('#lastName').val();
+        mobile = $('#mobile').val();
+        leadEmail = $('#email').val();
+        franchiseeTypeOfOwner = $('#franchiseeTypeOfOwner').val();
+        vehicle = $('#vehicle').val();
+        experience = $('#experience').val();
+        employment = $('#employment').val();
+        finance = $('#finance').val();
+        investment = $('#investment').val();
+        comments = $('#comments').val();
+        state = $('#state').val();
+        postcode = $('#postcode').val();
+        suburb = $('#city').val();
+
+        interestedZees = $('#zeeList').val()
+        listedForSaleZees = $('#zeeListedSale').val()
+        var errorMessage = '';
+        if (eoiSent == 1 || eoiSent == '1') {
+          if (validate()) {
+
+            interestedZees = $('#zeeList').val()
+            listedForSaleZees = $('#zeeListedSale').val()
+
+            var combinedInterestedZees = [];
+            if (!isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
+                interestedZees)) {
+              combinedInterestedZees = listedForSaleZees.concat(
+                interestedZees)
+            } else if (isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
+                interestedZees)) {
+              combinedInterestedZees = interestedZees
+            } else if (!isNullorEmpty(listedForSaleZees) && isNullorEmpty(
+                interestedZees)) {
+              combinedInterestedZees = listedForSaleZees
+            } else if (isNullorEmpty(listedForSaleZees) && isNullorEmpty(
+                interestedZees)) {
+              errorMessage += 'Please Select potential franchisees</br>';
+              if (!isNullorEmpty(errorMessage)) {
+                showAlert(errorMessage);
+                return false;
+              }
+            }
+
+            var zeeSalesLeadRecord = record.load({
+              type: 'customrecord_zee_sales_leads',
+              id: zeeleadid
+            });
+
+            zeeSalesLeadRecord.setValue({
+              fieldId: 'custrecord_zee_lead_stage',
+              value: 9
+            });
+
+            zeeSalesLeadRecord.setValue({
+              fieldId: 'custrecord_date_eoi_uploaded',
+              value: getDateToday()
+            });
+
+            zeeSalesLeadRecord.save();
+
+            document.getElementById('submitter').click();
+          }
+        } else {
+          errorMessage += 'Please Send Expression of Interest.</br>';
+          if (!isNullorEmpty(errorMessage)) {
+            showAlert(errorMessage);
+            return false;
+          }
+        }
+
+
+      });
+      $(document).on('click', '.financialsStep', function(e) {
+        zeeleadid = $(this).attr("data-id");
+
+        firstName = $('#firstName').val();
+        lastName = $('#lastName').val();
+        mobile = $('#mobile').val();
+        leadEmail = $('#email').val();
+        franchiseeTypeOfOwner = $('#franchiseeTypeOfOwner').val();
+        vehicle = $('#vehicle').val();
+        experience = $('#experience').val();
+        employment = $('#employment').val();
+        finance = $('#finance').val();
+        investment = $('#investment').val();
+        comments = $('#comments').val();
+        state = $('#state').val();
+        postcode = $('#postcode').val();
+        suburb = $('#city').val();
+
+        interestedZees = $('#zeeList').val()
+        listedForSaleZees = $('#zeeListedSale').val()
+
+        salePrice = $('#salePrice').val()
+        incGST = $('#incGST').val()
+        totalSalePrice = $('#totalPrice').val()
+
+
+        var errorMessage = '';
+        if (eoiSent == 1 || eoiSent == '1') {
+          if (validate()) {
+
+            interestedZees = $('#zeeList').val()
+            listedForSaleZees = $('#zeeListedSale').val()
+
+            var combinedInterestedZees = [];
+            if (!isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
+                interestedZees)) {
+              combinedInterestedZees = listedForSaleZees.concat(
+                interestedZees)
+            } else if (isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
+                interestedZees)) {
+              combinedInterestedZees = interestedZees
+            } else if (!isNullorEmpty(listedForSaleZees) && isNullorEmpty(
+                interestedZees)) {
+              combinedInterestedZees = listedForSaleZees
+            } else if (isNullorEmpty(listedForSaleZees) && isNullorEmpty(
+                interestedZees)) {
+              errorMessage += 'Please Select potential franchisees</br>';
+              if (!isNullorEmpty(errorMessage)) {
+                showAlert(errorMessage);
+                return false;
+              }
+            }
+
+            if (isNullorEmpty(salePrice)) {
+              errorMessage += 'Please Enter Sale Price</br>';
+              if (!isNullorEmpty(errorMessage)) {
+                showAlert(errorMessage);
+                return false;
+              }
+            }
+
+            var zeeSalesLeadRecord = record.load({
+              type: 'customrecord_zee_sales_leads',
+              id: zeeleadid
+            });
+
+            zeeSalesLeadRecord.setValue({
+              fieldId: 'custrecord_zee_lead_stage',
+              value: 10
+            });
+            zeeSalesLeadRecord.setValue({
+              fieldId: 'custrecord_sale_price',
+              value: salePrice
+            });
+            zeeSalesLeadRecord.setValue({
+              fieldId: 'custrecord_inc_gst',
+              value: incGST
+            });
+            zeeSalesLeadRecord.setValue({
+              fieldId: 'custrecord_total_sale_price',
+              value: totalSalePrice
+            });
+
+            zeeSalesLeadRecord.setValue({
+              fieldId: 'custrecord_date_finance_stage',
+              value: getDateToday()
+            });
+
+            zeeSalesLeadRecord.save();
+
+            document.getElementById('submitter').click();
           }
         } else {
           errorMessage += 'Please Send Expression of Interest.</br>';

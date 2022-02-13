@@ -4,14 +4,15 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T08:26:00+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-02-09T14:36:17+11:00
+ * @Last modified time: 2022-02-14T09:53:07+11:00
  */
 
 
 define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
-    'N/http', 'N/log', 'N/redirect', 'N/format'
+    'N/http', 'N/log', 'N/redirect', 'N/format', 'N/file'
   ],
-  function(ui, email, runtime, search, record, http, log, redirect, format) {
+  function(ui, email, runtime, search, record, http, log, redirect, format,
+    file) {
 
     var color_array = ['blue', 'red', 'green', 'orange', 'black'];
 
@@ -38,8 +39,15 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     var dateOpportunity = '';
     var dateQualifiedNoTerritory = ''
     var dateOpportunityDenied = ''
+    var dateEOIMichaelApproved = '';
+    var dateEOIChrisApproved = '';
+    var dateFinanceStage = '';
     var interestedZees = [];
     var eoiSent = '2';
+    var eoiFileId = 0;
+    var salePrice = 0;
+    var incGST = 2;
+    var totalSalePrice = 0;
 
     function onRequest(context) {
       var baseURL = 'https://system.na2.netsuite.com';
@@ -182,6 +190,30 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           eoiSent = zeeSalesLeadRecord.getValue({
             fieldId: 'custrecord_eoi_sent'
           });
+          dateEOIMichaelApproved = zeeSalesLeadRecord.getValue({
+            fieldId: 'custrecord_date_michael_approved'
+          });
+          dateEOIChrisApproved = zeeSalesLeadRecord.getValue({
+            fieldId: 'custrecord_date_chris_approved'
+          });
+          eoiFileId = zeeSalesLeadRecord.getValue({
+            fieldId: 'custrecord_eoi_doc_id'
+          });
+          salePrice = zeeSalesLeadRecord.getValue({
+            fieldId: 'custrecord_sale_price'
+          });
+          incGST = zeeSalesLeadRecord.getValue({
+            fieldId: 'custrecord_inc_gst'
+          });
+          if (isNullorEmpty(incGST)) {
+            incGST = 2
+          }
+          totalSalePrice = zeeSalesLeadRecord.getValue({
+            fieldId: 'custrecord_total_sale_price'
+          });
+          dateFinanceStage = zeeSalesLeadRecord.getValue({
+            fieldId: 'custrecord_date_finance_stage'
+          });
 
         } else {
           form.addField({
@@ -200,6 +232,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         }).updateDisplayType({
           displayType: ui.FieldDisplayType.HIDDEN
         }).defaultValue = eoiSent
+
 
         inlineHtml += lostZeeLeadModal();
 
@@ -232,8 +265,23 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           label: 'inlinehtml',
           type: 'inlinehtml'
         }).updateLayoutType({
-          layoutType: ui.FieldLayoutType.STARTROW
+          layoutType: ui.FieldLayoutType.MIDROW,
         }).defaultValue = inlineHtml;
+
+        if (salesStage == 8 || salesStage == '7') {
+          form.addField({
+              id: 'upload_file_1',
+              type: 'file',
+              label: 'Approved Expression of Interest'
+            }).updateLayoutType({
+              layoutType: ui.FieldLayoutType.OUTSIDEBELOW,
+            }).updateBreakType({
+              breakType: ui.FieldBreakType.STARTROW
+            }).isMandatory = true
+            // form.addField('upload_file_1', 'file',
+            //   'Approved Expression of Interest').setLayoutType(
+            //   'outsidebelow', 'startrow').setDisplaySize(40);
+        }
 
         form.addSubmitButton({
           label: 'SAVE'
@@ -243,6 +291,31 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         context.response.writePage(form);
 
       } else {
+
+        var file = context.request.files.upload_file_1;
+        var param_zeeleadid = context.request.parameters.custpage_zeeleadid;
+
+        if (!isNullorEmpty(file)) {
+
+          file.folder = 3162671;
+          var file_type = file.fileType;
+          var file_name = getDateToday() + '_' + param_zeeleadid + '.' +
+            file_type;
+          // Create file and upload it to the file cabinet.
+          file.name = file_name;
+          var f_id = file.save();
+
+          var rec = record.load({
+            type: 'customrecord_zee_sales_leads',
+            id: param_zeeleadid
+          });
+          rec.setValue({
+            fieldId: 'custrecord_eoi_doc_id',
+            value: f_id
+          });
+          rec.save();
+
+        }
 
         redirect.toSuitelet({
           scriptId: 'customscript_sl2_zee_new_leads_list',
@@ -342,7 +415,19 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span><a data-id="' +
           zeeleadid +
-          '" class="eoiApprovedMichael" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>EOI APPROVED - MICHAEL</b></a></span> </div><div class="step current"> <span><b>EOI APPROVED - CHRIS</b></span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+          '" class="eoiApprovedMichael" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>EOI APPROVED - MICHAEL</b></a></span> </div><div class="step current"> <span><b>EOI APPROVED - CHRIS</b></span> </div><div class="step"> <span><a data-id="' +
+          zeeleadid +
+          '" class="uploadEOI" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>UPLOAD SIGNED EOI</b></a></span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+      } else if (salesStage == 9) {
+        inlineHtml +=
+          '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step "> <span><a data-id="' +
+          zeeleadid +
+          '" class="eoiApprovedChris" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>EOI APPROVED - CHRIS</b></a></span> </div><div class="step current"> <span><b>APPROVED EOI UPLOADED</b></span> </div><div class="step"> <span><a data-id="' +
+          zeeleadid +
+          '" class="financialsStep" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>FINANCIALS</b></a></span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+      } else if (salesStage == 10) {
+        inlineHtml +=
+          '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step "> <span>EOI APPROVED - CHRIS</span> </div><div class="step "> <span>APPROVED EOI UPLOADE</span> </div><div class="step current"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
       } else {
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step current"> <span>NEW LEAD</span> </div><div class="step"> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
@@ -840,6 +925,27 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
+      inlineHtml += '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">DATE EOI MICHAEL APPROVED </span><input id="dateOpportunity" class="form-control dateOpportunity" value="' +
+        dateEOIMichaelApproved + '" readonly/></div></div>';
+      inlineHtml +=
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">DATE EOI CHRIS APPROVED </span><input id="dateOpportunity" class="form-control dateOpportunity" value="' +
+        dateEOIChrisApproved + '" readonly/></div></div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      inlineHtml += '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+
+      inlineHtml +=
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">DATE FINANCE STAGE </span><input id="dateOpportunity" class="form-control dateOpportunity" value="' +
+        dateFinanceStage + '" readonly/></div></div>';
+
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
       return inlineHtml
     }
 
@@ -902,6 +1008,52 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '</select></div></div>';
       inlineHtml += '</div>';
       inlineHtml += '</div>';
+
+      if (salesStage == 9 || salesStage == '9' || salesStage == 10 ||
+        salesStage == '10') {
+        inlineHtml += '<div class="form-group container">';
+        inlineHtml += '<div class="row">';
+        inlineHtml +=
+          '<div class="col-xs-4 sale_price_section"><div class="input-group"><span class="input-group-addon">SALE PRICE $: <span class="mandatory">*</span></span><input id="salePrice" class="form-control salePrice" value="' +
+          salePrice + '" /></div></div>';
+        inlineHtml +=
+          '<div class="col-xs-2 gst_section "><div class="input-group"><span class="input-group-addon" id="gst_text">INC GST <span class="mandatory">*</span></span><select id="incGST" class="form-control incGST" data-old="' +
+          finance + '">';
+        if (incGST == 0 || isNullorEmpty(incGST)) {
+          inlineHtml +=
+            '<option value=0></option><option value=1>Yes</option><option value=2>No</option>';
+        } else if (incGST == 1) {
+          inlineHtml +=
+            '<option value=0></option><option value=1 selected>Yes</option><option value=2>No</option>';
+        } else if (incGST == 2) {
+          inlineHtml +=
+            '<option value=0></option><option value=1>Yes</option><option value=2 selected>No</option>';
+        }
+        inlineHtml += '</select></div></div>';
+        inlineHtml +=
+          '<div class="col-xs-4 total_price_section"><div class="input-group"><span class="input-group-addon">TOTAL PRICE $: <span class="mandatory">*</span></span><input id="totalPrice" class="form-control totalPrice" value="' +
+          totalSalePrice + '" disabled/></div></div>';
+        inlineHtml += '</div>';
+        inlineHtml += '</div>';
+
+      }
+
+      if (eoiFileId != 0) {
+        inlineHtml += '<div class="form-group container">';
+        inlineHtml += '<div class="row">';
+        var fileObj = file.load({
+          id: eoiFileId
+        });
+        inlineHtml +=
+          '<div class="col-xs-2"></div>';
+        inlineHtml +=
+          '<div class="col-xs-8" style="text-align: center;"><iframe id="viewer" frameborder="0" scrolling="no" width="400" height="600" src="' +
+          fileObj.url + '"></iframe></div>';
+        inlineHtml +=
+          '<div class="col-xs-2"></div>';
+        inlineHtml += '</div>';
+        inlineHtml += '</div>';
+      }
 
       return inlineHtml
 
