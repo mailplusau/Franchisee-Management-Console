@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T08:26:00+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-02-14T09:53:07+11:00
+ * @Last modified time: 2022-02-24T09:10:37+11:00
  */
 
 
@@ -48,6 +48,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     var salePrice = 0;
     var incGST = 2;
     var totalSalePrice = 0;
+    var owner = '0';
+    var owner_list = '';
 
     function onRequest(context) {
       var baseURL = 'https://system.na2.netsuite.com';
@@ -214,6 +216,14 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           dateFinanceStage = zeeSalesLeadRecord.getValue({
             fieldId: 'custrecord_date_finance_stage'
           });
+          owner = zeeSalesLeadRecord.getValue({
+            fieldId: 'owner'
+          });
+
+          log.debug({
+            title: 'owner',
+            details: owner
+          })
 
         } else {
           form.addField({
@@ -255,6 +265,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml += areasOfInterestSection();
         inlineHtml += potentialZeesSection();
         inlineHtml += financeSection();
+        inlineHtml += reminderCommentsSection();
         inlineHtml += salesWFDateDetails();
         inlineHtml += line();
         inlineHtml += mainButtons()
@@ -377,40 +388,47 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step current"> <span>NEW LEAD</span> </div><div class="step"> <span><a data-id="' +
           zeeleadid +
-          '" class="stageQualified" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>QUALIFIED LEAD</b></a></span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+          '" class="stageQualified" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>QUALIFIED LEAD</b></a></span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span>IM SENT</span> </div><div class="step"> <span>NDA SENT</span> </div><div class="step"> <span>OPERATIONS MEETING</span> </div><div class="step"> <span>SALES MEETING</span> </div><div class="step"> <span>FINANCE MEETING</span> </div><div class="step"> <span>EOI & DEPOSIT</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
       } else if (salesStage == 2) {
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span><a data-id="' +
           zeeleadid +
           '" class="stageNewLead" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>NEW LEAD</b></a></span> </div><div class="step current"> <span>QUALIFIED LEAD</span> </div><div class="step"> <span><a data-id="' +
           zeeleadid +
-          '" class="stageOpportunity" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>OPPORTUNITY</b></a></span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+          '" class="stageOpportunity" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>OPPORTUNITY</b></a></span> </div><div class="step"> <span>IM SENT</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
       } else if (salesStage == 4) {
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span><a data-id="' +
           zeeleadid +
           '" class="stageNewLead" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>NEW LEAD</b></a></span> </div><div class="step current"> <span>QUALIFIED LEAD - NO TERRITORY</span> </div><div class="step"> <span><a data-id="' +
           zeeleadid +
-          '" class="stageOpportunity" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>OPPORTUNITY</b></a></span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+          '" class="stageOpportunity" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>OPPORTUNITY</b></a></span> </div><div class="step"> <span>IM SENT</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
       } else if (salesStage == 5) {
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span><a data-id="' +
           zeeleadid +
-          '" class="stageQualified" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>QUALIFIED LEAD</b></a></span> </div><div class="step current"> <span>OPPORTUNITY</span> </div><div class="step"> <span><a data-id="' +
+          '" class="stageQualified" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>QUALIFIED LEAD</b></a></span> </div><div class="step current"> <span>OPPORTUNITY</span> </div><div class="step"><span><a data-id="' +
           zeeleadid +
-          '" class="eoiApprovedMichael" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>EOI APPROVED - MICHAEL</b></a></span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+          '" class="stageIMSent" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>IM SENT</b></a></span></div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
       } else if (salesStage == 6) {
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span><a data-id="' +
           zeeleadid +
-          '" class="stageQualified" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>QUALIFIED LEAD</b></a></span> </div><div class="step current"> <span>OPPORTUNITY - DENIED</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+          '" class="stageQualified" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>QUALIFIED LEAD</b></a></span> </div><div class="step current"> <span>OPPORTUNITY - DENIED</span> </div><div class="step"> <span>IM SENT</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
       } else if (salesStage == 7) {
+        inlineHtml +=
+          '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span><a data-id="' +
+          zeeleadid +
+          '" class="stageIMSent" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>IM SENT</b></a></span> </div><div class="step current"> <span><b>EOI APPROVED - MICHAEL</b></span> </div><div class="step"> <span><a data-id="' +
+          zeeleadid +
+          '" class="eoiApprovedChris" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>EOI APPROVED - CHRIS</b></a></span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+      } else if (salesStage == 13) {
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span>QUALIFIED LEAD</span> </div><div class="step"> <span><a data-id="' +
           zeeleadid +
-          '" class="stageOpportunity" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>OPPORTUNITY</b></a></span> </div><div class="step current"> <span><b>EOI APPROVED - MICHAEL</b></span> </div><div class="step"> <span><a data-id="' +
+          '" class="stageOpportunity" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>OPPORTUNITY</b></a></span> </div><div class="step current"> <span><b>IM SENT</b></span> </div><div class="step current"> <span><a data-id="' +
           zeeleadid +
-          '" class="eoiApprovedChris" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>EOI APPROVED - CHRIS</b></a></span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+          '" class="eoiApprovedMichael" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>EOI APPROVED - MICHAEL</b></a></span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
       } else if (salesStage == 8) {
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span><a data-id="' +
@@ -420,17 +438,17 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           '" class="uploadEOI" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>UPLOAD SIGNED EOI</b></a></span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
       } else if (salesStage == 9) {
         inlineHtml +=
-          '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step "> <span><a data-id="' +
+          '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span>IM SENT</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step "> <span><a data-id="' +
           zeeleadid +
           '" class="eoiApprovedChris" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>EOI APPROVED - CHRIS</b></a></span> </div><div class="step current"> <span><b>APPROVED EOI UPLOADED</b></span> </div><div class="step"> <span><a data-id="' +
           zeeleadid +
           '" class="financialsStep" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>FINANCIALS</b></a></span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
       } else if (salesStage == 10) {
         inlineHtml +=
-          '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step "> <span>EOI APPROVED - CHRIS</span> </div><div class="step "> <span>APPROVED EOI UPLOADE</span> </div><div class="step current"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+          '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span>IM SENT</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step "> <span>EOI APPROVED - CHRIS</span> </div><div class="step "> <span>APPROVED EOI UPLOADE</span> </div><div class="step current"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
       } else {
         inlineHtml +=
-          '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step current"> <span>NEW LEAD</span> </div><div class="step"> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+          '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step current"> <span>NEW LEAD</span> </div><div class="step"> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span>IM SENT</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
       }
 
       // inlineHtml += '<div class="nav clearfix" style="margin-top: 10px !important;"><a href="#" class="prev btn btn-sm btn-info" style="border-radius: 15px !important;background-color: #103D39;border-color: transparent;">Previous Stage</a><a href="#" class="next pull-right btn btn-sm btn-info" style="border-radius: 15px !important;background-color: #103D39;border-color: transparent;">Next Stage</a></div></div></div>'
@@ -864,15 +882,6 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
-      inlineHtml += '<div class="form-group container">';
-      inlineHtml += '<div class="row">';
-      inlineHtml +=
-        '<div class="col-xs-12 comments_section"><div class="input-group"><span class="input-group-addon">COMMENTS </span><textarea id="comments" class="form-control comments" >' +
-        comments + '</textarea></div></div>';
-
-      inlineHtml += '</div>';
-      inlineHtml += '</div>';
-
       return inlineHtml
     }
 
@@ -1057,6 +1066,94 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
       return inlineHtml
 
+    }
+
+    function reminderCommentsSection() {
+
+      if (isNullorEmpty(owner) || owner == -4) {
+        var userId = runtime.getCurrentUser().id;
+        log.debug({
+          title: 'userId',
+          details: userId
+        })
+        owner_list = [userId];
+      }
+
+
+      var inlineHtml =
+        '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #103D39;">REMINDERS & COMMENTS</span></h4></div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      if (salesStage >= 2) {
+        inlineHtml += '<div class="form-group container ">';
+        inlineHtml += '<div class="row">';
+        // Reminder field
+        inlineHtml += '<div class="col-xs-6 reminder">';
+        inlineHtml += '<div class="input-group">';
+        inlineHtml +=
+          '<span class="input-group-addon" id="reminder_text">REMINDER<span class="mandatory">*</span></span>';
+        inlineHtml +=
+          '<input id="reminder" class="form-control reminder" type="date" />';
+        inlineHtml += '</div></div>';
+
+
+        inlineHtml += '<div class="col-xs-6 owner">';
+        inlineHtml += '<div class="input-group">';
+        inlineHtml +=
+          '<span class="input-group-addon" id="owner_text">OWNER<span class="mandatory">*</span></span>';
+        inlineHtml += '<select id="owner" class="form-control owner" >';
+
+        var employeeSearch = search.load({
+          type: 'employee',
+          id: 'customsearch_active_employees'
+        });
+        var employeeResultSet = employeeSearch.run();
+        employeeResultSet.each(function(employeeResult) {
+          var employee_id = employeeResult.id;
+          var employee_firstname = employeeResult.getValue('firstname');
+          var employee_lastname = employeeResult.getValue('lastname');
+          var employee_email = employeeResult.getValue('email');
+
+
+          if (owner_list.indexOf(parseInt(employee_id)) != -1) {
+            inlineHtml += '<option value="' + employee_id +
+              '" data-email="' + employee_email + '" selected>' +
+              employee_firstname + ' ' + employee_lastname + '</option>';
+          } else {
+            inlineHtml += '<option value="' + employee_id +
+              '" data-email="' + employee_email + '">' +
+              employee_firstname + ' ' + employee_lastname + '</option>';
+          }
+          return true;
+        });
+
+        inlineHtml += '</select>';
+        inlineHtml += '</div></div>';
+
+        inlineHtml += '</div></div>';
+      }
+
+
+      inlineHtml += '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-12 old_comments_section"><div class="input-group"><span class="input-group-addon">PREVIOUS COMMENTS </span><textarea id="old_comments" class="form-control old_comments" readonly style="height: 150px">' +
+        comments + '</textarea></div></div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+      inlineHtml += '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-12 comments_section"><div class="input-group"><span class="input-group-addon">COMMENTS </span><textarea id="comments" class="form-control comments" ></textarea></div></div>';
+
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      return inlineHtml
     }
 
     /*

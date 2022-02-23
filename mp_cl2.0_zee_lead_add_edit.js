@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-02-10T18:14:33+11:00
+ * @Last modified time: 2022-02-23T15:00:54+11:00
  */
 
 
@@ -29,6 +29,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
     var investment = '0';
     var classification = '0';
     var salesStage = '0';
+    var old_comments = '';
     var comments = '';
     var suburb = '';
     var state = '';
@@ -175,6 +176,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         employment = $('#employment').val();
         finance = $('#finance').val();
         investment = $('#investment').val();
+        old_comments = $('#old_comments').val();
         comments = $('#comments').val();
         state = $('#state').val();
         postcode = $('#postcode').val();
@@ -241,6 +243,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         employment = $('#employment').val();
         finance = $('#finance').val();
         investment = $('#investment').val();
+        old_comments = $('#old_comments').val();
         comments = $('#comments').val();
         state = $('#state').val();
         postcode = $('#postcode').val();
@@ -340,6 +343,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         employment = $('#employment').val();
         finance = $('#finance').val();
         investment = $('#investment').val();
+        old_comments = $('#old_comments').val();
         comments = $('#comments').val();
         state = $('#state').val();
         postcode = $('#postcode').val();
@@ -404,6 +408,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         employment = $('#employment').val();
         finance = $('#finance').val();
         investment = $('#investment').val();
+        old_comments = $('#old_comments').val();
         comments = $('#comments').val();
         state = $('#state').val();
         postcode = $('#postcode').val();
@@ -476,6 +481,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         employment = $('#employment').val();
         finance = $('#finance').val();
         investment = $('#investment').val();
+        old_comments = $('#old_comments').val();
         comments = $('#comments').val();
         state = $('#state').val();
         postcode = $('#postcode').val();
@@ -551,6 +557,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         employment = $('#employment').val();
         finance = $('#finance').val();
         investment = $('#investment').val();
+        old_comments = $('#old_comments').val();
         comments = $('#comments').val();
         state = $('#state').val();
         postcode = $('#postcode').val();
@@ -633,6 +640,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         employment = $('#employment').val();
         finance = $('#finance').val();
         investment = $('#investment').val();
+        old_comments = $('#old_comments').val();
         comments = $('#comments').val();
         state = $('#state').val();
         postcode = $('#postcode').val();
@@ -715,6 +723,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         employment = $('#employment').val();
         finance = $('#finance').val();
         investment = $('#investment').val();
+        old_comments = $('#old_comments').val();
         comments = $('#comments').val();
         state = $('#state').val();
         postcode = $('#postcode').val();
@@ -791,6 +800,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         employment = $('#employment').val();
         finance = $('#finance').val();
         investment = $('#investment').val();
+        old_comments = $('#old_comments').val();
         comments = $('#comments').val();
         state = $('#state').val();
         postcode = $('#postcode').val();
@@ -911,6 +921,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         employment = $('#employment').val();
         finance = $('#finance').val();
         investment = $('#investment').val();
+        old_comments = $('#old_comments').val();
         comments = $('#comments').val();
         state = $('#state').val();
         postcode = $('#postcode').val();
@@ -984,6 +995,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         employment = $('#employment').val();
         finance = $('#finance').val();
         investment = $('#investment').val();
+        old_comments = $('#old_comments').val();
         comments = $('#comments').val();
         state = $('#state').val();
         postcode = $('#postcode').val();
@@ -1058,6 +1070,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         employment = $('#employment').val();
         finance = $('#finance').val();
         investment = $('#investment').val();
+        old_comments = $('#old_comments').val();
         comments = $('#comments').val();
         state = $('#state').val();
         postcode = $('#postcode').val();
@@ -1297,9 +1310,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         });
         console.log('set interested zees')
       }
+      var combineComments = '';
+      combineComments = old_comments + "\n";
+      var dateToday = getDateToday().toString();
+      var dateSplit = dateToday.split("GMT");
+      combineComments += dateSplit[0] + ' By: ' + runtime.getCurrentUser()
+        .name + ' - Comment: ' + comments;
       zeeSalesLeadRecord.setValue({
         fieldId: 'custrecord_comments',
-        value: comments
+        value: combineComments
       });
       console.log('set comments')
       zeeSalesLeadRecord.setValue({
