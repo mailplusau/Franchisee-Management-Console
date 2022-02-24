@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-02-23T15:00:54+11:00
+ * @Last modified time: 2022-02-24T14:10:14+11:00
  */
 
 
@@ -40,6 +40,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
     var salePrice = 0;
     var incGST = 0;
     var totalSalePrice = 0.0;
+    var reminder;
+    var owner = '0';
+    var combineComments = '';
 
     var baseURL = 'https://1048144.app.netsuite.com';
     if (runtime.EnvType == "SANDBOX") {
@@ -486,6 +489,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         state = $('#state').val();
         postcode = $('#postcode').val();
         suburb = $('#city').val();
+        reminder = $('#reminder').val();
+        owner = $('#owner').val();
+        owner_text = $("#owner option:selected").text();
 
         interestedZees = $('#zeeList').val()
         listedForSaleZees = $('#zeeListedSale').val()
@@ -517,6 +523,27 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             }
           }
 
+          if (isNullorEmpty(reminder)) {
+            errorMessage += 'Please Select Reminder Date</br>';
+            if (!isNullorEmpty(errorMessage)) {
+              showAlert(errorMessage);
+              return false;
+            }
+          } else {
+            var reminderArray = reminder.split('-')
+            reminder = reminderArray[1] + '/' + reminderArray[2] + '/' +
+              reminderArray[0]
+
+          }
+
+          if (isNullorEmpty(owner)) {
+            errorMessage += 'Please Select Owner</br>';
+            if (!isNullorEmpty(errorMessage)) {
+              showAlert(errorMessage);
+              return false;
+            }
+          }
+
           var zeeSalesLeadRecord = record.load({
             type: 'customrecord_zee_sales_leads',
             id: zeeleadid
@@ -525,6 +552,32 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           zeeSalesLeadRecord.setValue({
             fieldId: 'custrecord_zee_lead_stage',
             value: 5
+          });
+
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_reminder_date',
+            value: formatDate(reminder)
+          });
+
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'owner',
+            value: owner
+          });
+
+          combineComments += old_comments + "\n";
+          var dateToday = getDateToday().toString();
+          var dateReminder = formatDate(reminder).toString();
+          var dateSplitToday = dateToday.split("GMT");
+          var dateSplitReminder = dateReminder.split("GMT");
+          combineComments += dateSplitToday[0] +
+            ' - Comment: Reminder Set for ' + dateSplitReminder[0] +
+            ' for ' + owner_text;
+
+          console.log(combineComments);
+
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_comments',
+            value: combineComments
           });
 
           zeeSalesLeadRecord.setValue({
@@ -787,6 +840,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
 
       });
+
       $(document).on('click', '.financialsStep', function(e) {
         zeeleadid = $(this).attr("data-id");
 
@@ -1310,17 +1364,20 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         });
         console.log('set interested zees')
       }
-      var combineComments = '';
-      combineComments = old_comments + "\n";
-      var dateToday = getDateToday().toString();
-      var dateSplit = dateToday.split("GMT");
-      combineComments += dateSplit[0] + ' By: ' + runtime.getCurrentUser()
-        .name + ' - Comment: ' + comments;
-      zeeSalesLeadRecord.setValue({
-        fieldId: 'custrecord_comments',
-        value: combineComments
-      });
-      console.log('set comments')
+      if (!isNullorEmpty(comments)) {
+        combineComments += +"\n" + old_comments + "\n";
+        var dateToday = getDateToday().toString();
+        var dateSplit = dateToday.split("GMT");
+        combineComments += dateSplit[0] + ' By: ' + runtime.getCurrentUser()
+          .name + ' - Comment: ' + comments;
+
+        zeeSalesLeadRecord.setValue({
+          fieldId: 'custrecord_comments',
+          value: combineComments
+        });
+        console.log('set comments')
+      }
+
       zeeSalesLeadRecord.setValue({
         fieldId: 'custrecord_areas_of_interest_suburb',
         value: suburb
@@ -1365,13 +1422,14 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
 
     function formatDate(testDate) {
-      console.log('testDate: ' + testDate);
-      var responseDate = format.format({
-        value: testDate,
-        type: format.Type.DATE
+      var reminder_date = new Date(testDate);
+      reminder_date = format.parse({
+        value: reminder_date,
+        type: format.Type.DATE,
+        timezone: format.Timezone.AUSTRALIA_SYDNEY
       });
-      console.log('responseDate: ' + responseDate);
-      return responseDate;
+
+      return reminder_date;
     }
 
     function replaceAll(string) {

@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T08:26:00+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-02-24T09:10:37+11:00
+ * @Last modified time: 2022-02-24T15:43:45+11:00
  */
 
 
@@ -44,11 +44,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     var dateFinanceStage = '';
     var interestedZees = [];
     var eoiSent = '2';
+    var imSent = '2';
     var eoiFileId = 0;
     var salePrice = 0;
     var incGST = 2;
     var totalSalePrice = 0;
     var owner = '0';
+    var reminder;
     var owner_list = '';
 
     function onRequest(context) {
@@ -219,10 +221,20 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           owner = zeeSalesLeadRecord.getValue({
             fieldId: 'owner'
           });
+          reminder = zeeSalesLeadRecord.getValue({
+            fieldId: 'custrecord_reminder_date'
+          });
+          imSent = zeeSalesLeadRecord.getValue({
+            fieldId: 'custrecord_im_sent'
+          });
 
           log.debug({
             title: 'owner',
             details: owner
+          })
+          log.debug({
+            title: 'reminder',
+            details: reminder
           })
 
         } else {
@@ -395,21 +407,21 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           zeeleadid +
           '" class="stageNewLead" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>NEW LEAD</b></a></span> </div><div class="step current"> <span>QUALIFIED LEAD</span> </div><div class="step"> <span><a data-id="' +
           zeeleadid +
-          '" class="stageOpportunity" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>OPPORTUNITY</b></a></span> </div><div class="step"> <span>IM SENT</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+          '" class="stageOpportunity" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>OPPORTUNITY</b></a></span> </div><div class="step"> <span>IM SENT</span> </div><div class="step"> <span>NDA SENT</span> </div><div class="step"> <span>OPERATIONS MEETING</span> </div><div class="step"> <span>SALES MEETING</span> </div><div class="step"> <span>FINANCE MEETING</span> </div><div class="step"> <span>EOI & DEPOSIT</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
       } else if (salesStage == 4) {
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span><a data-id="' +
           zeeleadid +
           '" class="stageNewLead" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>NEW LEAD</b></a></span> </div><div class="step current"> <span>QUALIFIED LEAD - NO TERRITORY</span> </div><div class="step"> <span><a data-id="' +
           zeeleadid +
-          '" class="stageOpportunity" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>OPPORTUNITY</b></a></span> </div><div class="step"> <span>IM SENT</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+          '" class="stageOpportunity" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>OPPORTUNITY</b></a></span> </div><div class="step"> <span>IM SENT</span> </div><div class="step"> <span>NDA SENT</span> </div><div class="step"> <span>OPERATIONS MEETING</span> </div><div class="step"> <span>SALES MEETING</span> </div><div class="step"> <span>FINANCE MEETING</span> </div><div class="step"> <span>EOI & DEPOSIT</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
       } else if (salesStage == 5) {
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span><a data-id="' +
           zeeleadid +
           '" class="stageQualified" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>QUALIFIED LEAD</b></a></span> </div><div class="step current"> <span>OPPORTUNITY</span> </div><div class="step"><span><a data-id="' +
           zeeleadid +
-          '" class="stageIMSent" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>IM SENT</b></a></span></div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+          '" class="stageIMSent" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>IM SENT</b></a></span></div><div class="step"> <span>NDA SENT</span> </div><div class="step"> <span>OPERATIONS MEETING</span> </div><div class="step"> <span>SALES MEETING</span> </div><div class="step"> <span>FINANCE MEETING</span> </div><div class="step"> <span>EOI & DEPOSIT</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
       } else if (salesStage == 6) {
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span><a data-id="' +
@@ -532,6 +544,16 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var eoiButtonClass = 'btn-info'
       }
 
+      if (imSent == 1 || imSent == '1') {
+        var disableIMButton = 'disabled';
+        var imButtonLabel = 'IM SENT'
+        var imButtonClass = 'btn-light'
+      } else {
+        var disableIMButton = '';
+        var imButtonLabel = 'SEND IM';
+        var imButtonClass = 'btn-info'
+      }
+
       var inlineHtml = ''
       inlineHtml +=
         '<div class="form-group container zee_available_buttons_section">';
@@ -554,11 +576,16 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             zeeleadid + '" /></div>'
 
         } else if (salesStage == 5) {
+          // inlineHtml +=
+          //   '<div class="col-xs-4 sendEOI"><input type="button" value="' +
+          //   eoiButtonLabel + '" class="form-control btn ' + eoiButtonClass +
+          //   '" id="sendEOI" data-id="' +
+          //   zeeleadid + '" ' + disableEOIButton + '/></div>'
           inlineHtml +=
-            '<div class="col-xs-4 sendEOI"><input type="button" value="' +
-            eoiButtonLabel + '" class="form-control btn ' + eoiButtonClass +
-            '" id="sendEOI" data-id="' +
-            zeeleadid + '" ' + disableEOIButton + '/></div>'
+            '<div class="col-xs-4 sendIM"><input type="button" value="' +
+            imButtonLabel + '" class="form-control btn ' + imButtonClass +
+            '" id="sendIM" data-id="' +
+            zeeleadid + '" ' + disableIMButton + '/></div>'
           inlineHtml +=
             '<div class="col-xs-4 opportunityDenied"><input type="button" value="OPPORTUNITY DENIED" class="form-control btn btn-danger" id="opportunityDenied" data-id="' +
             zeeleadid + '"/></div>'
@@ -1068,6 +1095,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
     }
 
+    /*
+     * PURPOSE : REMINDER AND COMMENTS SECTION
+     *  PARAMS :  -
+     * RETURNS :  INLINEHTML
+     *   NOTES :
+     */
+
     function reminderCommentsSection() {
 
       if (isNullorEmpty(owner) || owner == -4) {
@@ -1077,8 +1111,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           details: userId
         })
         owner_list = [userId];
+      } else {
+        owner_list = [owner];
       }
-
 
       var inlineHtml =
         '<div class="form-group container">';
@@ -1096,8 +1131,29 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml += '<div class="input-group">';
         inlineHtml +=
           '<span class="input-group-addon" id="reminder_text">REMINDER<span class="mandatory">*</span></span>';
-        inlineHtml +=
-          '<input id="reminder" class="form-control reminder" type="date" />';
+        if (!isNullorEmpty(reminder)) {
+          reminder = format.format({
+            value: reminder,
+            type: format.Type.DATE
+          });
+          var reminderArray = reminder.split('/');
+          if (reminderArray[1] < 10) {
+            reminderArray[1] = '0' + reminderArray[1];
+          }
+          if (reminderArray[0] < 10) {
+            reminderArray[0] = '0' + reminderArray[0];
+          }
+          var formattedReminder = reminderArray[2] + '-' + reminderArray[1] +
+            '-' + reminderArray[0];
+
+          inlineHtml +=
+            '<input id="reminder" class="form-control reminder" type="date" value="' +
+            formattedReminder + '"/>';
+        } else {
+          inlineHtml +=
+            '<input id="reminder" class="form-control reminder" type="date" />';
+        }
+
         inlineHtml += '</div></div>';
 
 
@@ -1119,7 +1175,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           var employee_email = employeeResult.getValue('email');
 
 
-          if (owner_list.indexOf(parseInt(employee_id)) != -1) {
+          if (owner == employee_id) {
             inlineHtml += '<option value="' + employee_id +
               '" data-email="' + employee_email + '" selected>' +
               employee_firstname + ' ' + employee_lastname + '</option>';

@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-11-02T08:24:43+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-02-03T11:18:57+11:00
+ * @Last modified time: 2022-02-24T15:26:39+11:00
  */
 
 
@@ -2113,6 +2113,11 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
           myRecord.setValue({
             fieldId: 'custpage_new_operator',
             value: vehicleNewOperatorArray.toString()
+          });
+
+          myRecord.setValue({
+            fieldId: 'custpage_listforsale',
+            value: 'T'
           });
 
           document.getElementById('submitter').click();

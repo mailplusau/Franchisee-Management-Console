@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-11-15T07:25:50+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-02-03T11:18:56+11:00
+ * @Last modified time: 2022-02-24T15:27:26+11:00
  */
 
 define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
@@ -736,6 +736,10 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           id: zeeId
         });
 
+        var zeeName = zeeRecord.getValue({
+          fieldId: 'companyname'
+        });
+
         zeeRecord.setValue({
           fieldId: 'custentity3',
           value: franchiseeMainContact
@@ -777,11 +781,24 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           zeeRecord.setValue({
             fieldId: 'custentity_listed_for_sale',
             value: 1
-          })
+          });
           zeeRecord.setValue({
             fieldId: 'custentity_date_listed_for_sale',
             value: getDateToday()
-          })
+          });
+
+          var email_body = ' Franchisee NS ID: ' + zeeId +
+            '</br> Franchisee Name: ' + zeeName +
+            '</br> Date: ' + getDateToday() +
+            '</br> Franchisee NS ID: ' + zeeRecordId;
+
+          email.send({
+            author: 112209,
+            recipients: ['michael.mcdaid@mailplus.com.au'],
+            subject: 'Listed for Sale - ' + zeeName + ' Franchisee',
+            body: email_body,
+            cc: ['ankith.ravindran@mailplus.com.au']
+          });
         }
 
         log.debug({
