@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-02-24T16:41:37+11:00
+ * @Last modified time: 2022-02-28T14:33:29+11:00
  */
 
 
@@ -88,7 +88,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       $(".viewZeeLead").click(function() {
         var zeeLeadInternalID = $(this).attr("data-id");
         var url = baseURL +
-          '/app/site/hosting/scriptlet.nl?script=1411&deploy=1&zeeleadid=' +
+          '/app/site/hosting/scriptlet.nl?script=1430&deploy=1&zeeid=' +
           zeeLeadInternalID;
         window.location.href = url;
 
@@ -123,7 +123,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           className: 'bolded'
         }, {
           className: "col-sm-2",
-          "targets": [0,1]
+          "targets": [0, 1]
         }, {
           className: "text-center",
           targets: [0, 1, 2, 3, 4]
@@ -139,7 +139,6 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
     }
 
     function loadZeeSalesLeadSearch() {
-
 
       //NetSuite Search: Franchisee Sales Leads - Website
       var searchZeeListedforSale = search.load({
