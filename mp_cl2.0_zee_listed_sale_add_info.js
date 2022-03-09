@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-02-28T14:20:17+11:00
+ * @Last modified time: 2022-03-10T08:43:37+11:00
  */
 
 
@@ -17,32 +17,33 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
     var userId = 0;
     var role = 0;
 
-    var firstName = '';
-    var lastName = '';
-    var mobile = '';
-    var leadEmail = '';
-    var franchiseeTypeOfOwner = '0';
-    var vehicle = '0';
-    var experience = '0';
-    var employment = '0';
-    var finance = '0';
-    var investment = '0';
-    var classification = '0';
-    var salesStage = '0';
-    var old_comments = '';
-    var comments = '';
-    var suburb = '';
-    var state = '';
-    var postcode = '';
-    var interestedZees = [];
-    var listedForSaleZees = [];
-    var eoiSent = 0
-    var salePrice = 0;
-    var incGST = 0;
-    var totalSalePrice = 0.0;
-    var reminder;
-    var owner = '0';
-    var combineComments = '';
+    var zeeleadid = 0;
+    var zeeName = '';
+    var mainContact = '';
+    var contactNumber = '';
+    var email = '';
+    var address = '';
+    var dateListedForSale = '';
+    var abn = '';
+    var tradingEntity = '';
+    var commencementDate = '';
+    var expiryDate = '';
+    var ultimateExpiryDate = '';
+    var unlimitedTermOffer = '';
+    var renewalTerms = '';
+    var lowPrice = '';
+    var highPrice = '';
+    var nabAccreditation = '';
+    var nabAccreditationFee = '';
+    var salesCommission = '';
+    var serviceRevenue = '';
+    var serviceRevenueYear = '';
+    var mpexRevenue = '';
+    var mpexRevenueYear = '';
+    var sendleRevenue = '';
+    var sendleRevenueYear = '';
+    var finalPurchasePrice = '';
+
 
     var baseURL = 'https://1048144.app.netsuite.com';
     if (runtime.EnvType == "SANDBOX") {
@@ -136,10 +137,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       // Get the value of custom fields
       zeeleadid = (myRecord.getValue({
-        fieldId: 'custpage_zeeleadid'
-      }));
-      eoiSent = (myRecord.getValue({
-        fieldId: 'custpage_eoisent'
+        fieldId: 'custpage_zee2'
       }));
 
       $('.ui.dropdown').dropdown();
@@ -159,11 +157,180 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         $(this).parent().hide();
       });
 
+      $(document).on("click", "#sendDeed", function(e) {
+
+        tradingEntity = $('#tradingEntity').val();
+        mainContact = $('#mainContact').val();
+        contactNumber = $('#contactNumber').val();
+        email = $('#email').val();
+        address = $('#address').val();
+
+        console.log(tradingEntity)
+        console.log(mainContact)
+        console.log(contactNumber)
+        console.log(email)
+        console.log(address)
+
+
+        if (validate()) {
+
+          myRecord.setValue({
+            fieldId: 'custpage_trading_entity2',
+            value: tradingEntity
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_main_contact2',
+            value: mainContact
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_email2',
+            value: email
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_address2',
+            value: address
+          });
+
+          document.getElementById('submitter').click();
+
+        }
+
+      });
+
+      $(document).on("click", "#uploadDeed", function(e) {
+
+        tradingEntity = $('#tradingEntity').val();
+        mainContact = $('#mainContact').val();
+        contactNumber = $('#contactNumber').val();
+        email = $('#email').val();
+        address = $('#address').val();
+
+        console.log(tradingEntity)
+        console.log(mainContact)
+        console.log(contactNumber)
+        console.log(email)
+        console.log(address)
+
+
+        if (validate()) {
+
+          myRecord.setValue({
+            fieldId: 'custpage_trading_entity2',
+            value: tradingEntity
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_main_contact2',
+            value: mainContact
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_email2',
+            value: email
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_address2',
+            value: address
+          });
+
+          document.getElementById('submitter').click();
+
+        }
+
+      });
+
+      $(document).on("click", "#saveZeeLead", function(e) {
+
+        tradingEntity = $('#tradingEntity').val();
+        mainContact = $('#mainContact').val();
+        contactNumber = $('#contactNumber').val();
+        email = $('#email').val();
+        address = $('#address').val();
+
+        lowPrice = $('#lowPrice').val();
+        highPrice = $('#highPrice').val();
+        serviceRevenue = $('#serviceRevenue').val();
+        serviceRevenueYear = $('#serviceRevenueYear').val();
+        mpexRevenue = $('#mpexRevenue').val();
+        mpexRevenueYear = $('#mpexRevenueYear').val();
+        sendleRevenue = $('#sendleRevenue').val();
+        sendleRevenueYear = $('#sendleRevenueYear').val();
+        salesCommission = $('#salesCommission').val();
+        nabAccreditation = $('#nabAccreditation').val();
+        nabAccreditationFee = $('#nabAccreditationFee').val();
+        finalPurchasePrice = $('#finalPurchasePrice').val();
+
+
+        if (validateRevenueComms()) {
+
+          if (zeeleadid != 0) {
+            var zeeRecord = record.load({
+              type: record.Type.PARTNER,
+              id: zeeleadid
+            });
+
+            zeeRecord.setValue({
+              fieldId: 'custentity_low_price',
+              value: lowPrice
+            });
+            zeeRecord.setValue({
+              fieldId: 'custentity_high_price',
+              value: highPrice
+            });
+            zeeRecord.setValue({
+              fieldId: 'custentity_nab_accreditation',
+              value: nabAccreditation
+            });
+            zeeRecord.setValue({
+              fieldId: 'custentity_nab_accreditation_fee',
+              value: nabAccreditationFee
+            });
+            zeeRecord.setValue({
+              fieldId: 'custentity_sales_commission',
+              value: salesCommission
+            });
+            zeeRecord.setValue({
+              fieldId: 'custentity_service_revenue',
+              value: serviceRevenue
+            });
+            zeeRecord.setValue({
+              fieldId: 'custentity_service_revenue_year',
+              value: serviceRevenueYear
+            });
+            zeeRecord.setValue({
+              fieldId: 'custentity_mpex_revenue',
+              value: mpexRevenue
+            });
+            zeeRecord.setValue({
+              fieldId: 'custentitympex_revenue_year',
+              value: mpexRevenueYear
+            });
+            zeeRecord.setValue({
+              fieldId: 'custentity_sendle_revenue',
+              value: sendleRevenue
+            });
+            zeeRecord.setValue({
+              fieldId: 'custentity_sendle_revenue_year',
+              value: sendleRevenueYear
+            });
+            zeeRecord.setValue({
+              fieldId: 'custentity_final_sale_price',
+              value: finalPurchasePrice
+            });
+
+            zeeRecord.save();
+
+          }
+
+          document.getElementById('submitter').click();
+
+        }
+
+      });
+
       afterLoad();
 
       $(document).on("click", '#backButton', function(e) {
         var url = baseURL +
-          '/app/site/hosting/scriptlet.nl?script=1409&deploy=1'
+          '/app/site/hosting/scriptlet.nl?script=1427&deploy=1'
         window.location.href = url;
       });
 
@@ -190,35 +357,102 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
     function validate() {
       var errorMessage = '';
-      if (isNullorEmpty(firstName)) {
-        errorMessage += 'Please Enter First Name</br>';
+      if (isNullorEmpty(tradingEntity)) {
+        errorMessage += 'Please Enter Trading Entity</br>';
       }
 
-      if (isNullorEmpty(lastName)) {
-        errorMessage += 'Please Enter Last Name</br>';
+      if (isNullorEmpty(mainContact)) {
+        errorMessage += 'Please Enter Main Contact</br>';
       }
 
-      if (isNullorEmpty(mobile)) {
-        errorMessage += 'Please Enter Mobile No.</br>';
+      if (isNullorEmpty(contactNumber)) {
+        errorMessage += 'Please Enter Mobile Number</br>';
       }
 
-      if (isNullorEmpty(leadEmail)) {
-        errorMessage += 'Please Enter Email Address</br>';
+      if (isNullorEmpty(email)) {
+        errorMessage += 'Please Enter Email</br>';
       }
 
-      if (isNullorEmpty(franchiseeTypeOfOwner)) {
-        errorMessage += 'Please Select Type of Owner</br>';
+      if (isNullorEmpty(address)) {
+        errorMessage += 'Please Enter Address</br>';
+      }
+
+      if (!isNullorEmpty(errorMessage)) {
+        showAlert(errorMessage);
+        return false;
       } else {
-        // if (franchiseeTypeOfOwner != 4) {
-        //   if (isNullorEmpty(interestedZees) && isNullorEmpty(
-        //       listedForSaleZees)) {
-        //     errorMessage += 'Please Select Interested Franchisees</br>';
-        //   }
-        // }
+        return true;
+      }
+    }
+
+    function validateRevenueComms() {
+      var errorMessage = '';
+      if (isNullorEmpty(tradingEntity)) {
+        errorMessage += 'Please Enter Trading Entity</br>';
       }
 
-      if (isNullorEmpty(state) || isNullorEmpty(postcode)) {
-        errorMessage += 'Please Select Area of Interest</br>';
+      if (isNullorEmpty(mainContact)) {
+        errorMessage += 'Please Enter Main Contact</br>';
+      }
+
+      if (isNullorEmpty(contactNumber)) {
+        errorMessage += 'Please Enter Mobile Number</br>';
+      }
+
+      if (isNullorEmpty(email)) {
+        errorMessage += 'Please Enter Email</br>';
+      }
+
+      if (isNullorEmpty(address)) {
+        errorMessage += 'Please Enter Address</br>';
+      }
+
+      if (isNullorEmptyExcZero(lowPrice)) {
+        errorMessage += 'Please Enter Low Price</br>';
+      }
+
+      if (isNullorEmptyExcZero(highPrice)) {
+        errorMessage += 'Please Enter High Price</br>';
+      }
+
+      if (isNullorEmptyExcZero(serviceRevenue)) {
+        errorMessage += 'Please Enter Service Revenue</br>';
+      }
+
+      if (isNullorEmpty(serviceRevenueYear)) {
+        errorMessage += 'Please Enter Service Revenue Year</br>';
+      }
+
+      if (isNullorEmptyExcZero(mpexRevenue)) {
+        errorMessage += 'Please Enter MPEX Revenue</br>';
+      }
+
+      if (isNullorEmpty(mpexRevenueYear)) {
+        errorMessage += 'Please Enter MPEX Revenue Year</br>';
+      }
+
+      if (isNullorEmptyExcZero(sendleRevenue)) {
+        errorMessage += 'Please Enter Sendle Revenue</br>';
+      }
+
+      if (isNullorEmpty(sendleRevenueYear)) {
+        errorMessage += 'Please Enter Sendle Revenue Year</br>';
+      }
+
+      if (isNullorEmptyExcZero(salesCommission)) {
+        errorMessage += 'Please Enter Sales Commission</br>';
+      }
+
+      if (isNullorEmpty(nabAccreditation)) {
+        errorMessage += 'Please Select NAB Accreditation</br>';
+      }
+
+      if (isNullorEmptyExcZero(nabAccreditationFee)) {
+        errorMessage += 'Please Enter NAB Accreditation Fee</br>';
+      }
+
+      if (isNullorEmpty(finalPurchasePrice)) {
+        errorMessage += 'Please Enter Final Purchase Price</br>';
       }
 
       if (!isNullorEmpty(errorMessage)) {
@@ -341,6 +575,11 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         undefined || strVal == 'undefined' || strVal == '- None -' ||
         strVal ==
         '0');
+    }
+
+    function isNullorEmptyExcZero(strVal) {
+      return (strVal == null || strVal == '' || strVal == 'null' || strVal ==
+        undefined || strVal == 'undefined' || strVal == '- None -');
     }
 
     return {

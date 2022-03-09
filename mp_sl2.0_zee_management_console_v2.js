@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-11-15T07:25:50+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-02-24T15:27:26+11:00
+ * @Last modified time: 2022-03-09T10:03:34+11:00
  */
 
 define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
@@ -718,17 +718,6 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var newownerArrys = newowner.split(',')
         var newoperatorArrys = newoperator.split(',')
 
-        var dobArray = FranchiseeDOB.split('-')
-        var dobString = dobArray[1] + '/' + dobArray[2] + '/' + dobArray[0]
-
-        log.debug({
-          title: "dobString",
-          details: dobString
-        });
-        log.debug({
-          title: "dateISOToNetsuite",
-          details: getDate(dobString)
-        });
 
         //Load Partner Record & Save the main details
         var zeeRecord = record.load({
@@ -748,22 +737,38 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           fieldId: 'custentity2',
           value: franchiseeMobileNumber
         })
-        zeeRecord.setValue({
-          fieldId: 'custentity_type_of_owner',
-          value: franchiseeTypeOfOwner
-        })
+        if (franchiseeTypeOfOwner != 0) {
+          zeeRecord.setValue({
+            fieldId: 'custentity_type_of_owner',
+            value: franchiseeTypeOfOwner
+          })
+        }
+
         zeeRecord.setValue({
           fieldId: 'custentity_personal_email_address',
           value: franchiseePersonalEmail
+        });
+
+        log.debug({
+          title: 'dobArray',
+          details: dobArray
         })
-        zeeRecord.setValue({
-          fieldId: 'custentity_zee_dob',
-          value: getDate(dobString)
-        })
-        zeeRecord.setValue({
-          fieldId: 'custentity_vacc_status',
-          value: franchiseeVaccinationStatus
-        })
+
+        if (!isNullorEmpty(dobArray)) {
+          var dobArray = FranchiseeDOB.split('-')
+          var dobString = dobArray[1] + '/' + dobArray[2] + '/' + dobArray[0]
+          zeeRecord.setValue({
+            fieldId: 'custentity_zee_dob',
+            value: getDate(dobString)
+          })
+        }
+        if (franchiseeVaccinationStatus != 0) {
+          zeeRecord.setValue({
+            fieldId: 'custentity_vacc_status',
+            value: franchiseeVaccinationStatus
+          })
+        }
+
         zeeRecord.setValue({
           fieldId: 'custentity_kin_name',
           value: franchiseeNextOfKinName
@@ -772,10 +777,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           fieldId: 'custentity_kin_mobile',
           value: franchiseeNextOfKinMobile
         })
-        zeeRecord.setValue({
-          fieldId: 'custentity_kin_relationship',
-          value: franchiseeNextOfKinRelationship
-        })
+        if (franchiseeNextOfKinRelationship != 0) {
+          zeeRecord.setValue({
+            fieldId: 'custentity_kin_relationship',
+            value: franchiseeNextOfKinRelationship
+          })
+        }
+
 
         if (listforsale == 'T') {
           zeeRecord.setValue({
@@ -792,13 +800,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             '</br> Date: ' + getDateToday() +
             '</br> Franchisee NS ID: ' + zeeRecordId;
 
-          email.send({
-            author: 112209,
-            recipients: ['michael.mcdaid@mailplus.com.au'],
-            subject: 'Listed for Sale - ' + zeeName + ' Franchisee',
-            body: email_body,
-            cc: ['ankith.ravindran@mailplus.com.au']
-          });
+          // email.send({
+          //   author: 112209,
+          //   recipients: ['michael.mcdaid@mailplus.com.au'],
+          //   subject: 'Listed for Sale - ' + zeeName + ' Franchisee',
+          //   body: email_body,
+          //   cc: ['ankith.ravindran@mailplus.com.au']
+          // });
         }
 
         log.debug({

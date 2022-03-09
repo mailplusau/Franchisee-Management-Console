@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-11-02T08:24:43+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-02-24T15:26:39+11:00
+ * @Last modified time: 2022-03-09T09:30:22+11:00
  */
 
 
@@ -1889,7 +1889,241 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         }
 
         //Validation of the franchisee main details
-        if (validate()) {
+        if (role == 1000) {
+          if (validate()) {
+            myRecord.setValue({
+              fieldId: 'custpage_maincontact',
+              value: mainContact
+            });
+
+            myRecord.setValue({
+              fieldId: 'custpage_mobilenumber',
+              value: mainContactMobile
+            });
+
+            myRecord.setValue({
+              fieldId: 'custpage_typeofowner',
+              value: franchiseeTypeOfOwner
+            });
+
+            myRecord.setValue({
+              fieldId: 'custpage_personalemail',
+              value: personalEmail
+            });
+
+            myRecord.setValue({
+              fieldId: 'custpage_dob',
+              value: dob
+            });
+
+            myRecord.setValue({
+              fieldId: 'custpage_vaccinationstatus',
+              value: vaccinationStatus
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_nextofkinname',
+              value: franchiseeNextOfKinName
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_nextofkinmobile',
+              value: franchiseeNextOfKinMobile
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_nextofkinrelationship',
+              value: franchiseeNextOfKinRelationship
+            });
+
+            myRecord.setValue({
+              fieldId: 'custpage_addressids',
+              value: addressIdsArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_address1',
+              value: address1Array.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_address2',
+              value: address2Array.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_suburb',
+              value: addressSuburbArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_state',
+              value: addressStateArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_postcode',
+              value: addressPostcodeArray.toString()
+            });
+
+            myRecord.setValue({
+              fieldId: 'custpage_operatorids',
+              value: operatorIdsArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_operatorname',
+              value: operatorNameArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_operatoremail',
+              value: operatorEmailArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_operatormobile',
+              value: operatorMobileArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_operatorrole',
+              value: operatorRoleArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_operatoremploymentype',
+              value: operatorEmploymentTypeArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_operatordds',
+              value: operatorDDSArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_operatorprimary',
+              value: operatorPrimaryArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_operatormobiledev',
+              value: operatorMobileDevArray.toString()
+            });
+
+            //New Operator Details
+            myRecord.setValue({
+              fieldId: 'custpage_new_operatorids',
+              value: operatorNewIdsArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_new_operatorname',
+              value: operatorNewNameArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_new_operatoremail',
+              value: operatorNewEmailArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_new_operatormobile',
+              value: operatorNewMobileArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_new_operatorrole',
+              value: operatorNewRoleArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_new_operatoremploymentype',
+              value: operatorNewEmploymentTypeArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_new_operatordds',
+              value: operatorNewDDSArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_new_operatorprimary',
+              value: operatorNewPrimaryArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_new_operatormobiledev',
+              value: operatorNewMobileDevArray.toString()
+            });
+
+            myRecord.setValue({
+              fieldId: 'custpage_fleetids',
+              value: vehicleIdsArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_fleetrego',
+              value: vehicleRegoArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_fleetmodel',
+              value: vehicleModelArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_fleetmake',
+              value: vehicleMakeArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_fleetcolor',
+              value: vehicleColorArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_fleetyear',
+              value: vehicleYearArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_fleetsignage',
+              value: vehicleSignageArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_caregocage',
+              value: vehicleCargoCageArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_owner',
+              value: vehicleOwnerArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_operator',
+              value: vehicleOperatorArray.toString()
+            });
+
+            //New Fleet Details
+            myRecord.setValue({
+              fieldId: 'custpage_new_fleetids',
+              value: vehicleNewIdsArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_new_fleetrego',
+              value: vehicleNewRegoArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_new_fleetmodel',
+              value: vehicleNewModelArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_new_fleetmake',
+              value: vehicleNewMakeArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_new_fleetcolor',
+              value: vehicleNewColorArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_new_fleetyear',
+              value: vehicleNewYearArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_new_fleetsignage',
+              value: vehicleNewSignageArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_new_caregocage',
+              value: vehicleNewCargoCageArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_new_owner',
+              value: vehicleNewOwnerArray.toString()
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_new_operator',
+              value: vehicleNewOperatorArray.toString()
+            });
+
+            myRecord.setValue({
+              fieldId: 'custpage_listforsale',
+              value: 'T'
+            });
+
+            document.getElementById('submitter').click();
+          }
+        } else {
           myRecord.setValue({
             fieldId: 'custpage_maincontact',
             value: mainContact
@@ -2121,7 +2355,9 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
           });
 
           document.getElementById('submitter').click();
+
         }
+
       });
 
 

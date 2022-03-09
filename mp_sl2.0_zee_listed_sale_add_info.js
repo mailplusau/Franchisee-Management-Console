@@ -4,17 +4,18 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T08:26:00+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-03-02T09:30:37+11:00
+ * @Last modified time: 2022-03-10T08:43:38+11:00
  */
 
 
 define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
-    'N/http', 'N/log', 'N/redirect', 'N/format', 'N/file'
+    'N/http', 'N/log', 'N/redirect', 'N/format', 'N/file', 'N/task'
   ],
   function(ui, email, runtime, search, record, http, log, redirect, format,
-    file) {
+    file, task) {
 
     var zeeId = 0;
+    var zeeAgreementId = 0;
     var zeeName = '';
     var mainContact = '';
     var contactNumber = '';
@@ -23,6 +24,27 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     var dateListedForSale = '';
     var abn = '';
     var tradingEntity = '';
+    var commencementDate = '';
+    var expiryDate = '';
+    var ultimateExpiryDate = '';
+    var unlimitedTermOffer = '';
+    var renewalTerms = '';
+    var lowPrice = '';
+    var highPrice = '';
+    var nabAccreditation = '';
+    var nabAccreditationFee = '';
+    var salesCommission = '';
+    var serviceRevenue = '';
+    var serviceRevenueYear = '';
+    var mpexRevenue = '';
+    var mpexRevenueYear = '';
+    var sendleRevenue = '';
+    var sendleRevenueYear = '';
+    var finalPurchasePrice = '';
+    var deedOfVariationSent = 0;
+    var deedOfVariationUploaded = 0;
+    var dateDeedOfVariationSent = '';
+    var deedOfVariation = '';
 
     function onRequest(context) {
       var baseURL = 'https://system.na2.netsuite.com';
@@ -75,8 +97,19 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             fieldId: 'email'
           });
 
+          log.debug({
+            title: 'count',
+            details: zeeSalesLeadRecord.getLineCount({
+              sublistId: 'addressbook'
+            })
+          });
+
+          var addressCount = zeeSalesLeadRecord.getLineCount({
+            sublistId: 'addressbook'
+          });
+
           address = zeeSalesLeadRecord.getValue({
-            fieldId: 'defaultaddress'
+            fieldId: 'shipaddress'
           });
 
           dateListedForSale = zeeSalesLeadRecord.getValue({
@@ -86,6 +119,53 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           abn = zeeSalesLeadRecord.getValue({
             fieldId: 'custentity_abn_franchiserecord'
           });
+
+          lowPrice = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_low_price'
+          });
+          highPrice = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_high_price'
+          });
+          nabAccreditation = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_nab_accreditation'
+          });
+          nabAccreditationFee = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_nab_accreditation_fee'
+          });
+          salesCommission = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_sales_commission'
+          });
+          serviceRevenue = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_service_revenue'
+          });
+          serviceRevenueYear = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_service_revenue_year'
+          });
+          mpexRevenue = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_mpex_revenue'
+          });
+          mpexRevenueYear = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentitympex_revenue_year'
+          });
+          sendleRevenue = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_sendle_revenue'
+          });
+          sendleRevenueYear = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_sendle_revenue_year'
+          });
+          finalPurchasePrice = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_final_sale_price'
+          });
+          deedOfVariationSent = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_deed_of_variation_sent'
+          });
+          dateDeedOfVariationSent = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_date_deed_of_variation_sent'
+          });
+          deedOfVariationUploaded = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_deed_uploaded'
+          });
+
 
           var searchZeeAgreements = search.load({
             id: 'customsearch_zee_agreements_listed_for_s',
@@ -103,13 +183,96 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
           searchZeeAgreements.run().each(function(
             searchZeeAgreementsResultSet) {
-              tradingEntity = searchZeeAgreementsResultSet.getValue('custrecord_fr_agreement_entity');
-              return true;
+            zeeAgreementId = searchZeeAgreementsResultSet.getValue(
+              'internalid');
+            tradingEntity = searchZeeAgreementsResultSet.getValue(
+              'custrecord_fr_agreement_entity');
+            commencementDate = searchZeeAgreementsResultSet.getValue(
+              'custrecord_fr_agreement_comm_date');
+            expiryDate = searchZeeAgreementsResultSet.getValue(
+              'custrecord_fr_agreement_expiry_date');
+            ultimateExpiryDate = searchZeeAgreementsResultSet.getValue(
+              'custrecord_fr_agreement_ult_expiry_date');
+            unlimitedTermOffer = searchZeeAgreementsResultSet.getValue(
+              'custrecord_unlimited_term_offer');
+            renewalTerms = searchZeeAgreementsResultSet.getValue(
+              'custrecord_fr_agreement_yrs_extended');
+            deedOfVariation = searchZeeAgreementsResultSet.getValue(
+              'custrecord_fr_agreement_deed');
+            address = searchZeeAgreementsResultSet.getValue({
+              name: "shipaddress",
+              join: "CUSTRECORD_FR_AGREEMENT_FRANCHISEE"
+            });
+            return true;
           });
 
           var form = ui.createForm({
             title: zeeName + ' Franchisee Presales'
           });
+
+          form.addField({
+            id: 'custpage_zee_agreement2',
+            type: ui.FieldType.TEXT,
+            label: 'Day'
+          }).updateDisplayType({
+            displayType: ui.FieldDisplayType.HIDDEN
+          }).defaultValue = zeeAgreementId;
+
+          form.addField({
+            id: 'custpage_zee2',
+            type: ui.FieldType.TEXT,
+            label: 'Day'
+          }).updateDisplayType({
+            displayType: ui.FieldDisplayType.HIDDEN
+          }).defaultValue = zeeId;
+
+          form.addField({
+            id: 'custpage_dov_sent',
+            type: ui.FieldType.TEXT,
+            label: 'Day'
+          }).updateDisplayType({
+            displayType: ui.FieldDisplayType.HIDDEN
+          }).defaultValue = deedOfVariationSent;
+
+          form.addField({
+            id: 'custpage_trading_entity2',
+            type: ui.FieldType.TEXT,
+            label: 'Day'
+          }).updateDisplayType({
+            displayType: ui.FieldDisplayType.HIDDEN
+          }).defaultValue = tradingEntity;
+
+          form.addField({
+            id: 'custpage_main_contact2',
+            type: ui.FieldType.TEXT,
+            label: 'Day'
+          }).updateDisplayType({
+            displayType: ui.FieldDisplayType.HIDDEN
+          }).defaultValue = mainContact;
+
+          form.addField({
+            id: 'custpage_address2',
+            type: ui.FieldType.TEXT,
+            label: 'Day'
+          }).updateDisplayType({
+            displayType: ui.FieldDisplayType.HIDDEN
+          }).defaultValue = address;
+
+          form.addField({
+            id: 'custpage_email2',
+            type: ui.FieldType.TEXT,
+            label: 'Day'
+          }).updateDisplayType({
+            displayType: ui.FieldDisplayType.HIDDEN
+          }).defaultValue = email;
+
+          form.addField({
+            id: 'custpage_dov_uploaded2',
+            type: ui.FieldType.TEXT,
+            label: 'Day'
+          }).updateDisplayType({
+            displayType: ui.FieldDisplayType.HIDDEN
+          }).defaultValue = deedOfVariationUploaded;
 
           //Loading Section that gets displayed when the page is being loaded
           inlineHtml +=
@@ -135,20 +298,19 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             layoutType: ui.FieldLayoutType.MIDROW,
           }).defaultValue = inlineHtml;
 
-          // if (salesStage == 8 || salesStage == '7') {
-          //   form.addField({
-          //       id: 'upload_file_1',
-          //       type: 'file',
-          //       label: 'Approved Expression of Interest'
-          //     }).updateLayoutType({
-          //       layoutType: ui.FieldLayoutType.OUTSIDEBELOW,
-          //     }).updateBreakType({
-          //       breakType: ui.FieldBreakType.STARTROW
-          //     }).isMandatory = true
-          //     // form.addField('upload_file_1', 'file',
-          //     //   'Approved Expression of Interest').setLayoutType(
-          //     //   'outsidebelow', 'startrow').setDisplaySize(40);
-          // }
+          if (deedOfVariationSent == 1 && isNullorEmpty(deedOfVariation) &&
+            deedOfVariationUploaded != 1) {
+            form.addField({
+              id: 'upload_file_1',
+              type: 'file',
+              label: 'Upload Signed Deed of Variation'
+            }).updateLayoutType({
+              layoutType: ui.FieldLayoutType.OUTSIDEBELOW,
+            }).updateBreakType({
+              breakType: ui.FieldBreakType.STARTROW
+            }).isMandatory = true
+          }
+
 
           form.addSubmitButton({
             label: 'SAVE'
@@ -167,33 +329,71 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
       } else {
 
-        var file = context.request.files.upload_file_1;
-        var param_zeeleadid = context.request.parameters.custpage_zeeleadid;
+        var param_zee_agreement_id = context.request.parameters.custpage_zee_agreement2;
+        var param_dov_uploaded = context.request.parameters.custpage_dov_uploaded2;
+        var param_dov_sent = context.request.parameters.custpage_dov_sent;
+        var param_param_zeeid = context.request.parameters.custpage_zee2;
+        var param_tradingEntity = context.request.parameters.custpage_trading_entity2;
+        var param_mainContact = context.request.parameters.custpage_main_contact2;
+        var param_email = context.request.parameters.custpage_email2;
+        var param_address = context.request.parameters.custpage_address2;
 
-        if (!isNullorEmpty(file)) {
+        if (param_dov_sent != 1) {
+          var params = {
+            custscript_zee_zeeid: param_param_zeeid,
+            custscript_zee_trading_entity: param_tradingEntity,
+            custscript_zee_main_contact: param_mainContact,
+            custscript_zee_email: param_email,
+            custscript_zee_address: param_address,
+          };
+          var reschedule = task.create({
+            taskType: task.TaskType.SCHEDULED_SCRIPT,
+            scriptId: 'customscript_ss_prefill_deed_of_variatio',
+            deploymentId: 'customdeploy1',
+            params: params
+          });
 
-          file.folder = 3162671;
+          log.debug({
+            title: 'rescheduling',
+            details: 'rescheduling'
+          });
+
+          reschedule.submit();
+
+        } else if (param_dov_sent == 1 && param_dov_uploaded != 1) {
+          var file = context.request.files.upload_file_1;
+          file.folder = 2905930;
           var file_type = file.fileType;
-          var file_name = getDateToday() + '_' + param_zeeleadid + '.' +
+          var file_name = 'Deed of Variation - ' + zeeName + ' - ' +
+            getDateToday() + '.' +
             file_type;
           // Create file and upload it to the file cabinet.
           file.name = file_name;
           var f_id = file.save();
 
           var rec = record.load({
-            type: 'customrecord_zee_sales_leads',
-            id: param_zeeleadid
+            type: 'customrecord_fr_agreements',
+            id: param_zee_agreement_id
           });
           rec.setValue({
-            fieldId: 'custrecord_eoi_doc_id',
+            fieldId: 'custrecord_fr_agreement_deed',
             value: f_id
           });
           rec.save();
 
+          var zeeRec = record.load({
+            type: 'partner',
+            id: param_param_zeeid
+          });
+          zeeRec.setValue({
+            fieldId: 'custentity_deed_uploaded',
+            value: 1
+          });
+          zeeRec.save();
         }
 
         redirect.toSuitelet({
-          scriptId: 'customscript_sl2_zee_new_leads_list',
+          scriptId: 'customscript_sl_zee_listed_for_sale',
           deploymentId: 'customdeploy1',
         });
 
@@ -264,10 +464,19 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml +=
         '<div class="form-group container zee_available_buttons_section">';
       inlineHtml += '<div class="row">';
-      inlineHtml +=
-        '<div class="col-xs-6 sendDeed"><input type="button" value="SEND DEED OF VARIATION" class="form-control btn btn-info" id="sendDeed" /></div>'
-      inlineHtml +=
-        '<div class="col-xs-6 saveZeeLead"><input type="button" value="SAVE" class="form-control btn btn-primary" id="saveZeeLead" /></div>'
+      if (deedOfVariationSent != 1) {
+        inlineHtml +=
+          '<div class="col-xs-6 sendDeed"><input type="button" value="SEND DEED OF VARIATION" class="form-control btn btn-info" id="sendDeed" /></div>'
+        inlineHtml +=
+          '<div class="col-xs-6 saveZeeLead"><input type="button" value="SAVE" class="form-control btn btn-primary" id="saveZeeLead" /></div>'
+      } else if (deedOfVariationSent == 1 && deedOfVariationUploaded != 1) {
+        inlineHtml +=
+          '<div class="col-xs-12 saveZeeLead"><input type="button" value="UPLOAD SIGNED DEED OF VARIATION" class="form-control btn btn-primary" id="uploadDeed" /></div>'
+      } else {
+        inlineHtml +=
+          '<div class="col-xs-12 saveZeeLead"><input type="button" value="SAVE" class="form-control btn btn-primary" id="saveZeeLead" /></div>'
+      }
+
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
@@ -281,6 +490,10 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
      *   NOTES :
      */
     function mainSection() {
+
+      var formattedCommencementDate = '';
+      var formattedExpiryDate = '';
+      var formattedUltimateExpiryDate = '';
 
       dateListedForSale = format.format({
         value: dateListedForSale,
@@ -296,6 +509,59 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       var formattedDateListedForSale = dateListedForSaleArray[2] + '-' +
         dateListedForSaleArray[1] +
         '-' + dateListedForSaleArray[0];
+
+      if (!isNullorEmpty(commencementDate)) {
+        commencementDate = format.format({
+          value: commencementDate,
+          type: format.Type.DATE
+        });
+
+        var commencementDateArray = commencementDate.split('/');
+        if (commencementDateArray[1] < 10) {
+          commencementDateArray[1] = '0' + commencementDateArray[1];
+        }
+        if (commencementDateArray[0] < 10) {
+          commencementDateArray[0] = '0' + commencementDateArray[0];
+        }
+        var formattedCommencementDate = commencementDateArray[2] + '-' +
+          commencementDateArray[1] +
+          '-' + commencementDateArray[0];
+      }
+
+      if (!isNullorEmpty(expiryDate)) {
+        expiryDate = format.format({
+          value: expiryDate,
+          type: format.Type.DATE
+        });
+        var expiryDateArray = expiryDate.split('/');
+        if (expiryDateArray[1] < 10) {
+          expiryDateArray[1] = '0' + expiryDateArray[1];
+        }
+        if (expiryDateArray[0] < 10) {
+          expiryDateArray[0] = '0' + expiryDateArray[0];
+        }
+        var formattedExpiryDate = expiryDateArray[2] + '-' +
+          expiryDateArray[1] +
+          '-' + expiryDateArray[0];
+      }
+
+      if (!isNullorEmpty(ultimateExpiryDate)) {
+        ultimateExpiryDate = format.format({
+          value: ultimateExpiryDate,
+          type: format.Type.DATE
+        });
+        var ultimateExpiryDateArray = ultimateExpiryDate.split('/');
+        if (ultimateExpiryDateArray[1] < 10) {
+          ultimateExpiryDateArray[1] = '0' + ultimateExpiryDateArray[1];
+        }
+        if (ultimateExpiryDateArray[0] < 10) {
+          ultimateExpiryDateArray[0] = '0' + ultimateExpiryDateArray[0];
+        }
+        var formattedUltimateExpiryDate = ultimateExpiryDateArray[2] + '-' +
+          ultimateExpiryDateArray[1] +
+          '-' + ultimateExpiryDateArray[0];
+      }
+
 
       var inlineHtml =
         '<div class="form-group container">';
@@ -350,6 +616,139 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '</div>';
 
 
+      inlineHtml += '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">COMMENCEMENT DATE <span class="mandatory">*</span></span><input id="commencementDate" class="form-control commencementDate" type="date" value="' +
+        formattedCommencementDate + '" /></div></div>';
+      inlineHtml +=
+        '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">EXPIRY DATE <span class="mandatory">*</span></span><input id="expiryDate" class="form-control expiryDate" type="date" value="' +
+        formattedExpiryDate + '" /></div></div>';
+      inlineHtml +=
+        '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">ULTIMATE EXPIRY DATE <span class="mandatory">*</span></span><input id="ultimateExpiryDate" class="form-control ultimateExpiryDate" type="date" value="' +
+        formattedUltimateExpiryDate + '" /></div></div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      if (!isNullorEmpty(deedOfVariation)) {
+
+        if (!isNullorEmpty(deedOfVariation)) {
+          inlineHtml += '<div class="form-group container">';
+          inlineHtml += '<div class="row">';
+          var fileObj = file.load({
+            id: deedOfVariation
+          });
+          inlineHtml +=
+            '<div class="col-xs-2"></div>';
+          inlineHtml +=
+            '<div class="col-xs-8" style="text-align: center;"><iframe id="viewer" frameborder="0" scrolling="no" width="400" height="600" src="' +
+            fileObj.url + '"></iframe></div>';
+          inlineHtml +=
+            '<div class="col-xs-2"></div>';
+          inlineHtml += '</div>';
+          inlineHtml += '</div>';
+        }
+
+        inlineHtml += '<div class="form-group container">';
+        inlineHtml += '<div class="row">';
+        inlineHtml +=
+          '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">UNLIMTED TERM OFFER<span class="mandatory">*</span></span><select id="unlimitedTermOffer" class="form-control unlimitedTermOffer">';
+        if (unlimitedTermOffer == 1) {
+          inlineHtml += '<option value="1" selected>Yes</option>';
+        } else {
+          inlineHtml += '<option value="2">No</option>';
+        }
+        inlineHtml += '</select></div></div>';
+        if (unlimitedTermOffer == 1) {
+          inlineHtml +=
+            '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">UNLIMITED TERM FEE ($) <span class="mandatory">*</span></span><input id="unlimitedTermFee" class="form-control unlimitedTermFee" value="25000"/></div></div>';
+        } else {
+          inlineHtml +=
+            '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">UNLIMITED TERM FEE ($) <span class="mandatory">*</span></span><input id="unlimitedTermFee" class="form-control unlimitedTermFee" value="0"/></div></div>';
+        }
+
+        inlineHtml +=
+          '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">RENEWAL TERMS (YEARS) <span class="mandatory">*</span></span><input id="renewalTerms" class="form-control renewalTerms" value="' +
+          renewalTerms + '" /></div></div>';
+
+        inlineHtml += '</div>';
+        inlineHtml += '</div>';
+
+        inlineHtml += '<div class="form-group container">';
+        inlineHtml += '<div class="row">';
+        inlineHtml +=
+          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">LOW PRICE ($) <span class="mandatory">*</span></span><input id="lowPrice" class="form-control lowPrice" value="' +
+          lowPrice + '"/></div></div>';
+        inlineHtml +=
+          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">HIGH PRICE ($) <span class="mandatory">*</span></span><input id="highPrice" class="form-control highPrice" value="' +
+          highPrice + '"/></div></div>';
+        inlineHtml += '</div>';
+        inlineHtml += '</div>';
+
+        inlineHtml += '<div class="form-group container">';
+        inlineHtml += '<div class="row">';
+        inlineHtml +=
+          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">SERVICE REVENUE ($) <span class="mandatory">*</span></span><input id="serviceRevenue" class="form-control serviceRevenue" value="' +
+          serviceRevenue + '"/></div></div>';
+        inlineHtml +=
+          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">YEAR<span class="mandatory">*</span></span><input id="serviceRevenueYear" class="form-control serviceRevenueYear" value="' +
+          serviceRevenueYear + '"/></div></div>';
+
+        inlineHtml += '</div>';
+        inlineHtml += '</div>';
+        inlineHtml += '<div class="form-group container">';
+        inlineHtml += '<div class="row">';
+        inlineHtml +=
+          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">MPEX REVENUE ($) <span class="mandatory">*</span></span><input id="mpexRevenue" class="form-control mpexRevenue" value="' +
+          mpexRevenue + '"/></div></div>';
+        inlineHtml +=
+          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">YEAR<span class="mandatory">*</span></span><input id="mpexRevenueYear" class="form-control mpexRevenueYear" value="' +
+          mpexRevenueYear + '"/></div></div>';
+        inlineHtml += '</div>';
+        inlineHtml += '</div>';
+
+        inlineHtml += '<div class="form-group container">';
+        inlineHtml += '<div class="row">';
+        inlineHtml +=
+          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">SENDLE REVENUE ($) <span class="mandatory">*</span></span><input id="sendleRevenue" class="form-control sendleRevenue" value="' +
+          sendleRevenue + '"/></div></div>';
+        inlineHtml +=
+          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">YEAR<span class="mandatory">*</span></span><input id="sendleRevenueYear" class="form-control sendleRevenueYear" value="' +
+          sendleRevenueYear + '"/></div></div>';
+        inlineHtml += '</div>';
+        inlineHtml += '</div>';
+
+        inlineHtml += '<div class="form-group container">';
+        inlineHtml += '<div class="row">';
+        inlineHtml +=
+          '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">SALES COMMISSION ($) <span class="mandatory">*</span></span><input id="salesCommission" class="form-control salesCommission" value="' +
+          salesCommission + '"/></div></div>';
+        inlineHtml +=
+          '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">NAB ACCREDITATION<span class="mandatory">*</span></span><select id="nabAccreditation" class="form-control nabAccreditation">';
+        if (isNullorEmpty(nabAccreditation) || nabAccreditation == 2) {
+          inlineHtml +=
+            '<option value="1" >Yes</option><option value="2" selected>No</option>';
+
+        } else {
+          inlineHtml +=
+            '<option value="1" selected>Yes</option><option value="2">No</option>';
+
+        }
+
+        inlineHtml += '</select></div></div>';
+        inlineHtml +=
+          '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">NAB ACCREDITATION FEE ($) <span class="mandatory">*</span></span><input id="nabAccreditationFee" class="form-control nabAccreditationFee" value="' +
+          nabAccreditationFee + '"/></div></div>';
+
+        inlineHtml += '</div></div>';
+        inlineHtml += '<div class="form-group container">';
+        inlineHtml += '<div class="row">';
+        inlineHtml +=
+          '<div class="col-xs-12 name_section"><div class="input-group"><span class="input-group-addon">FINAL PURCHASE PRICE<span class="mandatory">*</span></span><input id="finalPurchasePrice" class="form-control finalPurchasePrice" value="' +
+          finalPurchasePrice + '"/></div></div>';
+        inlineHtml += '</div>';
+        inlineHtml += '</div>';
+      }
 
       return inlineHtml
 
