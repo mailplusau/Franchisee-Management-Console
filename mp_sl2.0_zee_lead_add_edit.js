@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T08:26:00+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-03-15T15:06:56+11:00
+ * @Last modified time: 2022-03-15T16:52:25+11:00
  */
 
 
@@ -511,9 +511,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span>QUALIFIED LEAD</span> </div><div class="step"> <span><a data-id="' +
           zeeleadid +
-          '" class="stageOpportunity" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>OPPORTUNITY</b></a></span> </div><div class="step current"> <span><b>IM SENT</b></span> </div><div class="step current"> <span><a data-id="' +
-          zeeleadid +
-          '" class="eoiApprovedMichael" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>EOI APPROVED - MICHAEL</b></a></span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+          '" class="stageOpportunity" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>OPPORTUNITY</b></a></span> </div><div class="step current"> <span><b>IM SENT</b></span> </div><div class="step"> <span>NDA SENT</span> </div><div class="step"> <span>OPERATIONS MEETING</span> </div><div class="step"> <span>SALES MEETING</span> </div><div class="step"> <span>FINANCE MEETING</span> </div><div class="step"> <span>EOI & DEPOSIT</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
       } else if (salesStage == 8) {
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span><a data-id="' +
@@ -664,6 +662,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             zeeleadid + '"/></div>'
           inlineHtml +=
             '<div class="col-xs-4 zeeLeadLost"><input type="button" value="LEAD LOST" class="form-control btn btn-danger" id="zeeLeadLost" data-id="' +
+            zeeleadid + '"/></div>'
+        } else if (salesStage == 13) {
+          inlineHtml +=
+            '<div class="col-xs-6 sendNDA"><input type="button" value="SEND NDA" class="form-control btn btn-info" id="sendNDA" data-id="' +
+            zeeleadid + '" ' + disableIMButton + '/></div>'
+          inlineHtml +=
+            '<div class="col-xs-6 zeeLeadLost"><input type="button" value="LEAD LOST" class="form-control btn btn-danger" id="zeeLeadLost" data-id="' +
             zeeleadid + '"/></div>'
         } else {
           inlineHtml +=

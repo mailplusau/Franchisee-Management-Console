@@ -7,7 +7,7 @@
  * Description: Create MPEX Usage Report
  *
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-03-15T15:45:32+11:00
+ * @Last modified time: 2022-03-15T16:07:50+11:00
  *
  */
 
@@ -84,6 +84,7 @@ function main() {
   zeeSalesLeadRecord.setFieldValue('custrecord_im_sent', 1);
   zeeSalesLeadRecord.setFieldValue('custrecord_date_im_sent', getDate());
   zeeSalesLeadRecord.setFieldValue('custrecord_im_document', id);
+  zeeSalesLeadRecord.setFieldValue('custrecord_zee_lead_stage', 13);
 
   nlapiSubmitRecord(zeeSalesLeadRecord);
 
