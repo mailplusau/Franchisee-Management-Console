@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-03-10T08:43:37+11:00
+ * @Last modified time: 2022-03-11T14:11:05+11:00
  */
 
 
@@ -43,6 +43,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
     var sendleRevenue = '';
     var sendleRevenueYear = '';
     var finalPurchasePrice = '';
+    var businessStartDate = '';
+    var dailyRunTime = '';
 
 
     var baseURL = 'https://1048144.app.netsuite.com';
@@ -257,6 +259,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         nabAccreditation = $('#nabAccreditation').val();
         nabAccreditationFee = $('#nabAccreditationFee').val();
         finalPurchasePrice = $('#finalPurchasePrice').val();
+        businessStartDate = $('#businessStartDate').val();
+        dailyRunTime = $('#dailyRunTime').val();
 
 
         if (validateRevenueComms()) {
@@ -314,6 +318,16 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             zeeRecord.setValue({
               fieldId: 'custentity_final_sale_price',
               value: finalPurchasePrice
+            });
+
+            zeeRecord.setValue({
+              fieldId: 'custentity_business_start_date',
+              value: formatDate(businessStartDate)
+            });
+
+            zeeRecord.setValue({
+              fieldId: 'custentity_total_daily_runtime',
+              value: dailyRunTime
             });
 
             zeeRecord.save();
@@ -407,6 +421,12 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         errorMessage += 'Please Enter Address</br>';
       }
 
+      if (isNullorEmpty(businessStartDate)) {
+        errorMessage += 'Please Enter Business Start Date</br>';
+      }
+      if (isNullorEmpty(dailyRunTime)) {
+        errorMessage += 'Please Enter Total Daily Runtime</br>';
+      }
       if (isNullorEmptyExcZero(lowPrice)) {
         errorMessage += 'Please Enter Low Price</br>';
       }

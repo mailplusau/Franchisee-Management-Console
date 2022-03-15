@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-02-28T14:33:29+11:00
+ * @Last modified time: 2022-03-11T12:09:14+11:00
  */
 
 
@@ -108,7 +108,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         columns: [{
           title: 'LINK'
         }, {
-          title: 'Date Listed for Sale'
+          title: 'Listed for Sale'
         }, {
           title: 'Franchisee'
         }, {
@@ -117,18 +117,28 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           title: 'Mobile'
         }, {
           title: 'Email'
+        }, {
+          title: 'Deed of Variation - Exit Program Sent'
+        }, {
+          title: 'Signed Deed of Variation - Exit Program'
         }],
         columnDefs: [{
           targets: [1, 2],
           className: 'bolded'
         }, {
-          className: "col-sm-2",
-          "targets": [0, 1]
+          className: "col-sm-1",
+          "targets": [0, 1, 6, 7]
         }, {
           className: "text-center",
-          targets: [0, 1, 2, 3, 4]
+          targets: [0, 1, 2, 3, 4, 5, 6, 7]
         }],
-        rowCallback: function(row, data, index) {}
+        rowCallback: function(row, data, index) {
+          if (data[7] == 'Yes') {
+            $('td', row).css('background-color', '#1da94e80');
+          } else if (data[6] == 'Yes' && (isNullorEmpty(data[7]))) {
+            $('td', row).css('background-color', '#c9750d80');
+          }
+        }
       });
 
       loadZeeSalesLeadSearch();
@@ -170,6 +180,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         var zeeMobile = zeeListedforSaleReseultSet.getValue({
           name: 'custentity2'
         });
+        var deedOfVariationUploaded = zeeListedforSaleReseultSet.getText({
+          name: 'custentity_deed_uploaded'
+        });
+        var deedOfVariationSent = zeeListedforSaleReseultSet.getText({
+          name: 'custentity_deed_of_variation_sent'
+        });
+
+        console.log('deedOfVariationUploaded')
+        console.log(deedOfVariationUploaded)
 
         zeeSalesLeadSet.push({
           internalID: internalID,
@@ -178,6 +197,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           mainContact: mainContact,
           zeeEmail: zeeEmail,
           zeeMobile: zeeMobile,
+          deedOfVariationUploaded: deedOfVariationUploaded,
+          deedOfVariationSent: deedOfVariationSent,
         });
 
         return true;
@@ -203,10 +224,12 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             zeeSalesLeads_row.internalID +
             '" class="viewZeeLead" style="cursor: pointer !important;color: white;">VIEW</a></button>';
 
+
           zeeSalesLeadDataSet.push([linkURL, zeeSalesLeads_row.date,
             zeeSalesLeads_row.zeeName,
             zeeSalesLeads_row.mainContact, zeeSalesLeads_row.zeeMobile,
-            zeeSalesLeads_row.zeeEmail
+            zeeSalesLeads_row.zeeEmail, zeeSalesLeads_row.deedOfVariationSent,
+            zeeSalesLeads_row.deedOfVariationUploaded
           ]);
         });
       }

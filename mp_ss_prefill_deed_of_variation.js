@@ -7,7 +7,7 @@
  * Description: Create MPEX Usage Report
  *
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-03-09T14:37:39+11:00
+ * @Last modified time: 2022-03-10T08:52:23+11:00
  *
  */
 
@@ -90,6 +90,12 @@ function main() {
   zeeRecord.setFieldValue('custentity_deed_of_variation',id);
 
   nlapiSubmitRecord(zeeRecord);
+
+  var records = new Array();
+
+
+  nlapiSendEmail(409635,'ankith,ravindran@mailplus.com.au',subject,body,['michael.mcdaid@mailplus.com.au', 'ankith.ravindran@mailplus.com.au'],null,records)
+
 
 }
 

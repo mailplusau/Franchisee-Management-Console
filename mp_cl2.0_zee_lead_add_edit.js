@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-02-24T14:10:14+11:00
+ * @Last modified time: 2022-03-15T15:57:32+11:00
  */
 
 
@@ -184,7 +184,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         state = $('#state').val();
         postcode = $('#postcode').val();
         suburb = $('#city').val();
-        interestedZees = $('#zeeList').val()
+        // interestedZees = $('#zeeList').val()
         listedForSaleZees = $('#zeeListedSale').val()
 
         if (validate()) {
@@ -234,6 +234,44 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       });
 
+      $(document).on("click", "#sendIM", function(e) {
+
+        firstName = $('#firstName').val();
+        lastName = $('#lastName').val();
+        mobile = $('#mobile').val();
+        leadEmail = $('#email').val();
+        franchiseeTypeOfOwner = $('#franchiseeTypeOfOwner').val();
+        vehicle = $('#vehicle').val();
+        experience = $('#experience').val();
+        employment = $('#employment').val();
+        finance = $('#finance').val();
+        investment = $('#investment').val();
+        old_comments = $('#old_comments').val();
+        comments = $('#comments').val();
+        state = $('#state').val();
+        postcode = $('#postcode').val();
+        suburb = $('#city').val();
+        // interestedZees = $('#zeeList').val()
+        listedForSaleZees = $('#zeeListedSale').val()
+
+        if (validate()) {
+
+          myRecord.setValue({
+            fieldId: 'custpage_imsent',
+            value: '1'
+          })
+
+          myRecord.setValue({
+            fieldId: 'custpage_interestedzees',
+            value: listedForSaleZees
+          });
+
+          createUpdateRecord();
+          document.getElementById('submitter').click();
+        }
+
+      });
+
       $(document).on("click", "#saveZeeLead", function(e) {
 
         firstName = $('#firstName').val();
@@ -252,7 +290,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         postcode = $('#postcode').val();
         suburb = $('#city').val();
 
-        interestedZees = $('#zeeList').val()
+        // interestedZees = $('#zeeList').val()
         listedForSaleZees = $('#zeeListedSale').val()
 
         salePrice = $('#salePrice').val()
@@ -277,6 +315,81 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         }
 
         $('#totalPrice').val(totalSalePrice)
+      });
+
+
+      $(document).on("change", "#zeeListedSale", function(e) {
+        selectedZees = $(this).val();
+        for (var i = 0; i < selectedZees.length; i++) {
+
+          var zeeSalesLeadRecord = record.load({
+            type: record.Type.PARTNER,
+            id: selectedZees[i]
+          });
+
+          lowPrice = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_low_price'
+          });
+          highPrice = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_high_price'
+          });
+          nabAccreditation = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_nab_accreditation'
+          });
+          nabAccreditationFee = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_nab_accreditation_fee'
+          });
+          salesCommission = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_sales_commission'
+          });
+          serviceRevenue = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_service_revenue'
+          });
+          serviceRevenueYear = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_service_revenue_year'
+          });
+          mpexRevenue = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_mpex_revenue'
+          });
+          mpexRevenueYear = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentitympex_revenue_year'
+          });
+          sendleRevenue = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_sendle_revenue'
+          });
+          sendleRevenueYear = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_sendle_revenue_year'
+          });
+          finalPurchasePrice = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_final_sale_price'
+          });
+          // finalPurchasePrice = zeeSalesLeadRecord.getValue({
+          //   fieldId: 'custentity_territory_map'
+          // });
+          $('#lowPrice').val(lowPrice.toFixed(2).replace(
+            /\d(?=(\d{3})+\.)/g, "$&,"));
+          $('#highPrice').val(highPrice.toFixed(2).replace(
+            /\d(?=(\d{3})+\.)/g, "$&,"));
+          $('#nabAccreditation').val(nabAccreditation);
+          $('#nabAccreditationFee').val(parseFloat(nabAccreditationFee).toFixed(
+            2).replace(/\d(?=(\d{3})+\.)/g, "$&,"));
+          $('#salesCommission').val(salesCommission.toFixed(2).replace(
+            /\d(?=(\d{3})+\.)/g, "$&,"));
+          $('#serviceRevenue').val(serviceRevenue.toFixed(2).replace(
+            /\d(?=(\d{3})+\.)/g, "$&,"));
+          $('#serviceRevenueYear').val(serviceRevenueYear);
+          $('#mpexRevenue').val(mpexRevenue.toFixed(2).replace(
+            /\d(?=(\d{3})+\.)/g, "$&,"));
+          $('#mpexRevenueYear').val(mpexRevenueYear);
+          $('#sendleRevenue').val(sendleRevenue.toFixed(2).replace(
+            /\d(?=(\d{3})+\.)/g, "$&,"));
+          $('#sendleRevenueYear').val(sendleRevenueYear);
+          $('#finalPurchasePrice').val(finalPurchasePrice.toFixed(2).replace(
+            /\d(?=(\d{3})+\.)/g, "$&,"));
+          $('.presales_div').removeClass('hide');
+
+        }
+
       });
 
       $(document).on("change", "#incGST", function(e) {
@@ -352,7 +465,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         postcode = $('#postcode').val();
         suburb = $('#city').val();
 
-        interestedZees = $('#zeeList').val()
+        // interestedZees = $('#zeeList').val()
         listedForSaleZees = $('#zeeListedSale').val()
 
         if (validate()) {
@@ -417,7 +530,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         postcode = $('#postcode').val();
         suburb = $('#city').val();
 
-        interestedZees = $('#zeeList').val()
+        // interestedZees = $('#zeeList').val()
         listedForSaleZees = $('#zeeListedSale').val()
 
         if (validate()) {
@@ -493,29 +606,18 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         owner = $('#owner').val();
         owner_text = $("#owner option:selected").text();
 
-        interestedZees = $('#zeeList').val()
+        // interestedZees = $('#zeeList').val()
         listedForSaleZees = $('#zeeListedSale').val()
 
         if (validate()) {
 
-          interestedZees = $('#zeeList').val()
+          // interestedZees = $('#zeeList').val()
           listedForSaleZees = $('#zeeListedSale').val()
 
           var errorMessage = '';
 
           var combinedInterestedZees = [];
-          if (!isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
-              interestedZees)) {
-            combinedInterestedZees = listedForSaleZees.concat(
-              interestedZees)
-          } else if (isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
-              interestedZees)) {
-            combinedInterestedZees = interestedZees
-          } else if (!isNullorEmpty(listedForSaleZees) && isNullorEmpty(
-              interestedZees)) {
-            combinedInterestedZees = listedForSaleZees
-          } else if (isNullorEmpty(listedForSaleZees) && isNullorEmpty(
-              interestedZees)) {
+          if (isNullorEmpty(listedForSaleZees)) {
             errorMessage += 'Please Select potential franchisees</br>';
             if (!isNullorEmpty(errorMessage)) {
               showAlert(errorMessage);
@@ -616,28 +718,17 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         postcode = $('#postcode').val();
         suburb = $('#city').val();
 
-        interestedZees = $('#zeeList').val()
+        // interestedZees = $('#zeeList').val()
         listedForSaleZees = $('#zeeListedSale').val()
         var errorMessage = '';
         if (eoiSent == 1 || eoiSent == '1') {
           if (validate()) {
 
-            interestedZees = $('#zeeList').val()
+            // interestedZees = $('#zeeList').val()
             listedForSaleZees = $('#zeeListedSale').val()
 
             var combinedInterestedZees = [];
-            if (!isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
-                interestedZees)) {
-              combinedInterestedZees = listedForSaleZees.concat(
-                interestedZees)
-            } else if (isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
-                interestedZees)) {
-              combinedInterestedZees = interestedZees
-            } else if (!isNullorEmpty(listedForSaleZees) && isNullorEmpty(
-                interestedZees)) {
-              combinedInterestedZees = listedForSaleZees
-            } else if (isNullorEmpty(listedForSaleZees) && isNullorEmpty(
-                interestedZees)) {
+            if (isNullorEmpty(listedForSaleZees)) {
               errorMessage += 'Please Select potential franchisees</br>';
               if (!isNullorEmpty(errorMessage)) {
                 showAlert(errorMessage);
@@ -699,28 +790,17 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         postcode = $('#postcode').val();
         suburb = $('#city').val();
 
-        interestedZees = $('#zeeList').val()
+        // interestedZees = $('#zeeList').val()
         listedForSaleZees = $('#zeeListedSale').val()
         var errorMessage = '';
         if (eoiSent == 1 || eoiSent == '1') {
           if (validate()) {
 
-            interestedZees = $('#zeeList').val()
+            // interestedZees = $('#zeeList').val()
             listedForSaleZees = $('#zeeListedSale').val()
 
             var combinedInterestedZees = [];
-            if (!isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
-                interestedZees)) {
-              combinedInterestedZees = listedForSaleZees.concat(
-                interestedZees)
-            } else if (isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
-                interestedZees)) {
-              combinedInterestedZees = interestedZees
-            } else if (!isNullorEmpty(listedForSaleZees) && isNullorEmpty(
-                interestedZees)) {
-              combinedInterestedZees = listedForSaleZees
-            } else if (isNullorEmpty(listedForSaleZees) && isNullorEmpty(
-                interestedZees)) {
+            if (isNullorEmpty(listedForSaleZees)) {
               errorMessage += 'Please Select potential franchisees</br>';
               if (!isNullorEmpty(errorMessage)) {
                 showAlert(errorMessage);
@@ -782,28 +862,17 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         postcode = $('#postcode').val();
         suburb = $('#city').val();
 
-        interestedZees = $('#zeeList').val()
+        // interestedZees = $('#zeeList').val()
         listedForSaleZees = $('#zeeListedSale').val()
         var errorMessage = '';
         if (eoiSent == 1 || eoiSent == '1') {
           if (validate()) {
 
-            interestedZees = $('#zeeList').val()
+            // interestedZees = $('#zeeList').val()
             listedForSaleZees = $('#zeeListedSale').val()
 
             var combinedInterestedZees = [];
-            if (!isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
-                interestedZees)) {
-              combinedInterestedZees = listedForSaleZees.concat(
-                interestedZees)
-            } else if (isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
-                interestedZees)) {
-              combinedInterestedZees = interestedZees
-            } else if (!isNullorEmpty(listedForSaleZees) && isNullorEmpty(
-                interestedZees)) {
-              combinedInterestedZees = listedForSaleZees
-            } else if (isNullorEmpty(listedForSaleZees) && isNullorEmpty(
-                interestedZees)) {
+            if (isNullorEmpty(listedForSaleZees)) {
               errorMessage += 'Please Select potential franchisees</br>';
               if (!isNullorEmpty(errorMessage)) {
                 showAlert(errorMessage);
@@ -860,7 +929,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         postcode = $('#postcode').val();
         suburb = $('#city').val();
 
-        interestedZees = $('#zeeList').val()
+        // interestedZees = $('#zeeList').val()
         listedForSaleZees = $('#zeeListedSale').val()
 
         salePrice = $('#salePrice').val()
@@ -872,22 +941,11 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         if (eoiSent == 1 || eoiSent == '1') {
           if (validate()) {
 
-            interestedZees = $('#zeeList').val()
+            // interestedZees = $('#zeeList').val()
             listedForSaleZees = $('#zeeListedSale').val()
 
             var combinedInterestedZees = [];
-            if (!isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
-                interestedZees)) {
-              combinedInterestedZees = listedForSaleZees.concat(
-                interestedZees)
-            } else if (isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
-                interestedZees)) {
-              combinedInterestedZees = interestedZees
-            } else if (!isNullorEmpty(listedForSaleZees) && isNullorEmpty(
-                interestedZees)) {
-              combinedInterestedZees = listedForSaleZees
-            } else if (isNullorEmpty(listedForSaleZees) && isNullorEmpty(
-                interestedZees)) {
+            if (isNullorEmpty(listedForSaleZees)) {
               errorMessage += 'Please Select potential franchisees</br>';
               if (!isNullorEmpty(errorMessage)) {
                 showAlert(errorMessage);
@@ -943,6 +1001,20 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         }
 
 
+      });
+
+      $('#listforSale').click(function() {
+        var url = baseURL +
+          '/app/site/hosting/scriptlet.nl?script=1399&deploy=1';
+        window.location.href = url;
+      });
+
+      $('#editPresales').click(function() {
+        var zeeid = $(this).attr("data-id");
+        var url = baseURL +
+          '/app/site/hosting/scriptlet.nl?script=1430&deploy=1&zeeid=' +
+          zeeid;
+        window.location.href = url;
       });
 
       $("#zeeLeadLost").click(function() {
@@ -1129,7 +1201,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         state = $('#state').val();
         postcode = $('#postcode').val();
         suburb = $('#city').val();
-        interestedZees = $('#zeeList').val()
+        // interestedZees = $('#zeeList').val()
         listedForSaleZees = $('#zeeListedSale').val()
 
         var zeeSalesLeadRecord = record.load({
@@ -1248,13 +1320,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
     function createUpdateRecord() {
       var combinedInterestedZees = [];
-      if (!isNullorEmpty(listedForSaleZees) && !isNullorEmpty(interestedZees)) {
-        combinedInterestedZees = listedForSaleZees.concat(interestedZees)
-      } else if (isNullorEmpty(listedForSaleZees) && !isNullorEmpty(
-          interestedZees)) {
-        combinedInterestedZees = interestedZees
-      } else if (!isNullorEmpty(listedForSaleZees) && isNullorEmpty(
-          interestedZees)) {
+      if (!isNullorEmpty(listedForSaleZees)) {
         combinedInterestedZees = listedForSaleZees
       }
 

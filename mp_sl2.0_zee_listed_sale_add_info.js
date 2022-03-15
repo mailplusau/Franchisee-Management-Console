@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T08:26:00+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-03-10T08:43:38+11:00
+ * @Last modified time: 2022-03-14T15:09:14+11:00
  */
 
 
@@ -45,6 +45,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     var deedOfVariationUploaded = 0;
     var dateDeedOfVariationSent = '';
     var deedOfVariation = '';
+    var businessStartDate = '';
+    var dailyRunTime = '';
+    var territoryMapDoc = '';
 
     function onRequest(context) {
       var baseURL = 'https://system.na2.netsuite.com';
@@ -165,6 +168,15 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           deedOfVariationUploaded = zeeSalesLeadRecord.getValue({
             fieldId: 'custentity_deed_uploaded'
           });
+          businessStartDate = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_business_start_date'
+          });
+          dailyRunTime = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_total_daily_runtime'
+          });
+          territoryMapDoc = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_territory_map_doc'
+          });
 
 
           var searchZeeAgreements = search.load({
@@ -198,7 +210,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             renewalTerms = searchZeeAgreementsResultSet.getValue(
               'custrecord_fr_agreement_yrs_extended');
             deedOfVariation = searchZeeAgreementsResultSet.getValue(
-              'custrecord_fr_agreement_deed');
+              'custrecord_deed_of_variation_exit_progra');
             address = searchZeeAgreementsResultSet.getValue({
               name: "shipaddress",
               join: "CUSTRECORD_FR_AGREEMENT_FRANCHISEE"
@@ -274,6 +286,14 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             displayType: ui.FieldDisplayType.HIDDEN
           }).defaultValue = deedOfVariationUploaded;
 
+          form.addField({
+            id: 'custpage_dov_zee_name2',
+            type: ui.FieldType.TEXT,
+            label: 'Day'
+          }).updateDisplayType({
+            displayType: ui.FieldDisplayType.HIDDEN
+          }).defaultValue = zeeName;
+
           //Loading Section that gets displayed when the page is being loaded
           inlineHtml +=
             '<div class="se-pre-con"></div><div ng-app="myApp" ng-controller="myCtrl">';
@@ -309,6 +329,17 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             }).updateBreakType({
               breakType: ui.FieldBreakType.STARTROW
             }).isMandatory = true
+          } else if (deedOfVariationSent == 1 &&
+            deedOfVariationUploaded == 1) {
+            form.addField({
+              id: 'upload_file_2',
+              type: 'file',
+              label: 'Upload Territory Map'
+            }).updateLayoutType({
+              layoutType: ui.FieldLayoutType.OUTSIDEBELOW,
+            }).updateBreakType({
+              breakType: ui.FieldBreakType.STARTROW
+            }).isMandatory = true
           }
 
 
@@ -330,6 +361,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       } else {
 
         var param_zee_agreement_id = context.request.parameters.custpage_zee_agreement2;
+        var param_zee_name = context.request.parameters.custpage_dov_zee_name2;
         var param_dov_uploaded = context.request.parameters.custpage_dov_uploaded2;
         var param_dov_sent = context.request.parameters.custpage_dov_sent;
         var param_param_zeeid = context.request.parameters.custpage_zee2;
@@ -362,9 +394,11 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
         } else if (param_dov_sent == 1 && param_dov_uploaded != 1) {
           var file = context.request.files.upload_file_1;
-          file.folder = 2905930;
+          file.folder = 3162670;
           var file_type = file.fileType;
-          var file_name = 'Deed of Variation - ' + zeeName + ' - ' +
+          var file_name =
+            'Deed of Variation - Exit Program Assistance Offer - ' +
+            param_zee_name + ' - ' +
             getDateToday() + '.' +
             file_type;
           // Create file and upload it to the file cabinet.
@@ -376,7 +410,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             id: param_zee_agreement_id
           });
           rec.setValue({
-            fieldId: 'custrecord_fr_agreement_deed',
+            fieldId: 'custrecord_deed_of_variation_exit_progra',
             value: f_id
           });
           rec.save();
@@ -388,6 +422,36 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           zeeRec.setValue({
             fieldId: 'custentity_deed_uploaded',
             value: 1
+          });
+          zeeRec.save();
+        } else if (param_dov_sent == 1 && param_dov_uploaded == 1) {
+          var file = context.request.files.upload_file_2;
+          file.folder = 3193457;
+          file.isonline = true;
+          var file_type = file.fileType;
+          var file_name = 'Territory Map - ' + param_zee_name + ' - ' +
+            getDateToday() + '.' +
+            file_type;
+          // Create file and upload it to the file cabinet.
+          file.name = file_name;
+          var f_id2 = file.save();
+
+          log.debug({
+            title: 'f_id',
+            details: f_id2
+          })
+          log.debug({
+            title: 'file.url',
+            details: file.url
+          })
+
+          var zeeRec = record.load({
+            type: 'partner',
+            id: param_param_zeeid
+          });
+          zeeRec.setValue({
+            fieldId: 'custentity_territory_map_doc',
+            value: f_id2
           });
           zeeRec.save();
         }
@@ -466,12 +530,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '<div class="row">';
       if (deedOfVariationSent != 1) {
         inlineHtml +=
-          '<div class="col-xs-6 sendDeed"><input type="button" value="SEND DEED OF VARIATION" class="form-control btn btn-info" id="sendDeed" /></div>'
+          '<div class="col-xs-6 sendDeed"><input type="button" value="SEND DEED OF VARIATION - EXIT PROGRAM ASSISTANCE OFFER" class="form-control btn btn-info" id="sendDeed" /></div>'
         inlineHtml +=
           '<div class="col-xs-6 saveZeeLead"><input type="button" value="SAVE" class="form-control btn btn-primary" id="saveZeeLead" /></div>'
       } else if (deedOfVariationSent == 1 && deedOfVariationUploaded != 1) {
         inlineHtml +=
-          '<div class="col-xs-12 saveZeeLead"><input type="button" value="UPLOAD SIGNED DEED OF VARIATION" class="form-control btn btn-primary" id="uploadDeed" /></div>'
+          '<div class="col-xs-12 saveZeeLead"><input type="button" value="UPLOAD SIGNED DEED OF VARIATION - EXIT PROGRAM ASSISTANCE OFFER" class="form-control btn btn-primary" id="uploadDeed" /></div>'
       } else {
         inlineHtml +=
           '<div class="col-xs-12 saveZeeLead"><input type="button" value="SAVE" class="form-control btn btn-primary" id="saveZeeLead" /></div>'
@@ -494,6 +558,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       var formattedCommencementDate = '';
       var formattedExpiryDate = '';
       var formattedUltimateExpiryDate = '';
+      var formattedBusinessStartDate = '';
 
       dateListedForSale = format.format({
         value: dateListedForSale,
@@ -560,6 +625,22 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var formattedUltimateExpiryDate = ultimateExpiryDateArray[2] + '-' +
           ultimateExpiryDateArray[1] +
           '-' + ultimateExpiryDateArray[0];
+      }
+      if (!isNullorEmpty(businessStartDate)) {
+        businessStartDate = format.format({
+          value: businessStartDate,
+          type: format.Type.DATE
+        });
+        var businessStartDateArray = businessStartDate.split('/');
+        if (businessStartDateArray[1] < 10) {
+          businessStartDateArray[1] = '0' + businessStartDateArray[1];
+        }
+        if (businessStartDateArray[0] < 10) {
+          businessStartDateArray[0] = '0' + businessStartDateArray[0];
+        }
+        var formattedBusinessStartDate = businessStartDateArray[2] + '-' +
+          businessStartDateArray[1] +
+          '-' + businessStartDateArray[0];
       }
 
 
@@ -630,7 +711,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
-      if (!isNullorEmpty(deedOfVariation)) {
+      if (!isNullorEmpty(deedOfVariation) || deedOfVariationUploaded == 1) {
 
         if (!isNullorEmpty(deedOfVariation)) {
           inlineHtml += '<div class="form-group container">';
@@ -648,6 +729,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           inlineHtml += '</div>';
           inlineHtml += '</div>';
         }
+
 
         inlineHtml += '<div class="form-group container">';
         inlineHtml += '<div class="row">';
@@ -677,6 +759,18 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml += '<div class="form-group container">';
         inlineHtml += '<div class="row">';
         inlineHtml +=
+          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">DATE BUSINESS STARTED <span class="mandatory">*</span></span><input id="businessStartDate" class="form-control businessStartDate" type="date" value="' +
+          formattedBusinessStartDate + '"/></div></div>';
+        inlineHtml +=
+          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">TOTAL DAILY RUN TIME  <span class="mandatory">*</span></span><input id="dailyRunTime" class="form-control dailyRunTime" value="' +
+          dailyRunTime + '"/></div></div>';
+        inlineHtml += '</div>';
+        inlineHtml += '</div>';
+
+
+        inlineHtml += '<div class="form-group container">';
+        inlineHtml += '<div class="row">';
+        inlineHtml +=
           '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">LOW PRICE ($) <span class="mandatory">*</span></span><input id="lowPrice" class="form-control lowPrice" value="' +
           lowPrice + '"/></div></div>';
         inlineHtml +=
@@ -699,7 +793,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml += '<div class="form-group container">';
         inlineHtml += '<div class="row">';
         inlineHtml +=
-          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">MPEX REVENUE ($) <span class="mandatory">*</span></span><input id="mpexRevenue" class="form-control mpexRevenue" value="' +
+          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">MPEX COMMISSION ($) <span class="mandatory">*</span></span><input id="mpexRevenue" class="form-control mpexRevenue" value="' +
           mpexRevenue + '"/></div></div>';
         inlineHtml +=
           '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">YEAR<span class="mandatory">*</span></span><input id="mpexRevenueYear" class="form-control mpexRevenueYear" value="' +
@@ -710,7 +804,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml += '<div class="form-group container">';
         inlineHtml += '<div class="row">';
         inlineHtml +=
-          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">SENDLE REVENUE ($) <span class="mandatory">*</span></span><input id="sendleRevenue" class="form-control sendleRevenue" value="' +
+          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">SENDLE COMMISSION ($) <span class="mandatory">*</span></span><input id="sendleRevenue" class="form-control sendleRevenue" value="' +
           sendleRevenue + '"/></div></div>';
         inlineHtml +=
           '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">YEAR<span class="mandatory">*</span></span><input id="sendleRevenueYear" class="form-control sendleRevenueYear" value="' +
@@ -721,7 +815,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml += '<div class="form-group container">';
         inlineHtml += '<div class="row">';
         inlineHtml +=
-          '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">SALES COMMISSION ($) <span class="mandatory">*</span></span><input id="salesCommission" class="form-control salesCommission" value="' +
+          '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">SALES COMMISSION (%) <span class="mandatory">*</span></span><input id="salesCommission" class="form-control salesCommission" value="' +
           salesCommission + '"/></div></div>';
         inlineHtml +=
           '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">NAB ACCREDITATION<span class="mandatory">*</span></span><select id="nabAccreditation" class="form-control nabAccreditation">';
@@ -744,10 +838,27 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml += '<div class="form-group container">';
         inlineHtml += '<div class="row">';
         inlineHtml +=
-          '<div class="col-xs-12 name_section"><div class="input-group"><span class="input-group-addon">FINAL PURCHASE PRICE<span class="mandatory">*</span></span><input id="finalPurchasePrice" class="form-control finalPurchasePrice" value="' +
+          '<div class="col-xs-12 name_section"><div class="input-group"><span class="input-group-addon">SALE PRICE<span class="mandatory">*</span></span><input id="finalPurchasePrice" class="form-control finalPurchasePrice" value="' +
           finalPurchasePrice + '"/></div></div>';
         inlineHtml += '</div>';
         inlineHtml += '</div>';
+
+        if (!isNullorEmpty(territoryMapDoc)) {
+          inlineHtml += '<div class="form-group container">';
+          inlineHtml += '<div class="row">';
+          var fileObj2 = file.load({
+            id: territoryMapDoc
+          });
+          inlineHtml +=
+            '<div class="col-xs-2"></div>';
+          inlineHtml +=
+            '<div class="col-xs-8" style="text-align: center;"><img id="viewer" src="' +
+            fileObj2.url + '" style="width: 100%; height: 100%;"/></div>';
+          inlineHtml +=
+            '<div class="col-xs-2"></div>';
+          inlineHtml += '</div>';
+          inlineHtml += '</div>';
+        }
       }
 
       return inlineHtml

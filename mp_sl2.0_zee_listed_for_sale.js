@@ -5,7 +5,7 @@
  * @Date:   2021-12-24T08:26:00+11:00
  * @Description: List of Franchisees listed for sale
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-02-24T16:41:53+11:00
+ * @Last modified time: 2022-03-14T14:08:08+11:00
  */
 
 
@@ -17,7 +17,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     var color_array = ['blue', 'red', 'green', 'orange', 'black'];
 
     function onRequest(context) {
-      var baseURL = 'https://system.na2.netsuite.com';
+      var baseURL = 'https://1048144.app.netsuite.com/';
       if (runtime.EnvType == "SANDBOX") {
         baseURL = 'https://system.sandbox.netsuite.com';
       }

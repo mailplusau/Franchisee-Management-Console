@@ -4,15 +4,15 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T08:26:00+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-02-24T15:43:45+11:00
+ * @Last modified time: 2022-03-15T15:06:56+11:00
  */
 
 
 define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
-    'N/http', 'N/log', 'N/redirect', 'N/format', 'N/file'
+    'N/http', 'N/log', 'N/redirect', 'N/format', 'N/file', 'N/task'
   ],
   function(ui, email, runtime, search, record, http, log, redirect, format,
-    file) {
+    file, task) {
 
     var color_array = ['blue', 'red', 'green', 'orange', 'black'];
 
@@ -52,12 +52,35 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     var owner = '0';
     var reminder;
     var owner_list = '';
+    var lowPrice = '';
+    var highPrice = '';
+    var nabAccreditation = '';
+    var nabAccreditationFee = '';
+    var salesCommission = '';
+    var serviceRevenue = '';
+    var serviceRevenueYear = '';
+    var mpexRevenue = '';
+    var mpexRevenueYear = '';
+    var sendleRevenue = '';
+    var sendleRevenueYear = '';
+    var finalPurchasePrice = '';
+    var zeeAgreementId = '';
+    var tradingEntity = '';
+    var commencementDate = '';
+    var expiryDate = '';
+    var ultimateExpiryDate = '';
+    var unlimitedTermOffer = '';
+    var renewalTerms = '';
+    var territoryMapDoc = '';
+    var territoryMapURL = '';
+
+    var baseURL = 'https://1048144.app.netsuite.com/';
+    if (runtime.EnvType == "SANDBOX") {
+      baseURL = 'https://system.sandbox.netsuite.com';
+    }
 
     function onRequest(context) {
-      var baseURL = 'https://system.na2.netsuite.com';
-      if (runtime.EnvType == "SANDBOX") {
-        baseURL = 'https://system.sandbox.netsuite.com';
-      }
+
       userId = runtime.getCurrentUser().id;
       role = runtime.getCurrentUser().role;
 
@@ -90,13 +113,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml +=
           '<style>.mandatory{color:red;}.clearfix:after {clear: both;content: "";display: block;height: 0;}.wrapper {vertical-align: middle;}.nav {margin-top: 40px;}.pull-right {float: right;}a, a:active {color: #212121;text-decoration: none;}a:hover {color: #999;}.arrow-steps .step {font-size: 14px;text-align: center;color: #fff;cursor: default;margin: 0 3px;padding: 10px 10px 10px 30px;float: left;position: relative;background-color: #379e8f;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none; transition: background-color 0.2s ease;}.arrow-steps .step:after,.arrow-steps .step:before {content: " ";position: absolute;top: 0;right: -17px;width: 0;height: 40px;border-top: 19px solid transparent;border-bottom: 17px solid transparent;border-left: 17px solid #379e8f;	z-index: 2;transition: border-color 0.2s ease;}.arrow-steps .step:before {right: auto;left: 0;border-left: 17px solid #fff;	z-index: 0;}.arrow-steps .step:first-child:before {border: none;}.arrow-steps .step:first-child {border-top-left-radius: 4px;border-bottom-left-radius: 4px;}.arrow-steps .step span {position: relative;}.arrow-steps .step span:before {opacity: 0;content: "✔";position: absolute;top: -2px;left: -20px;color: #06ac77;}.arrow-steps .step.done span:before {opacity: 1;-webkit-transition: opacity 0.3s ease 0.5s;-moz-transition: opacity 0.3s ease 0.5s;-ms-transition: opacity 0.3s ease 0.5s;transition: opacity 0.3s ease 0.5s;}.arrow-steps .step.current {color: #103d39;font-weight: bold;background-color: #fbea51;}.arrow-steps .step.current:after {border-left: 17px solid #fbea51;	}.nav > li.active > a, .nav > li.active > a:focus, .nav > li.active > a:hover { background-color: #379E8F; color: #fff }.nav > li > a, .nav > li > a:focus, .nav > li > a:hover { margin-left: 5px; margin-right: 5px; border: 2px solid #379E8F; color: #379E8F; }</style>';
 
-        form.addField({
-          id: 'custpage_table_csv',
-          type: ui.FieldType.TEXT,
-          label: 'Table CSV'
-        }).updateDisplayType({
-          displayType: ui.FieldDisplayType.HIDDEN
-        })
+
 
         //For Edit Screen, get all the info from the record
         if (!isNullorEmpty(zeeleadid)) {
@@ -152,7 +169,6 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           interestedZees = zeeSalesLeadRecord.getValue({
             fieldId: 'custrecord_zee_leads_interested_zees'
           });
-
 
           suburb = zeeSalesLeadRecord.getValue({
             fieldId: 'custrecord_areas_of_interest_suburb'
@@ -228,6 +244,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             fieldId: 'custrecord_im_sent'
           });
 
+
           log.debug({
             title: 'owner',
             details: owner
@@ -255,6 +272,22 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           displayType: ui.FieldDisplayType.HIDDEN
         }).defaultValue = eoiSent
 
+        form.addField({
+          id: 'custpage_imsent',
+          type: ui.FieldType.TEXT,
+          label: 'Table CSV'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        }).defaultValue = imSent
+
+        form.addField({
+          id: 'custpage_interestedzees',
+          type: ui.FieldType.TEXT,
+          label: 'Table CSV'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        }).defaultValue = interestedZees
+
 
         inlineHtml += lostZeeLeadModal();
 
@@ -275,7 +308,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml += zeeSalesMainLead();
         inlineHtml += operationsSection();
         inlineHtml += areasOfInterestSection();
-        inlineHtml += potentialZeesSection();
+        if (zeeleadid != 0 && !isNullorEmpty(zeeleadid)) {
+          if (salesStage != 1) {
+            inlineHtml += potentialZeesSection();
+            inlineHtml += presalesDetails();
+          }
+        }
         inlineHtml += financeSection();
         inlineHtml += reminderCommentsSection();
         inlineHtml += salesWFDateDetails();
@@ -317,6 +355,41 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
         var file = context.request.files.upload_file_1;
         var param_zeeleadid = context.request.parameters.custpage_zeeleadid;
+        var param_imsent = context.request.parameters.custpage_imsent;
+        var param_interestedzees = context.request.parameters.custpage_interestedzees;
+
+        log.debug({
+          title: 'param_zeeleadid',
+          details: param_zeeleadid
+        });
+        log.debug({
+          title: 'param_imsent',
+          details: param_imsent
+        });
+        log.debug({
+          title: 'param_interestedzees',
+          details: param_interestedzees
+        });
+
+        if (param_imsent == '1') {
+          var params = {
+            custscript_zeeleadid: param_zeeleadid,
+            custscript_interestedzees: param_interestedzees
+          };
+          var reschedule = task.create({
+            taskType: task.TaskType.SCHEDULED_SCRIPT,
+            scriptId: 'customscript_ss_prefill_im',
+            deploymentId: 'customdeploy1',
+            params: params
+          });
+
+          log.debug({
+            title: 'rescheduling',
+            details: 'rescheduling'
+          });
+
+          reschedule.submit();
+        }
 
         if (!isNullorEmpty(file)) {
 
@@ -606,6 +679,392 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       return inlineHtml
     }
 
+    function presalesDetails() {
+
+      if (salesStage != 1 && salesStage != 2) {
+        var display_div = '';
+
+        var zeeSalesLeadRecord = record.load({
+          type: record.Type.PARTNER,
+          id: interestedZees
+        });
+
+        var lowPrice = zeeSalesLeadRecord.getValue({
+          fieldId: 'custentity_low_price'
+        });
+        var highPrice = zeeSalesLeadRecord.getValue({
+          fieldId: 'custentity_high_price'
+        });
+        var nabAccreditation = zeeSalesLeadRecord.getValue({
+          fieldId: 'custentity_nab_accreditation'
+        });
+        var nabAccreditationFee = zeeSalesLeadRecord.getValue({
+          fieldId: 'custentity_nab_accreditation_fee'
+        });
+        var salesCommission = zeeSalesLeadRecord.getValue({
+          fieldId: 'custentity_sales_commission'
+        });
+        var serviceRevenue = zeeSalesLeadRecord.getValue({
+          fieldId: 'custentity_service_revenue'
+        });
+        var serviceRevenueYear = zeeSalesLeadRecord.getValue({
+          fieldId: 'custentity_service_revenue_year'
+        });
+        var mpexRevenue = zeeSalesLeadRecord.getValue({
+          fieldId: 'custentity_mpex_revenue'
+        });
+        var mpexRevenueYear = zeeSalesLeadRecord.getValue({
+          fieldId: 'custentitympex_revenue_year'
+        });
+        var sendleRevenue = zeeSalesLeadRecord.getValue({
+          fieldId: 'custentity_sendle_revenue'
+        });
+        var sendleRevenueYear = zeeSalesLeadRecord.getValue({
+          fieldId: 'custentity_sendle_revenue_year'
+        });
+        var finalPurchasePrice = zeeSalesLeadRecord.getValue({
+          fieldId: 'custentity_final_sale_price'
+        });
+        var territoryMapDoc = zeeSalesLeadRecord.getValue({
+          fieldId: 'custentity_territory_map_doc'
+        });
+
+        if (!isNullorEmpty()) {
+          var fileObj = file.load({
+            id: territoryMapDoc
+          });
+
+          territoryMapURL = fileObj.url;
+
+          fileObj.isonline = true;
+
+          fileObj.save();
+
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custentity_territory_map',
+            value: territoryMapURL
+          });
+          zeeSalesLeadRecord.save();
+        }
+
+
+
+        var searchZeeAgreements = search.load({
+          id: 'customsearch_zee_agreements_listed_for_s',
+          type: 'customrecord_fr_agreements'
+        });
+
+        var new_filter = search.createFilter({
+          name: 'internalid',
+          join: 'custrecord_fr_agreement_franchisee',
+          operator: 'anyof',
+          values: interestedZees,
+        });
+
+        searchZeeAgreements.filters.push(new_filter);
+
+        searchZeeAgreements.run().each(function(
+          searchZeeAgreementsResultSet) {
+          zeeAgreementId = searchZeeAgreementsResultSet.getValue(
+            'internalid');
+          tradingEntity = searchZeeAgreementsResultSet.getValue(
+            'custrecord_fr_agreement_entity');
+          commencementDate = searchZeeAgreementsResultSet.getValue(
+            'custrecord_fr_agreement_comm_date');
+          expiryDate = searchZeeAgreementsResultSet.getValue(
+            'custrecord_fr_agreement_expiry_date');
+          ultimateExpiryDate = searchZeeAgreementsResultSet.getValue(
+            'custrecord_fr_agreement_ult_expiry_date');
+          unlimitedTermOffer = searchZeeAgreementsResultSet.getValue(
+            'custrecord_unlimited_term_offer');
+          renewalTerms = searchZeeAgreementsResultSet.getValue(
+            'custrecord_fr_agreement_yrs_extended');
+
+          return true;
+        });
+
+
+
+      } else {
+        var display_div = 'hide'
+      }
+
+      var inlineHtml =
+        '<div class="presales_div ' + display_div +
+        '"><div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #103D39;">PRESALES DETAILS & IM DETAILS</span></h4></div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      var formattedCommencementDate = '';
+      var formattedExpiryDate = '';
+      var formattedUltimateExpiryDate = '';
+
+      if (!isNullorEmpty(commencementDate)) {
+        commencementDate = format.format({
+          value: commencementDate,
+          type: format.Type.DATE
+        });
+
+        var commencementDateArray = commencementDate.split('/');
+        if (commencementDateArray[1] < 10) {
+          commencementDateArray[1] = '0' + commencementDateArray[1];
+        }
+        if (commencementDateArray[0] < 10) {
+          commencementDateArray[0] = '0' + commencementDateArray[0];
+        }
+        var formattedCommencementDate = commencementDateArray[2] + '-' +
+          commencementDateArray[1] +
+          '-' + commencementDateArray[0];
+      }
+
+      if (!isNullorEmpty(expiryDate)) {
+        expiryDate = format.format({
+          value: expiryDate,
+          type: format.Type.DATE
+        });
+        var expiryDateArray = expiryDate.split('/');
+        if (expiryDateArray[1] < 10) {
+          expiryDateArray[1] = '0' + expiryDateArray[1];
+        }
+        if (expiryDateArray[0] < 10) {
+          expiryDateArray[0] = '0' + expiryDateArray[0];
+        }
+        var formattedExpiryDate = expiryDateArray[2] + '-' +
+          expiryDateArray[1] +
+          '-' + expiryDateArray[0];
+      }
+
+      if (!isNullorEmpty(ultimateExpiryDate)) {
+        ultimateExpiryDate = format.format({
+          value: ultimateExpiryDate,
+          type: format.Type.DATE
+        });
+        var ultimateExpiryDateArray = ultimateExpiryDate.split('/');
+        if (ultimateExpiryDateArray[1] < 10) {
+          ultimateExpiryDateArray[1] = '0' + ultimateExpiryDateArray[1];
+        }
+        if (ultimateExpiryDateArray[0] < 10) {
+          ultimateExpiryDateArray[0] = '0' + ultimateExpiryDateArray[0];
+        }
+        var formattedUltimateExpiryDate = ultimateExpiryDateArray[2] + '-' +
+          ultimateExpiryDateArray[1] +
+          '-' + ultimateExpiryDateArray[0];
+      }
+
+      inlineHtml += '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-12 name_section"><div class="input-group"><span class="input-group-addon">TRADING ENTITY <span class="mandatory">*</span></span><input id="tradingEntity" class="form-control tradingEntity" value="' +
+        tradingEntity + '" readonly/></div></div>';
+
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+
+      inlineHtml += '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">COMMENCEMENT DATE <span class="mandatory">*</span></span><input id="commencementDate" class="form-control commencementDate" type="date" value="' +
+        formattedCommencementDate + '" readonly/></div></div>';
+      inlineHtml +=
+        '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">EXPIRY DATE <span class="mandatory">*</span></span><input id="expiryDate" class="form-control expiryDate" type="date" value="' +
+        formattedExpiryDate + '" readonly/></div></div>';
+      inlineHtml +=
+        '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">ULTIMATE EXPIRY DATE <span class="mandatory">*</span></span><input id="ultimateExpiryDate" class="form-control ultimateExpiryDate" type="date" value="' +
+        formattedUltimateExpiryDate + '" readonly/></div></div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      inlineHtml += '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">UNLIMTED TERM OFFER<span class="mandatory">*</span></span><select id="unlimitedTermOffer" class="form-control unlimitedTermOffer" readonly>';
+      if (unlimitedTermOffer == 1) {
+        inlineHtml += '<option value="1" selected>Yes</option>';
+      } else {
+        inlineHtml += '<option value="2">No</option>';
+      }
+      inlineHtml += '</select></div></div>';
+      if (unlimitedTermOffer == 1) {
+        inlineHtml +=
+          '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">UNLIMITED TERM FEE ($) <span class="mandatory">*</span></span><input id="unlimitedTermFee" class="form-control unlimitedTermFee" value="25000" readonly/></div></div>';
+      } else {
+        inlineHtml +=
+          '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">UNLIMITED TERM FEE ($) <span class="mandatory">*</span></span><input id="unlimitedTermFee" class="form-control unlimitedTermFee" value="0" readonly/></div></div>';
+      }
+
+      inlineHtml +=
+        '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">RENEWAL TERMS (YEARS) <span class="mandatory">*</span></span><input id="renewalTerms" class="form-control renewalTerms" value="' +
+        renewalTerms + '" readonly/></div></div>';
+
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+
+      inlineHtml += '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      if (!isNullorEmpty(lowPrice)) {
+        inlineHtml +=
+          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">LOW PRICE ($) </span><input id="lowPrice" class="form-control lowPrice" value="' +
+          lowPrice.toFixed(2).replace(
+            /\d(?=(\d{3})+\.)/g, "$&,") + '" readonly/></div></div>';
+      } else {
+        inlineHtml +=
+          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">LOW PRICE ($) </span><input id="lowPrice" class="form-control lowPrice" value="' +
+          lowPrice + '" readonly/></div></div>';
+      }
+      if (!isNullorEmpty(highPrice)) {
+        inlineHtml +=
+          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">HIGH PRICE ($) </span><input id="highPrice" class="form-control highPrice" value="' +
+          highPrice.toFixed(2).replace(
+            /\d(?=(\d{3})+\.)/g, "$&,") + '" readonly/></div></div>';
+      } else {
+        inlineHtml +=
+          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">HIGH PRICE ($) </span><input id="highPrice" class="form-control highPrice" value="' +
+          highPrice + '" readonly/></div></div>';
+      }
+
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      inlineHtml += '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      if (!isNullorEmpty(serviceRevenue)) {
+        inlineHtml +=
+          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">SERVICE REVENUE ($) </span><input id="serviceRevenue" class="form-control serviceRevenue" value="' +
+          serviceRevenue.toFixed(2).replace(
+            /\d(?=(\d{3})+\.)/g, "$&,") + '" readonly/></div></div>';
+      } else {
+        inlineHtml +=
+          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">SERVICE REVENUE ($) </span><input id="serviceRevenue" class="form-control serviceRevenue" value="' +
+          serviceRevenue + '" readonly/></div></div>';
+      }
+
+      inlineHtml +=
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">YEAR</span><input id="serviceRevenueYear" class="form-control serviceRevenueYear" value="' +
+        serviceRevenueYear + '" readonly/></div></div>';
+
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+      inlineHtml += '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      if (!isNullorEmpty(mpexRevenue)) {
+        inlineHtml +=
+          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">MPEX REVENUE ($) </span><input id="mpexRevenue" class="form-control mpexRevenue" value="' +
+          mpexRevenue.toFixed(2).replace(
+            /\d(?=(\d{3})+\.)/g, "$&,") + '" readonly/></div></div>';
+      } else {
+        inlineHtml +=
+          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">MPEX REVENUE ($) </span><input id="mpexRevenue" class="form-control mpexRevenue" value="' +
+          mpexRevenue + '" readonly/></div></div>';
+      }
+
+      inlineHtml +=
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">YEAR</span><input id="mpexRevenueYear" class="form-control mpexRevenueYear" value="' +
+        mpexRevenueYear + '" readonly/></div></div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      inlineHtml += '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      if (!isNullorEmpty(sendleRevenue)) {
+        inlineHtml +=
+          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">SENDLE REVENUE ($) </span><input id="sendleRevenue" class="form-control sendleRevenue" value="' +
+          sendleRevenue.toFixed(2).replace(
+            /\d(?=(\d{3})+\.)/g, "$&,") + '" readonly/></div></div>';
+      } else {
+        inlineHtml +=
+          '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">SENDLE REVENUE ($) </span><input id="sendleRevenue" class="form-control sendleRevenue" value="' +
+          sendleRevenue + '" readonly/></div></div>';
+      }
+
+      inlineHtml +=
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">YEAR</span><input id="sendleRevenueYear" class="form-control sendleRevenueYear" value="' +
+        sendleRevenueYear + '" readonly/></div></div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      inlineHtml += '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">SALES COMMISSION ($) </span><input id="salesCommission" class="form-control salesCommission" value="' +
+        salesCommission + '" readonly/></div></div>';
+      inlineHtml +=
+        '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">NAB ACCREDITATION</span><select id="nabAccreditation" class="form-control nabAccreditation" readonly>';
+      if (nabAccreditation == 1) {
+        inlineHtml +=
+          '<option value="1" selected>Yes</option><option value="2">No</option>';
+      } else {
+        inlineHtml +=
+          '<option value="1" >Yes</option><option value="2" selected>No</option>';
+      }
+
+
+      inlineHtml += '</select></div></div>';
+      if (!isNullorEmpty(nabAccreditationFee)) {
+        inlineHtml +=
+          '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">NAB ACCREDITATION FEE ($) </span><input id="nabAccreditationFee" class="form-control nabAccreditationFee" value="' +
+          parseFloat(nabAccreditationFee).toFixed(2).replace(
+            /\d(?=(\d{3})+\.)/g, "$&,") + '" readonly/></div></div>';
+      } else {
+        inlineHtml +=
+          '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">NAB ACCREDITATION FEE ($) </span><input id="nabAccreditationFee" class="form-control nabAccreditationFee" value="' +
+          nabAccreditationFee + '" readonly/></div></div>';
+      }
+
+
+      inlineHtml += '</div></div>';
+      inlineHtml += '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      if (!isNullorEmpty(finalPurchasePrice)) {
+        inlineHtml +=
+          '<div class="col-xs-12 name_section"><div class="input-group"><span class="input-group-addon">SALE PRICE ($) </span><input id="finalPurchasePrice" class="form-control finalPurchasePrice" value="' +
+          finalPurchasePrice.toFixed(2).replace(
+            /\d(?=(\d{3})+\.)/g, "$&,") + '" readonly/></div></div>';
+      } else {
+        inlineHtml +=
+          '<div class="col-xs-12 name_section"><div class="input-group"><span class="input-group-addon">SALE PRICE ($) </span><input id="finalPurchasePrice" class="form-control finalPurchasePrice" value="' +
+          finalPurchasePrice + '" readonly/></div></div>';
+      }
+
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      if (!isNullorEmpty(territoryMapURL)) {
+        var fullURL = baseURL + territoryMapURL;
+        inlineHtml += '<div class="form-group container">';
+        inlineHtml += '<div class="row">';
+        inlineHtml +=
+          '<div class="col-xs-12 editPresales"><div class="input-group"><span class="input-group-addon">TERRITORY MAP URL </span><input type="" value="' +
+          fullURL +
+          '" class="form-control" id="" readonly/></div></div>'
+        inlineHtml += '</div>';
+        inlineHtml += '</div>';
+
+        inlineHtml += '<div class="form-group container">';
+        inlineHtml += '<div class="row">';
+
+        inlineHtml +=
+          '<div class="col-xs-2"></div>';
+        inlineHtml +=
+          '<div class="col-xs-8" style="text-align: center;"><img id="viewer" src="' +
+          territoryMapURL + '" style="width: 100%; height: 100%;"/><div>';
+        inlineHtml +=
+          '<div class="col-xs-2"></div>';
+        inlineHtml += '</div>';
+        inlineHtml += '</div>';
+      }
+
+      inlineHtml += '</div>';
+
+
+      return inlineHtml
+
+    }
+
     /*
      * PURPOSE : FRANCHISE MAIN DETAILS TAB
      *  PARAMS : ZEE ID
@@ -738,35 +1197,35 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
       inlineHtml += '<div class="form-group container">';
       inlineHtml += '<div class="row">';
-      inlineHtml +=
-        '<div class="col-xs-4 zee_section ' + defaultHideClass +
-        '"><div class="input-group"><span class="input-group-addon" id="zee_text">TERRITORIES OF INTEREST </span><select id="zeeList" class="form-control ui fluid search dropdown zeeList" data-old="" json="" multiple="" style="font-size: 12px;"><option value=0></option>';
-
-      resultSetZees.each(function(searchResultZees) {
-        zeeId = searchResultZees.getValue('internalid');
-        franchiseeName = searchResultZees.getValue('companyname');
-        franchiseeListedForSale = searchResultZees.getValue(
-          'custentity_listed_for_sale');
-
-        var indexValue = interestedZees.indexOf(zeeId);
-
-        if (indexValue != -1) {
-          inlineHtml += '<option value=' + zeeId + ' selected>' +
-            franchiseeName + '</option>';
-        } else {
-          inlineHtml += '<option value=' + zeeId + '>' + franchiseeName +
-            '</option>';
-        }
-
-
-
-        return true;
-      });
-
-      inlineHtml += '</select></div></div>';
+      // inlineHtml +=
+      //   '<div class="col-xs-4 zee_section ' + defaultHideClass +
+      //   '"><div class="input-group"><span class="input-group-addon" id="zee_text">TERRITORIES OF INTEREST </span><select id="zeeList" class="form-control ui fluid search dropdown zeeList" data-old="" json="" multiple="" style="font-size: 12px;"><option value=0></option>';
+      //
+      // resultSetZees.each(function(searchResultZees) {
+      //   zeeId = searchResultZees.getValue('internalid');
+      //   franchiseeName = searchResultZees.getValue('companyname');
+      //   franchiseeListedForSale = searchResultZees.getValue(
+      //     'custentity_listed_for_sale');
+      //
+      //   var indexValue = interestedZees.indexOf(zeeId);
+      //
+      //   if (indexValue != -1) {
+      //     inlineHtml += '<option value=' + zeeId + ' selected>' +
+      //       franchiseeName + '</option>';
+      //   } else {
+      //     inlineHtml += '<option value=' + zeeId + '>' + franchiseeName +
+      //       '</option>';
+      //   }
+      //
+      //
+      //
+      //   return true;
+      // });
+      //
+      // inlineHtml += '</select></div></div>';
       inlineHtml +=
         '<div class="col-xs-8 zeeListedSale_section ' + defaultHideClass +
-        '"><div class="input-group"><span class="input-group-addon" id="zeeListedSale_text">TERRITORIES AVAILABLE </span><select id="zeeListedSale" class="form-control ui fluid search dropdown zeeListedSale" data-old="" json="" multiple="" style="font-size: 12px"><option value=0></option>';
+        '"><div class="input-group"><span class="input-group-addon" id="zeeListedSale_text">TERRITORIES AVAILABLE </span><select id="zeeListedSale" class="form-control ui fluid search dropdown zeeListedSale" data-old="" json="" style="font-size: 12px"><option value=0></option>';
 
       resultSetZeesListed.each(function(searchResultZeesListed) {
         zeeId = searchResultZeesListed.getValue('internalid');
@@ -786,6 +1245,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       });
 
       inlineHtml += '</select></div></div>';
+      inlineHtml +=
+        '<div class="col-xs-4 listforSale"><input type="button" value="LIST FRANCHISEES FOR SALE" class="form-control btn btn-primary" id="listforSale" /></div>'
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
