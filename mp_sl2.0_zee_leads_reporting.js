@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T08:26:00+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-01-20T09:41:20+11:00
+ * @Last modified time: 2022-03-16T14:38:07+11:00
  */
 
 
@@ -172,6 +172,10 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml +=
         '<li role="presentation" class="active"><a data-toggle="tab" href="#type"><b>LEAD COUNT - BY TYPE</b></a></li>';
       inlineHtml +=
+        '<li role="presentation" class=""><a data-toggle="tab" href="#source"><b>LEAD COUNT - BY SOURCE</b></a></li>';
+      inlineHtml +=
+        '<li role="presentation" class=""><a data-toggle="tab" href="#status"><b>LEAD COUNT - BY STATUS</b></a></li>';
+      inlineHtml +=
         '<li role="presentation" class=""><a data-toggle="tab" href="#state"><b>LEAD COUNT - BY STATE</b></a></li>';
 
       inlineHtml += '</ul></div>';
@@ -187,6 +191,20 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '<div id="container"></div>';
       inlineHtml += '</figure><br></br>';
       inlineHtml += dataTable('zee_leads_list_preview');
+      inlineHtml += '</div>';
+
+      inlineHtml += '<div role="tabpanel" class="tab-pane" id="source">';
+      inlineHtml += '<figure class="highcharts-figure">';
+      inlineHtml += '<div id="container6"></div>';
+      inlineHtml += '</figure><br></br>';
+      inlineHtml += dataTable('source_table');
+      inlineHtml += '</div>';
+
+      inlineHtml += '<div role="tabpanel" class="tab-pane" id="status">';
+      inlineHtml += '<figure class="highcharts-figure">';
+      inlineHtml += '<div id="container7"></div>';
+      inlineHtml += '</figure><br></br>';
+      inlineHtml += dataTable('status_table');
       inlineHtml += '</div>';
 
       inlineHtml += '<div role="tabpanel" class="tab-pane" id="state">';
