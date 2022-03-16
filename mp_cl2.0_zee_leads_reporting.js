@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-03-16T16:43:11+11:00
+ * @Last modified time: 2022-03-16T17:01:09+11:00
  */
 
 
@@ -227,7 +227,14 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           className: 'bolded'
         }],
         rowCallback: function(row, data, index) {
-
+          if (parseInt(data[2]) > 0) {
+            $(row).find('td:eq(2)').css('background-color', '#398AB9');
+            $(row).find('td:eq(2)').css('color', '#fffff');
+          }
+          if (parseInt(data[12]) > 0) {
+            $(row).find('td:eq(12)').css('background-color', '#E83A14');
+            $(row).find('td:eq(12)').css('color', '#fffff');
+          }
         }
       });
 
@@ -1555,7 +1562,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         series: [{
           name: 'NEW LEAD',
           data: series_data_newLead,
-          color: '#084594',
+          color: '#398AB9',
           style: {
             fontWeight: 'bold',
           }
