@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-03-11T14:11:05+11:00
+ * @Last modified time: 2022-03-16T09:30:55+11:00
  */
 
 
@@ -45,6 +45,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
     var finalPurchasePrice = '';
     var businessStartDate = '';
     var dailyRunTime = '';
+    var termOnIM = '';
 
 
     var baseURL = 'https://1048144.app.netsuite.com';
@@ -261,6 +262,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         finalPurchasePrice = $('#finalPurchasePrice').val();
         businessStartDate = $('#businessStartDate').val();
         dailyRunTime = $('#dailyRunTime').val();
+        termOnIM = $('#termOnIM').val();
 
 
         if (validateRevenueComms()) {
@@ -328,6 +330,11 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             zeeRecord.setValue({
               fieldId: 'custentity_total_daily_runtime',
               value: dailyRunTime
+            });
+
+            zeeRecord.setValue({
+              fieldId: 'custentity_term_on_im',
+              value: termOnIM
             });
 
             zeeRecord.save();
@@ -474,6 +481,12 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       if (isNullorEmpty(finalPurchasePrice)) {
         errorMessage += 'Please Enter Final Purchase Price</br>';
       }
+
+      if (isNullorEmpty(termOnIM)) {
+        errorMessage +=
+          'Please Enter Term that needs to be shown in the Franchisee IM</br>';
+      }
+
 
       if (!isNullorEmpty(errorMessage)) {
         showAlert(errorMessage);

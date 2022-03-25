@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T08:26:00+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-03-15T16:52:25+11:00
+ * @Last modified time: 2022-03-25T16:10:02+11:00
  */
 
 
@@ -45,6 +45,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     var interestedZees = [];
     var eoiSent = '2';
     var imSent = '2';
+    var ndaSent = '2';
     var eoiFileId = 0;
     var salePrice = 0;
     var incGST = 2;
@@ -73,6 +74,15 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     var renewalTerms = '';
     var territoryMapDoc = '';
     var territoryMapURL = '';
+    var tradingEntityName = '';
+    var acn = '';
+    var abn = '';
+    var ndaaddress1 = '';
+    var ndaaddress2 = '';
+    var ndasuburb = '';
+    var ndastate = '';
+    var ndapostcode = '';
+    var deposit = '';
 
     var baseURL = 'https://1048144.app.netsuite.com/';
     if (runtime.EnvType == "SANDBOX") {
@@ -243,6 +253,39 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           imSent = zeeSalesLeadRecord.getValue({
             fieldId: 'custrecord_im_sent'
           });
+          ndaSent = zeeSalesLeadRecord.getValue({
+            fieldId: 'custrecord_nda_sent'
+          });
+          if (isNullorEmpty(ndaSent)) {
+            ndaSent = '2';
+          }
+          tradingEntityName = zeeSalesLeadRecord.getValue({
+            fieldId: 'custrecord_trading_entity_name'
+          });
+          acn = zeeSalesLeadRecord.getValue({
+            fieldId: 'custrecord_acn'
+          });
+          abn = zeeSalesLeadRecord.getValue({
+            fieldId: 'custrecord_abn'
+          });
+          ndaaddress1 = zeeSalesLeadRecord.getValue({
+            fieldId: 'custrecord_address1'
+          });
+          ndaaddress2 = zeeSalesLeadRecord.getValue({
+            fieldId: 'custrecord_address2'
+          });
+          ndasuburb = zeeSalesLeadRecord.getValue({
+            fieldId: 'custrecord_suburb'
+          });
+          ndastate = zeeSalesLeadRecord.getValue({
+            fieldId: 'custrecord_address_state'
+          });
+          ndapostcode = zeeSalesLeadRecord.getValue({
+            fieldId: 'custrecord_postcode'
+          });
+          deposit = zeeSalesLeadRecord.getValue({
+            fieldId: 'custrecord_deposit'
+          });
 
 
           log.debug({
@@ -281,12 +324,28 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         }).defaultValue = imSent
 
         form.addField({
+          id: 'custpage_ndasent',
+          type: ui.FieldType.TEXT,
+          label: 'Table CSV'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        }).defaultValue = ndaSent
+
+        form.addField({
           id: 'custpage_interestedzees',
           type: ui.FieldType.TEXT,
           label: 'Table CSV'
         }).updateDisplayType({
           displayType: ui.FieldDisplayType.HIDDEN
         }).defaultValue = interestedZees
+
+        form.addField({
+          id: 'custpage_upload_nda_clicked',
+          type: ui.FieldType.TEXT,
+          label: 'Table CSV'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        }).defaultValue = false
 
 
         inlineHtml += lostZeeLeadModal();
@@ -312,8 +371,10 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           if (salesStage != 1) {
             inlineHtml += potentialZeesSection();
             inlineHtml += presalesDetails();
+
           }
         }
+        inlineHtml += prefillNDASection();
         inlineHtml += financeSection();
         inlineHtml += reminderCommentsSection();
         inlineHtml += salesWFDateDetails();
@@ -329,19 +390,26 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           layoutType: ui.FieldLayoutType.MIDROW,
         }).defaultValue = inlineHtml;
 
-        if (salesStage == 8 || salesStage == '7') {
+        if (salesStage == '7') {
           form.addField({
-              id: 'upload_file_1',
-              type: 'file',
-              label: 'Approved Expression of Interest'
-            }).updateLayoutType({
-              layoutType: ui.FieldLayoutType.OUTSIDEBELOW,
-            }).updateBreakType({
-              breakType: ui.FieldBreakType.STARTROW
-            }).isMandatory = true
-            // form.addField('upload_file_1', 'file',
-            //   'Approved Expression of Interest').setLayoutType(
-            //   'outsidebelow', 'startrow').setDisplaySize(40);
+            id: 'upload_file_2',
+            type: 'file',
+            label: 'Upload Signed NDA'
+          }).updateLayoutType({
+            layoutType: ui.FieldLayoutType.OUTSIDEBELOW,
+          }).updateBreakType({
+            breakType: ui.FieldBreakType.STARTROW
+          }).isMandatory = true
+        } else if (salesStage == 10 && eoiSent == 1) {
+          form.addField({
+            id: 'upload_file_1',
+            type: 'file',
+            label: 'Upload Signed EOI'
+          }).updateLayoutType({
+            layoutType: ui.FieldLayoutType.OUTSIDEBELOW,
+          }).updateBreakType({
+            breakType: ui.FieldBreakType.STARTROW
+          }).isMandatory = true
         }
 
         form.addSubmitButton({
@@ -354,9 +422,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       } else {
 
         var file = context.request.files.upload_file_1;
+        var file2 = context.request.files.upload_file_2;
         var param_zeeleadid = context.request.parameters.custpage_zeeleadid;
         var param_imsent = context.request.parameters.custpage_imsent;
+        var param_ndasent = context.request.parameters.custpage_ndasent;
         var param_interestedzees = context.request.parameters.custpage_interestedzees;
+        var param_upload_nda_clicked = context.request.parameters.custpage_upload_nda_clicked;
 
         log.debug({
           title: 'param_zeeleadid',
@@ -367,11 +438,15 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           details: param_imsent
         });
         log.debug({
+          title: 'param_ndasent',
+          details: param_ndasent
+        });
+        log.debug({
           title: 'param_interestedzees',
           details: param_interestedzees
         });
 
-        if (param_imsent == '1') {
+        if (param_imsent == '1' && param_ndasent == '2') {
           var params = {
             custscript_zeeleadid: param_zeeleadid,
             custscript_interestedzees: param_interestedzees
@@ -389,27 +464,88 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           });
 
           reschedule.submit();
+        } else if (param_imsent == '1' && param_ndasent == '1' &&
+          param_upload_nda_clicked == 'false' && isNullorEmpty(file)) {
+          var params = {
+            custscript_zeeleadid_nda: param_zeeleadid
+          };
+          var reschedule = task.create({
+            taskType: task.TaskType.SCHEDULED_SCRIPT,
+            scriptId: 'customscript_ss_prefill_nda',
+            deploymentId: 'customdeploy1',
+            params: params
+          });
+
+          log.debug({
+            title: 'rescheduling',
+            details: 'rescheduling'
+          });
+
+          reschedule.submit();
         }
 
         if (!isNullorEmpty(file)) {
 
           file.folder = 3162671;
           var file_type = file.fileType;
-          var file_name = getDateToday() + '_' + param_zeeleadid + '.' +
-            file_type;
-          // Create file and upload it to the file cabinet.
-          file.name = file_name;
-          var f_id = file.save();
+          if (!isNullorEmpty(file_type) && file_type != 'undefined') {
+            var file_name = getDateToday() + '_' + param_zeeleadid + '.' +
+              file_type;
+            // Create file and upload it to the file cabinet.
+            file.name = file_name;
+            var f_id = file.save();
 
-          var rec = record.load({
-            type: 'customrecord_zee_sales_leads',
-            id: param_zeeleadid
-          });
-          rec.setValue({
-            fieldId: 'custrecord_eoi_doc_id',
-            value: f_id
-          });
-          rec.save();
+            var rec = record.load({
+              type: 'customrecord_zee_sales_leads',
+              id: param_zeeleadid
+            });
+            rec.setValue({
+              fieldId: 'custrecord_eoi_doc_id',
+              value: f_id
+            });
+            rec.save();
+          }
+
+
+        }
+        if (!isNullorEmpty(file2)) {
+
+          file2.folder = 3199521;
+          var file_type2 = file2.fileType;
+          log.debug({
+            title: 'file_type2',
+            value: file_type2
+          })
+          if (!isNullorEmpty(file_type2) && file_type2 != 'undefined') {
+            var file_name2 = getDateToday() + '_' + param_zeeleadid + '.' +
+              file_type;
+            // Create file and upload it to the file cabinet.
+            file2.name = file_name2;
+            var f_id2 = file2.save();
+
+            var rec = record.load({
+              type: 'customrecord_zee_sales_leads',
+              id: param_zeeleadid
+            });
+            rec.setValue({
+              fieldId: 'custrecord_signed_nda_doc',
+              value: f_id2
+            });
+            rec.setValue({
+              fieldId: 'custrecord_zee_lead_stage',
+              value: 8
+            });
+            rec.setValue({
+              fieldId: 'custrecord_date_signed_nda_uploaded',
+              value: getDateToday()
+            });
+            rec.setValue({
+              fieldId: 'custrecord_date_michael_approved',
+              value: getDateToday()
+            });
+            rec.save();
+
+          }
 
         }
 
@@ -492,9 +628,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span><a data-id="' +
           zeeleadid +
-          '" class="stageQualified" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>QUALIFIED LEAD</b></a></span> </div><div class="step current"> <span>OPPORTUNITY</span> </div><div class="step"><span><a data-id="' +
-          zeeleadid +
-          '" class="stageIMSent" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>IM SENT</b></a></span></div><div class="step"> <span>NDA SENT</span> </div><div class="step"> <span>OPERATIONS MEETING</span> </div><div class="step"> <span>SALES MEETING</span> </div><div class="step"> <span>FINANCE MEETING</span> </div><div class="step"> <span>EOI & DEPOSIT</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+          '" class="stageQualified" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>QUALIFIED LEAD</b></a></span> </div><div class="step current"> <span>OPPORTUNITY</span> </div><div class="step"><span>IM SENT</span></div><div class="step"> <span>NDA SENT</span> </div><div class="step"> <span>OPERATIONS MEETING</span> </div><div class="step"> <span>SALES MEETING</span> </div><div class="step"> <span>FINANCE MEETING</span> </div><div class="step"> <span>EOI & DEPOSIT</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
       } else if (salesStage == 6) {
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span><a data-id="' +
@@ -504,9 +638,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span><a data-id="' +
           zeeleadid +
-          '" class="stageIMSent" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>IM SENT</b></a></span> </div><div class="step current"> <span><b>EOI APPROVED - MICHAEL</b></span> </div><div class="step"> <span><a data-id="' +
-          zeeleadid +
-          '" class="eoiApprovedChris" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>EOI APPROVED - CHRIS</b></a></span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+          '" class="stageIMSent" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>IM SENT</b></a></span> </div><div class="step current"> <span><b>NDA SENT</b></span> </div><div class="step"> <span>OPERATIONS MEETING</span> </div><div class="step"> <span>SALES MEETING</span> </div><div class="step"> <span>FINANCE MEETING</span> </div><div class="step"> <span>EOI & DEPOSIT</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
       } else if (salesStage == 13) {
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span>QUALIFIED LEAD</span> </div><div class="step"> <span><a data-id="' +
@@ -514,21 +646,26 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           '" class="stageOpportunity" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>OPPORTUNITY</b></a></span> </div><div class="step current"> <span><b>IM SENT</b></span> </div><div class="step"> <span>NDA SENT</span> </div><div class="step"> <span>OPERATIONS MEETING</span> </div><div class="step"> <span>SALES MEETING</span> </div><div class="step"> <span>FINANCE MEETING</span> </div><div class="step"> <span>EOI & DEPOSIT</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
       } else if (salesStage == 8) {
         inlineHtml +=
-          '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span><a data-id="' +
+          '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span><b>IM SENT</b></span> </div><div class="step"> <span>NDA SENT</span> </div><div class="step current"> <span>OPERATIONS MEETING</span> </div><div class="step"> <span><a data-id="' +
           zeeleadid +
-          '" class="eoiApprovedMichael" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>EOI APPROVED - MICHAEL</b></a></span> </div><div class="step current"> <span><b>EOI APPROVED - CHRIS</b></span> </div><div class="step"> <span><a data-id="' +
-          zeeleadid +
-          '" class="uploadEOI" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>UPLOAD SIGNED EOI</b></a></span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+          '" class="salesMeeting" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>SALES MEETING</b></a></span> </div><div class="step"> <span>FINANCE MEETING</span> </div><div class="step"> <span>EOI & DEPOSIT</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
       } else if (salesStage == 9) {
         inlineHtml +=
-          '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span>IM SENT</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step "> <span><a data-id="' +
+          '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span><b>IM SENT</b></span> </div><div class="step"> <span>NDA SENT</span> </div><div class="step"> <span>OPERATIONS MEETING</span> </div><div class="step"> <span>SALES MEETING</span> </div><div class="step"> <span><a data-id="' +
           zeeleadid +
-          '" class="eoiApprovedChris" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>EOI APPROVED - CHRIS</b></a></span> </div><div class="step current"> <span><b>APPROVED EOI UPLOADED</b></span> </div><div class="step"> <span><a data-id="' +
+          '" class="financeMeeting" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>FINANCE MEETING</b></a></span> </div><div class="step current"> <span>EOI & DEPOSIT</span> </div><div class="step"> <span><a data-id="' +
           zeeleadid +
-          '" class="financialsStep" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>FINANCIALS</b></a></span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+          '" class="interview" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>INTERVIEW</b></a></span> </div></div>';
       } else if (salesStage == 10) {
         inlineHtml +=
-          '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span>IM SENT</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step "> <span>EOI APPROVED - CHRIS</span> </div><div class="step "> <span>APPROVED EOI UPLOADE</span> </div><div class="step current"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+          '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span><b>IM SENT</b></span> </div><div class="step"> <span>NDA SENT</span> </div><div class="step"> <span>OPERATIONS MEETING</span> </div><div class="step"> <span>SALES MEETING</span> </div><div class="step current"> <span>FINANCE MEETING</span> </div><div class="step"> <span><a data-id="' +
+          zeeleadid +
+          '" class="financeMeeting" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>EOI & DEPOSIT</b></a></span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
+      } else if (salesStage == 11) {
+        inlineHtml +=
+          '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step"> <span>NEW LEAD</span> </div><div class="step "> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span><b>IM SENT</b></span> </div><div class="step"> <span>NDA SENT</span> </div><div class="step"> <span>OPERATIONS MEETING</span> </div><div class="step current"> <span>SALES MEETING</span> </div><div class="step"> <span><a data-id="' +
+          zeeleadid +
+          '" class="financeMeeting" style="cursor: pointer !important;color: white;text-weight: 800 !important;text-decoration: underline !important;"><b>FINANCE MEETING</b></a></span> </div><div class="step"> <span>EOI & DEPOSIT</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
       } else {
         inlineHtml +=
           '<div class=""> <div class="wrapper"> <div class="arrow-steps clearfix"><div class="step current"> <span>NEW LEAD</span> </div><div class="step"> <span>QUALIFIED LEAD</span> </div><div class="step"> <span>OPPORTUNITY</span> </div><div class="step"> <span>IM SENT</span> </div><div class="step"> <span>EOI APPROVED - MICHAEL</span> </div><div class="step"> <span>EOI APPROVED - CHRIS</span> </div><div class="step"> <span>UPLOAD SIGNED EOI</span> </div><div class="step"> <span>FINANCIALS</span> </div><div class="step"> <span>PRESENTATION</span> </div><div class="step"> <span>INTERVIEW</span> </div></div>';
@@ -625,6 +762,16 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var imButtonClass = 'btn-info'
       }
 
+      if (ndaSent == 1 || ndaSent == '1') {
+        var disableNDAButton = 'disabled';
+        var ndaButtonLabel = 'NDA SENT'
+        var ndaButtonClass = 'btn-light'
+      } else {
+        var disableNDAButton = '';
+        var ndaButtonLabel = 'SEND NDA';
+        var ndaButtonClass = 'btn-info'
+      }
+
       var inlineHtml = ''
       inlineHtml +=
         '<div class="form-group container zee_available_buttons_section">';
@@ -666,7 +813,35 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         } else if (salesStage == 13) {
           inlineHtml +=
             '<div class="col-xs-6 sendNDA"><input type="button" value="SEND NDA" class="form-control btn btn-info" id="sendNDA" data-id="' +
-            zeeleadid + '" ' + disableIMButton + '/></div>'
+            zeeleadid + '" /></div>'
+          inlineHtml +=
+            '<div class="col-xs-6 zeeLeadLost"><input type="button" value="LEAD LOST" class="form-control btn btn-danger" id="zeeLeadLost" data-id="' +
+            zeeleadid + '"/></div>'
+        } else if (salesStage == 7) {
+          inlineHtml +=
+            '<div class="col-xs-6 uploadNDA"><input type="button" value="UPLOAD SIGNED NDA" class="form-control btn btn-info" id="uploadNDA" data-id="' +
+            zeeleadid + '" /></div>'
+          inlineHtml +=
+            '<div class="col-xs-6 zeeLeadLost"><input type="button" value="LEAD LOST" class="form-control btn btn-danger" id="zeeLeadLost" data-id="' +
+            zeeleadid + '"/></div>'
+        } else if (salesStage == 10) {
+          if (eoiSent == 1) {
+            inlineHtml +=
+              '<div class="col-xs-3 sendEOI"><input type="button" value="' +
+              eoiButtonLabel + '" class="form-control btn ' + eoiButtonClass +
+              '" id="sendEOI" data-id="' +
+              zeeleadid + '" ' + disableEOIButton + '/></div>';
+            inlineHtml +=
+              '<div class="col-xs-3 uploadEOI"><input type="button" value="UPLOAD EOI" class="form-control btn btn-info" id="uploadEOI" data-id="' +
+              zeeleadid + '" /></div>';
+          } else {
+            inlineHtml +=
+              '<div class="col-xs-6 sendEOI"><input type="button" value="' +
+              eoiButtonLabel + '" class="form-control btn ' + eoiButtonClass +
+              '" id="sendEOI" data-id="' +
+              zeeleadid + '" ' + disableEOIButton + '/></div>';
+          }
+
           inlineHtml +=
             '<div class="col-xs-6 zeeLeadLost"><input type="button" value="LEAD LOST" class="form-control btn btn-danger" id="zeeLeadLost" data-id="' +
             zeeleadid + '"/></div>'
@@ -734,7 +909,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           fieldId: 'custentity_territory_map_doc'
         });
 
-        if (!isNullorEmpty()) {
+        if (!isNullorEmpty(territoryMapDoc)) {
           var fileObj = file.load({
             id: territoryMapDoc
           });
@@ -1071,6 +1246,77 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     }
 
     /*
+     * PURPOSE : FIELDS THAT NEEDS TO BE FILLED TO GET THE NDA PREFILLED
+     *  PARAMS :  -
+     * RETURNS :  INLINEHTML
+     *   NOTES :
+     */
+
+    function prefillNDASection() {
+
+      if (!isNullorEmpty(zeeleadid) && salesStage != 1 && salesStage != 2 &&
+        salesStage != 5) {
+        var display_div = '';
+      } else {
+        var display_div = 'hide';
+      }
+
+      var inlineHtml =
+        '<div class="' + display_div + '">';
+      inlineHtml +=
+        '<div class="form-group container ' + display_div + '">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #103D39;">PREFILL NDA DETAILS</span></h4></div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      inlineHtml += '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">TRADING ENTITY NAME <span class="mandatory">*</span></span><input id="tradingEntityName" class="form-control tradingEntityName" type="" value="' +
+        tradingEntityName + '"/></div></div>';
+      inlineHtml +=
+        '<div class="col-xs-3 name_section"><div class="input-group"><span class="input-group-addon">ACN </span><input id="acn" class="form-control acn" type="" value="' +
+        acn + '" /></div></div>';
+      inlineHtml +=
+        '<div class="col-xs-3 name_section"><div class="input-group"><span class="input-group-addon">ABN </span><input id="abn" class="form-control abn" type="" value="' +
+        abn + '" /></div></div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      inlineHtml += '<div class="form-group container row_address1 ">'
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-6 address1_section"><div class="input-group"><span class="input-group-addon">UNIT/LEVEL/SUITE</span><input id="ndaaddress1" class="form-control ndaaddress1" value="' +
+        ndaaddress1 + '" /></div></div>';
+      inlineHtml +=
+        '<div class="col-xs-6 ndaaddress2_section"><div class="input-group"><span class="input-group-addon">STREET NO. & NAME <span class="mandatory">*</span></span><input id="ndaaddress2" class="form-control ndaaddress2" value="' +
+        ndaaddress2 + '"/></div></div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      inlineHtml +=
+        '<div class="form-group container city_state_postcode ">'
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-6"><div class="input-group"><span class="input-group-addon">SUBURB</span><input id="ndacity" readonly class="form-control ndacity" value="' +
+        ndasuburb + '"/></div></div>';
+      inlineHtml +=
+        '<div class="col-xs-3"><div class="input-group"><span class="input-group-addon">STATE</span><input id="ndastate" readonly class="form-control ndastate" value="' +
+        ndastate + '"/></div></div>';
+
+      inlineHtml +=
+        '<div class="col-xs-3 ndapost_code_section"><div class="input-group"><span class="input-group-addon">POSTCODE</span><input id="ndapostcode" readonly class="form-control ndapostcode" value="' +
+        ndapostcode + '"/></div></div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      return inlineHtml;
+    }
+
+    /*
      * PURPOSE : FRANCHISE MAIN DETAILS TAB
      *  PARAMS : ZEE ID
      * RETURNS : INLINEHTML
@@ -1175,6 +1421,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var defaultHideClass = 'hide'
       }
 
+      if (salesStage >= 13) {
+        var readonlyField = 'readonly';
+      } else {
+        var readonlyField = ''
+      }
+
       //NetSuite Search: Interested Franchisees - Franchisees
       var searchZees = search.load({
         id: 'customsearch_zee_management_console_ze_2',
@@ -1230,7 +1482,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       // inlineHtml += '</select></div></div>';
       inlineHtml +=
         '<div class="col-xs-8 zeeListedSale_section ' + defaultHideClass +
-        '"><div class="input-group"><span class="input-group-addon" id="zeeListedSale_text">TERRITORIES AVAILABLE </span><select id="zeeListedSale" class="form-control ui fluid search dropdown zeeListedSale" data-old="" json="" style="font-size: 12px"><option value=0></option>';
+        '"><div class="input-group"><span class="input-group-addon" id="zeeListedSale_text">TERRITORIES AVAILABLE </span><select id="zeeListedSale" class="form-control ui fluid search dropdown zeeListedSale" data-old="" json="" style="font-size: 12px" ' +
+        readonlyField + '><option value=0></option>';
 
       resultSetZeesListed.each(function(searchResultZeesListed) {
         zeeId = searchResultZeesListed.getValue('internalid');
@@ -1430,10 +1683,10 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '<div class="form-group container">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">DATE EOI MICHAEL APPROVED </span><input id="dateOpportunity" class="form-control dateOpportunity" value="' +
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">DATE OPERATIONS MEETING </span><input id="dateOpportunity" class="form-control dateOpportunity" value="' +
         dateEOIMichaelApproved + '" readonly/></div></div>';
       inlineHtml +=
-        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">DATE EOI CHRIS APPROVED </span><input id="dateOpportunity" class="form-control dateOpportunity" value="' +
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">DATE SALES MEETING </span><input id="dateOpportunity" class="form-control dateOpportunity" value="' +
         dateEOIChrisApproved + '" readonly/></div></div>';
       inlineHtml += '</div>';
       inlineHtml += '</div>';
@@ -1516,7 +1769,14 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml += '<div class="form-group container">';
         inlineHtml += '<div class="row">';
         inlineHtml +=
-          '<div class="col-xs-4 sale_price_section"><div class="input-group"><span class="input-group-addon">SALE PRICE $: <span class="mandatory">*</span></span><input id="salePrice" class="form-control salePrice" value="' +
+          '<div class="col-xs-4 sale_price_section"><div class="input-group"><span class="input-group-addon">DEPOSIT $: <span class="mandatory">*</span></span><input id="deposit" class="form-control deposit" value="' +
+          deposit + '" /></div></div>';
+        inlineHtml += '</div>';
+        inlineHtml += '</div>';
+        inlineHtml += '<div class="form-group container">';
+        inlineHtml += '<div class="row">';
+        inlineHtml +=
+          '<div class="col-xs-4 sale_price_section"><div class="input-group"><span class="input-group-addon">FINAL SALE PRICE $: <span class="mandatory">*</span></span><input id="salePrice" class="form-control salePrice" value="' +
           salePrice + '" /></div></div>';
         inlineHtml +=
           '<div class="col-xs-2 gst_section "><div class="input-group"><span class="input-group-addon" id="gst_text">INC GST <span class="mandatory">*</span></span><select id="incGST" class="form-control incGST" data-old="' +
@@ -1533,7 +1793,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         }
         inlineHtml += '</select></div></div>';
         inlineHtml +=
-          '<div class="col-xs-4 total_price_section"><div class="input-group"><span class="input-group-addon">TOTAL PRICE $: <span class="mandatory">*</span></span><input id="totalPrice" class="form-control totalPrice" value="' +
+          '<div class="col-xs-6 total_price_section"><div class="input-group"><span class="input-group-addon">TOTAL PRICE $: <span class="mandatory">*</span></span><input id="totalPrice" class="form-control totalPrice" value="' +
           totalSalePrice + '" disabled/></div></div>';
         inlineHtml += '</div>';
         inlineHtml += '</div>';

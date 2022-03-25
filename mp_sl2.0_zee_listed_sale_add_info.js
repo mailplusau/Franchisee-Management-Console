@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T08:26:00+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-03-14T15:09:14+11:00
+ * @Last modified time: 2022-03-24T09:46:53+11:00
  */
 
 
@@ -48,6 +48,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     var businessStartDate = '';
     var dailyRunTime = '';
     var territoryMapDoc = '';
+    var termOnIM = '';
 
     function onRequest(context) {
       var baseURL = 'https://system.na2.netsuite.com';
@@ -176,6 +177,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           });
           territoryMapDoc = zeeSalesLeadRecord.getValue({
             fieldId: 'custentity_territory_map_doc'
+          });
+          termOnIM = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_term_on_im'
           });
 
 
@@ -394,7 +398,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
         } else if (param_dov_sent == 1 && param_dov_uploaded != 1) {
           var file = context.request.files.upload_file_1;
-          file.folder = 3162670;
+          file.folder = 3200123;
           var file_type = file.fileType;
           var file_name =
             'Deed of Variation - Exit Program Assistance Offer - ' +
@@ -656,10 +660,10 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '<div class="row">';
       inlineHtml +=
         '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">TRADING ENTITY <span class="mandatory">*</span></span><input id="tradingEntity" class="form-control tradingEntity" value="' +
-        tradingEntity + '" /></div></div>';
+        tradingEntity + '" readonly/></div></div>';
       inlineHtml +=
         '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">MAIN CONTACT <span class="mandatory">*</span></span><input id="mainContact" class="form-control mainContact" value="' +
-        mainContact + '" /></div></div>';
+        mainContact + '" readonly/></div></div>';
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
@@ -667,10 +671,10 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '<div class="row">';
       inlineHtml +=
         '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">MOBILE NUMBER <span class="mandatory">*</span></span><input id="contactNumber" class="form-control contactNumber" value="' +
-        contactNumber + '" /></div></div>';
+        contactNumber + '" readonly/></div></div>';
       inlineHtml +=
         '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">EMAIL<span class="mandatory">*</span></span><input id="email" class="form-control email" value="' +
-        email + '" /></div></div>';
+        email + '" readonly/></div></div>';
 
       inlineHtml += '</div>';
       inlineHtml += '</div>';
@@ -680,38 +684,65 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '<div class="row">';
       inlineHtml +=
         '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">ABN <span class="mandatory">*</span></span><input id="abn" class="form-control abn" value="' +
-        abn + '" /></div></div>';
+        abn + '" readonly/></div></div>';
       inlineHtml +=
         '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">DATE LISTED FOR SALE <span class="mandatory">*</span></span><input id="dateListedForSale" class="form-control dateListedForSale" type="date" value="' +
-        formattedDateListedForSale + '" /></div></div>';
+        formattedDateListedForSale + '" readonly/></div></div>';
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
       inlineHtml += '<div class="form-group container">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="col-xs-12 name_section"><div class="input-group"><span class="input-group-addon">ADDRESS<span class="mandatory">*</span></span><textarea id="address" class="form-control address" style="height: 125px" />' +
+        '<div class="col-xs-12 name_section"><div class="input-group"><span class="input-group-addon">ADDRESS<span class="mandatory">*</span></span><textarea id="address" class="form-control address" style="height: 125px" readonly/>' +
         address + '</textarea></div></div>';
 
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
-
       inlineHtml += '<div class="form-group container">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
         '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">COMMENCEMENT DATE <span class="mandatory">*</span></span><input id="commencementDate" class="form-control commencementDate" type="date" value="' +
-        formattedCommencementDate + '" /></div></div>';
+        formattedCommencementDate + '" readonly/></div></div>';
       inlineHtml +=
         '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">EXPIRY DATE <span class="mandatory">*</span></span><input id="expiryDate" class="form-control expiryDate" type="date" value="' +
-        formattedExpiryDate + '" /></div></div>';
+        formattedExpiryDate + '" readonly/></div></div>';
       inlineHtml +=
         '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">ULTIMATE EXPIRY DATE <span class="mandatory">*</span></span><input id="ultimateExpiryDate" class="form-control ultimateExpiryDate" type="date" value="' +
-        formattedUltimateExpiryDate + '" /></div></div>';
+        formattedUltimateExpiryDate + '" readonly/></div></div>';
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
+
+
       if (!isNullorEmpty(deedOfVariation) || deedOfVariationUploaded == 1) {
+
+
+        inlineHtml += '<div class="form-group container">';
+        inlineHtml += '<div class="row">';
+        inlineHtml +=
+          '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">UNLIMTED TERM OFFER<span class="mandatory">*</span></span><select id="unlimitedTermOffer" class="form-control unlimitedTermOffer" readonly>';
+        if (unlimitedTermOffer == 1) {
+          inlineHtml += '<option value="1" selected>Yes</option>';
+        } else {
+          inlineHtml += '<option value="2">No</option>';
+        }
+        inlineHtml += '</select></div></div>';
+        if (unlimitedTermOffer == 1) {
+          inlineHtml +=
+            '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">UNLIMITED TERM FEE ($) <span class="mandatory">*</span></span><input id="unlimitedTermFee" class="form-control unlimitedTermFee" value="25000" readonly/></div></div>';
+        } else {
+          inlineHtml +=
+            '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">UNLIMITED TERM FEE ($) <span class="mandatory">*</span></span><input id="unlimitedTermFee" class="form-control unlimitedTermFee" value="0" readonly/></div></div>';
+        }
+
+        inlineHtml +=
+          '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">RENEWAL TERMS (YEARS) <span class="mandatory">*</span></span><input id="renewalTerms" class="form-control renewalTerms" value="' +
+          renewalTerms + '" readonly/></div></div>';
+
+        inlineHtml += '</div>';
+        inlineHtml += '</div>';
 
         if (!isNullorEmpty(deedOfVariation)) {
           inlineHtml += '<div class="form-group container">';
@@ -730,31 +761,28 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           inlineHtml += '</div>';
         }
 
+        inlineHtml +=
+          '<div class="form-group container">';
+        inlineHtml += '<div class="row">';
+        inlineHtml +=
+          '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #103D39;">PRESALES DETAILS</span></h4></div>';
+        inlineHtml += '</div>';
+        inlineHtml += '</div>';
+
 
         inlineHtml += '<div class="form-group container">';
         inlineHtml += '<div class="row">';
-        inlineHtml +=
-          '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">UNLIMTED TERM OFFER<span class="mandatory">*</span></span><select id="unlimitedTermOffer" class="form-control unlimitedTermOffer">';
-        if (unlimitedTermOffer == 1) {
-          inlineHtml += '<option value="1" selected>Yes</option>';
-        } else {
-          inlineHtml += '<option value="2">No</option>';
-        }
-        inlineHtml += '</select></div></div>';
         if (unlimitedTermOffer == 1) {
           inlineHtml +=
-            '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">UNLIMITED TERM FEE ($) <span class="mandatory">*</span></span><input id="unlimitedTermFee" class="form-control unlimitedTermFee" value="25000"/></div></div>';
+            '<div class="col-xs-12 name_section"><div class="input-group"><span class="input-group-addon">TERM ON FRANCHISEE IM <span class="mandatory">*</span></span><input id="termOnIM" class="form-control termOnIM" value="Unlimited" readonly/></div></div>';
         } else {
           inlineHtml +=
-            '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">UNLIMITED TERM FEE ($) <span class="mandatory">*</span></span><input id="unlimitedTermFee" class="form-control unlimitedTermFee" value="0"/></div></div>';
+            '<div class="col-xs-12 name_section"><div class="input-group"><span class="input-group-addon">TERM ON FRANCHISEE IM <span class="mandatory">*</span></span><input id="termOnIM" class="form-control termOnIM" value="' +
+            termOnIM + '" readonly/></div></div>';
         }
-
-        inlineHtml +=
-          '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">RENEWAL TERMS (YEARS) <span class="mandatory">*</span></span><input id="renewalTerms" class="form-control renewalTerms" value="' +
-          renewalTerms + '" /></div></div>';
-
         inlineHtml += '</div>';
         inlineHtml += '</div>';
+
 
         inlineHtml += '<div class="form-group container">';
         inlineHtml += '<div class="row">';

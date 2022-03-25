@@ -4,10 +4,10 @@
  * NSVersion    Date                        Author
  * 1.00         2019-10-15 13:18:23         Ankith
  *
- * Description: Create MPEX Usage Report
+ * Description: Prefill Franchisee IM
  *
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-03-15T16:07:50+11:00
+ * @Last modified time: 2022-03-25T12:40:11+11:00
  *
  */
 
@@ -65,7 +65,8 @@ function main() {
   merge['NLAPSENDLEREVENUEDATE'] = sendleRevenueYear;
   merge['NLAPHOURS'] = dailyRunTime + ' hours per day';
   merge['NLAPTERM'] = "Unlimited";
-  merge['NLAPTERRITORYMAPURL'] = territoryMapURL;
+  merge['NLAPTERRITORYMAPURL'] = 'https://1048144.app.netsuite.com/' +
+    territoryMapURL;
   merge['NLAPSALEPRICE'] = '$' + (parseFloat(finalPurchasePrice).toFixed(2).replace(
     /\d(?=(\d{3})+\.)/g, "$&,")).toString() + ' plus GST';
 
@@ -88,12 +89,20 @@ function main() {
 
   nlapiSubmitRecord(zeeSalesLeadRecord);
 
-  // var records = new Array();
-  //
-  //
-  // nlapiSendEmail(409635, email, subject, body, [
-  //   'michael.mcdaid@mailplus.com.au', 'ankith.ravindran@mailplus.com.au'
-  // ], null, records);
+  var mergeResult = nlapiCreateEmailMerger(343).merge();
+  var emailBody = mergeResult.getBody();
+
+  var records = new Array();
+  records['record'] = zeeLeadID;
+  records['recordtype'] = 'customrecord_zee_sales_leads';
+
+  var arrAttachments = [];
+  arrAttachments.push(nlapiLoadFile(parseInt(id)));
+  nlapiSendEmail(112209, email, 'Information Memorandum Brochure', emailBody, [
+    'michael.mcdaid@mailplus.com.au', 'ankith.ravindran@mailplus.com.au'
+  ], null, records, arrAttachments);
+
+
 
 }
 

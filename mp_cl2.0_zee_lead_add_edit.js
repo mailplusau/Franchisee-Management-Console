@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-03-15T15:57:32+11:00
+ * @Last modified time: 2022-03-25T16:10:01+11:00
  */
 
 
@@ -43,6 +43,14 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
     var reminder;
     var owner = '0';
     var combineComments = '';
+    var tradingEntityName = '';
+    var acn = '';
+    var abn = '';
+    var ndaaddress1 = '';
+    var ndaaddress2 = '';
+    var ndasuburb = '';
+    var ndastate = '';
+    var ndapostcode = '';
 
     var baseURL = 'https://1048144.app.netsuite.com';
     if (runtime.EnvType == "SANDBOX") {
@@ -67,8 +75,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
     }
 
     function initAutocomplete() {
-      // Create the autocomplete object, restricting the search to geographical location types.
-      // types is empty to get all places, not only address. Previously it was types: ['geocode']
+      console.log('inside initAutocomplete')
+        // Create the autocomplete object, restricting the search to geographical location types.
+        // types is empty to get all places, not only address. Previously it was types: ['geocode']
       var options = {
         types: [],
         componentRestrictions: {
@@ -82,6 +91,26 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       autocomplete.addListener('place_changed', fillInAddress);
     }
 
+    function initAutocompleteNDA() {
+
+      console.log('inside initAutocompleteNDA')
+
+
+      // Create the autocomplete object, restricting the search to geographical location types.
+      // types is empty to get all places, not only address. Previously it was types: ['geocode']
+      var options = {
+        types: [],
+        componentRestrictions: {
+          country: 'au'
+        }
+      }
+      autocompleteNDA = new google.maps.places.Autocomplete((document.getElementById(
+        'ndaaddress2')), options);
+
+      // When the user selects an address from the dropdown, populate the address fields in the form.
+      autocompleteNDA.addListener('place_changed', fillInAddressNDA);
+    }
+
     function setupClickListener(id, types) {
       // var radioButton = document.getElementById(id);
       // radioButton.addEventListener('click', function() {
@@ -90,9 +119,40 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
     }
 
     //Fill the Street No. & Street Name after selecting an address from the dropdown
-    function fillInAddress() {
+    function fillInAddressNDA() {
+      console.log('Inside fill Address NDA')
 
       // Get the place details from the autocomplete object.
+      var place = autocompleteNDA.getPlace();
+
+      // Get each component of the address from the place details and fill the corresponding field on the form.
+      var addressComponent = "";
+
+      for (var i = 0; i < place.address_components.length; i++) {
+
+        console.log(place.address_components[i])
+
+        if (place.address_components[i].types[0] == 'street_number' || place.address_components[
+            i].types[0] == 'route') {
+          addressComponent += place.address_components[i]['short_name'] + " ";
+          $('#ndaaddress2').val(addressComponent);
+        }
+        if (place.address_components[i].types[0] == 'postal_code') {
+          $('#ndapostcode').val(place.address_components[i]['short_name']);
+        }
+        if (place.address_components[i].types[0] ==
+          'administrative_area_level_1') {
+          $('#ndastate').val(place.address_components[i]['short_name']);
+        }
+        if (place.address_components[i].types[0] == 'locality') {
+          $('#ndacity').val(place.address_components[i]['short_name']);
+        }
+      }
+    }
+
+    function fillInAddress() {
+      console.log('Inside fill Address ')
+        // Get the place details from the autocomplete object.
       var place = autocomplete.getPlace();
 
       // Get each component of the address from the place details and fill the corresponding field on the form.
@@ -149,6 +209,10 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         // alert('onfocus')
         initAutocomplete();
       });
+      $(document).on('focus', '#ndaaddress2', function(event) {
+        // alert('onfocus')
+        initAutocompleteNDA();
+      });
 
       //Hide the alert section on the page
       $('#alert').hide();
@@ -185,7 +249,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         postcode = $('#postcode').val();
         suburb = $('#city').val();
         // interestedZees = $('#zeeList').val()
-        listedForSaleZees = $('#zeeListedSale').val()
+        listedForSaleZees = $('#zeeListedSale').val();
+        tradingEntityName = $('#tradingEntityName').val();
+        acn = $('#acn').val();
+        abn = $('#abn').val();
+        ndaaddress1 = $('#ndaaddress1').val();
+        ndaaddress2 = $('#ndaaddress2').val();
+        ndasuburb = $('#ndacity').val();
+        ndastate = $('#ndastate').val();
+        ndapostcode = $('#ndapostcode').val();
 
         if (validate()) {
           var zeeSalesLeadRecord = record.load({
@@ -272,6 +344,87 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       });
 
+      $(document).on("click", "#sendNDA", function(e) {
+
+        firstName = $('#firstName').val();
+        lastName = $('#lastName').val();
+        mobile = $('#mobile').val();
+        leadEmail = $('#email').val();
+        franchiseeTypeOfOwner = $('#franchiseeTypeOfOwner').val();
+        vehicle = $('#vehicle').val();
+        experience = $('#experience').val();
+        employment = $('#employment').val();
+        finance = $('#finance').val();
+        investment = $('#investment').val();
+        old_comments = $('#old_comments').val();
+        comments = $('#comments').val();
+        state = $('#state').val();
+        postcode = $('#postcode').val();
+        suburb = $('#city').val();
+        // interestedZees = $('#zeeList').val()
+        listedForSaleZees = $('#zeeListedSale').val();
+        tradingEntityName = $('#tradingEntityName').val();
+        acn = $('#acn').val();
+        abn = $('#abn').val();
+        ndaaddress1 = $('#ndaaddress1').val();
+        ndaaddress2 = $('#ndaaddress2').val();
+        ndasuburb = $('#ndacity').val();
+        ndastate = $('#ndastate').val();
+        ndapostcode = $('#ndapostcode').val();
+
+        if (validateNDA()) {
+
+          myRecord.setValue({
+            fieldId: 'custpage_ndasent',
+            value: '1'
+          })
+
+          var zeeSalesLeadRecord = record.load({
+            type: 'customrecord_zee_sales_leads',
+            id: zeeleadid
+          });
+
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_trading_entity_name',
+            value: tradingEntityName
+          });
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_acn',
+            value: acn
+          });
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_abn',
+            value: abn
+          });
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_address1',
+            value: ndaaddress1
+          });
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_address2',
+            value: ndaaddress2
+          });
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_suburb',
+            value: ndasuburb
+          });
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_address_state',
+            value: ndastate
+          });
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_postcode',
+            value: ndapostcode
+          });
+
+          zeeSalesLeadRecord.save();
+
+          createUpdateRecord();
+          document.getElementById('submitter').click();
+        }
+
+      });
+
       $(document).on("click", "#saveZeeLead", function(e) {
 
         firstName = $('#firstName').val();
@@ -296,6 +449,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         salePrice = $('#salePrice').val()
         incGST = $('#incGST').val()
         totalSalePrice = $('#totalPrice').val()
+
+        tradingEntityName = $('#tradingEntityName').val();
+        acn = $('#acn').val();
+        abn = $('#abn').val();
+        ndaaddress1 = $('#ndaaddress1').val();
+        ndaaddress2 = $('#ndaaddress2').val();
+        ndasuburb = $('#ndacity').val();
+        ndastate = $('#ndastate').val();
+        ndapostcode = $('#ndapostcode').val();
 
         if (validate()) {
           document.getElementById('submitter').click();
@@ -843,7 +1005,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       });
 
-      $(document).on('click', '.uploadEOI', function(e) {
+      $(document).on('click', '#uploadEOI', function(e) {
         zeeleadid = $(this).attr("data-id");
 
         firstName = $('#firstName').val();
@@ -863,7 +1025,17 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         suburb = $('#city').val();
 
         // interestedZees = $('#zeeList').val()
-        listedForSaleZees = $('#zeeListedSale').val()
+        listedForSaleZees = $('#zeeListedSale').val();
+        tradingEntityName = $('#tradingEntityName').val();
+        acn = $('#acn').val();
+        abn = $('#abn').val();
+        ndaaddress1 = $('#ndaaddress1').val();
+        ndaaddress2 = $('#ndaaddress2').val();
+        ndasuburb = $('#ndacity').val();
+        ndastate = $('#ndastate').val();
+        ndapostcode = $('#ndapostcode').val();
+
+
         var errorMessage = '';
         if (eoiSent == 1 || eoiSent == '1') {
           if (validate()) {
@@ -908,6 +1080,170 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         }
 
 
+      });
+
+
+      $(document).on('click', '#uploadNDA', function(e) {
+        zeeleadid = $(this).attr("data-id");
+
+        firstName = $('#firstName').val();
+        lastName = $('#lastName').val();
+        mobile = $('#mobile').val();
+        leadEmail = $('#email').val();
+        franchiseeTypeOfOwner = $('#franchiseeTypeOfOwner').val();
+        vehicle = $('#vehicle').val();
+        experience = $('#experience').val();
+        employment = $('#employment').val();
+        finance = $('#finance').val();
+        investment = $('#investment').val();
+        old_comments = $('#old_comments').val();
+        comments = $('#comments').val();
+        state = $('#state').val();
+        postcode = $('#postcode').val();
+        suburb = $('#city').val();
+
+        // interestedZees = $('#zeeList').val()
+        listedForSaleZees = $('#zeeListedSale').val()
+
+        salePrice = $('#salePrice').val()
+        incGST = $('#incGST').val()
+        totalSalePrice = $('#totalPrice').val()
+
+        tradingEntityName = $('#tradingEntityName').val();
+        acn = $('#acn').val();
+        abn = $('#abn').val();
+        ndaaddress1 = $('#ndaaddress1').val();
+        ndaaddress2 = $('#ndaaddress2').val();
+        ndasuburb = $('#ndacity').val();
+        ndastate = $('#ndastate').val();
+        ndapostcode = $('#ndapostcode').val();
+        if (validate()) {
+          myRecord.setValue({
+            fieldId: 'custpage_upload_nda_clicked',
+            value: true
+          })
+          document.getElementById('submitter').click();
+        }
+      });
+
+      $(document).on('click', '.salesMeeting', function(e) {
+        zeeleadid = $(this).attr("data-id");
+
+        firstName = $('#firstName').val();
+        lastName = $('#lastName').val();
+        mobile = $('#mobile').val();
+        leadEmail = $('#email').val();
+        franchiseeTypeOfOwner = $('#franchiseeTypeOfOwner').val();
+        vehicle = $('#vehicle').val();
+        experience = $('#experience').val();
+        employment = $('#employment').val();
+        finance = $('#finance').val();
+        investment = $('#investment').val();
+        old_comments = $('#old_comments').val();
+        comments = $('#comments').val();
+        state = $('#state').val();
+        postcode = $('#postcode').val();
+        suburb = $('#city').val();
+
+        listedForSaleZees = $('#zeeListedSale').val()
+
+        salePrice = $('#salePrice').val()
+        incGST = $('#incGST').val()
+        totalSalePrice = $('#totalPrice').val()
+
+        tradingEntityName = $('#tradingEntityName').val();
+        acn = $('#acn').val();
+        abn = $('#abn').val();
+        ndaaddress1 = $('#ndaaddress1').val();
+        ndaaddress2 = $('#ndaaddress2').val();
+        ndasuburb = $('#ndacity').val();
+        ndastate = $('#ndastate').val();
+        ndapostcode = $('#ndapostcode').val();
+        if (validate()) {
+          var zeeSalesLeadRecord = record.load({
+            type: 'customrecord_zee_sales_leads',
+            id: zeeleadid
+          });
+
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_zee_lead_stage',
+            value: 11
+          });
+
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_date_chris_approved',
+            value: getDateToday()
+          });
+
+          zeeSalesLeadRecord.save();
+
+          createUpdateRecord();
+
+          var url = baseURL +
+            '/app/site/hosting/scriptlet.nl?script=1411&deploy=1&zeeleadid=' +
+            zeeleadid;
+          window.location.href = url;
+        }
+      });
+
+      $(document).on('click', '.financeMeeting', function(e) {
+        zeeleadid = $(this).attr("data-id");
+
+        firstName = $('#firstName').val();
+        lastName = $('#lastName').val();
+        mobile = $('#mobile').val();
+        leadEmail = $('#email').val();
+        franchiseeTypeOfOwner = $('#franchiseeTypeOfOwner').val();
+        vehicle = $('#vehicle').val();
+        experience = $('#experience').val();
+        employment = $('#employment').val();
+        finance = $('#finance').val();
+        investment = $('#investment').val();
+        old_comments = $('#old_comments').val();
+        comments = $('#comments').val();
+        state = $('#state').val();
+        postcode = $('#postcode').val();
+        suburb = $('#city').val();
+
+        listedForSaleZees = $('#zeeListedSale').val()
+
+        salePrice = $('#salePrice').val()
+        incGST = $('#incGST').val()
+        totalSalePrice = $('#totalPrice').val()
+
+        tradingEntityName = $('#tradingEntityName').val();
+        acn = $('#acn').val();
+        abn = $('#abn').val();
+        ndaaddress1 = $('#ndaaddress1').val();
+        ndaaddress2 = $('#ndaaddress2').val();
+        ndasuburb = $('#ndacity').val();
+        ndastate = $('#ndastate').val();
+        ndapostcode = $('#ndapostcode').val();
+        if (validate()) {
+          var zeeSalesLeadRecord = record.load({
+            type: 'customrecord_zee_sales_leads',
+            id: zeeleadid
+          });
+
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_zee_lead_stage',
+            value: 10
+          });
+
+          zeeSalesLeadRecord.setValue({
+            fieldId: 'custrecord_date_finance_stage',
+            value: getDateToday()
+          });
+
+          zeeSalesLeadRecord.save();
+
+          createUpdateRecord();
+
+          var url = baseURL +
+            '/app/site/hosting/scriptlet.nl?script=1411&deploy=1&zeeleadid=' +
+            zeeleadid;
+          window.location.href = url;
+        }
       });
 
       $(document).on('click', '.financialsStep', function(e) {
@@ -1318,6 +1654,69 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       }
     }
 
+    function validateNDA() {
+      var errorMessage = '';
+      if (isNullorEmpty(firstName)) {
+        errorMessage += 'Please Enter First Name</br>';
+      }
+
+      if (isNullorEmpty(lastName)) {
+        errorMessage += 'Please Enter Last Name</br>';
+      }
+
+      if (isNullorEmpty(mobile)) {
+        errorMessage += 'Please Enter Mobile No.</br>';
+      }
+
+      if (isNullorEmpty(leadEmail)) {
+        errorMessage += 'Please Enter Email Address</br>';
+      }
+
+      if (isNullorEmpty(franchiseeTypeOfOwner)) {
+        errorMessage += 'Please Select Type of Owner</br>';
+      } else {
+        // if (franchiseeTypeOfOwner != 4) {
+        //   if (isNullorEmpty(interestedZees) && isNullorEmpty(
+        //       listedForSaleZees)) {
+        //     errorMessage += 'Please Select Interested Franchisees</br>';
+        //   }
+        // }
+      }
+
+      if (isNullorEmpty(state) || isNullorEmpty(postcode)) {
+        errorMessage += 'Please Select Area of Interest</br>';
+      }
+
+      if (isNullorEmpty(tradingEntityName)) {
+        errorMessage += 'Please Enter Trading Entity Name</br>';
+      }
+      // if (isNullorEmpty(acn)) {
+      //   errorMessage += 'Please Enter ACN</br>';
+      // }
+      // if (isNullorEmpty(abn)) {
+      //   errorMessage += 'Please Enter ABN</br>';
+      // }
+      // if (isNullorEmpty(ndaaddress2)) {
+      //   errorMessage += 'Please Enter Street Number & Name</br>';
+      // }
+      if (isNullorEmpty(ndasuburb)) {
+        errorMessage += 'Please Enter Street Number & Name/br>';
+      }
+      if (isNullorEmpty(ndastate)) {
+        errorMessage += 'Please Enter Street Number & Name</br>';
+      }
+      if (isNullorEmpty(ndapostcode)) {
+        errorMessage += 'Please Enter Street Number & Name</br>';
+      }
+
+      if (!isNullorEmpty(errorMessage)) {
+        showAlert(errorMessage);
+        return false;
+      } else {
+        return true;
+      }
+    }
+
     function createUpdateRecord() {
       var combinedInterestedZees = [];
       if (!isNullorEmpty(listedForSaleZees)) {
@@ -1458,7 +1857,40 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         fieldId: 'custrecord_areas_of_interest_postcode',
         value: postcode
       });
-      console.log('set postcode')
+      console.log('set postcode');
+
+      zeeSalesLeadRecord.setValue({
+        fieldId: 'custrecord_trading_entity_name',
+        value: tradingEntityName
+      });
+      zeeSalesLeadRecord.setValue({
+        fieldId: 'custrecord_acn',
+        value: acn
+      });
+      zeeSalesLeadRecord.setValue({
+        fieldId: 'custrecord_abn',
+        value: abn
+      });
+      zeeSalesLeadRecord.setValue({
+        fieldId: 'custrecord_address1',
+        value: ndaaddress1
+      });
+      zeeSalesLeadRecord.setValue({
+        fieldId: 'custrecord_address2',
+        value: ndaaddress2
+      });
+      zeeSalesLeadRecord.setValue({
+        fieldId: 'custrecord_suburb',
+        value: ndasuburb
+      });
+      zeeSalesLeadRecord.setValue({
+        fieldId: 'custrecord_address_state',
+        value: ndastate
+      });
+      zeeSalesLeadRecord.setValue({
+        fieldId: 'custrecord_postcode',
+        value: ndapostcode
+      });
 
       zeeSalesLeadRecord.save();
 

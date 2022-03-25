@@ -4,10 +4,10 @@
  * NSVersion    Date                        Author
  * 1.00         2019-10-15 13:18:23         Ankith
  *
- * Description: Create MPEX Usage Report
+ * Description: CPrefill Deed of Variation - Exit Program
  *
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-03-10T08:52:23+11:00
+ * @Last modified time: 2022-03-24T09:46:12+11:00
  *
  */
 
@@ -79,22 +79,32 @@ function main() {
 
   var fileSCFORM = nlapiMergeRecord(deed_of_variation,
     'partner', zeeId, null, null, merge);
-  fileSCFORM.setName('Deed of Variation - ' + zeeName + ' - ' + getDate() + '.pdf');
+  fileSCFORM.setName('Deed of Variation - ' + zeeName + ' - ' + getDate() +
+    '.pdf');
   fileSCFORM.setIsOnline(true);
-  fileSCFORM.setFolder(3162670);
+  fileSCFORM.setFolder(3171368);
 
   var id = nlapiSubmitFile(fileSCFORM);
 
-  zeeRecord.setFieldValue('custentity_deed_of_variation_sent',1);
-  zeeRecord.setFieldValue('custentity_date_deed_of_variation_sent',getDate());
-  zeeRecord.setFieldValue('custentity_deed_of_variation',id);
+  zeeRecord.setFieldValue('custentity_deed_of_variation_sent', 1);
+  zeeRecord.setFieldValue('custentity_date_deed_of_variation_sent', getDate());
+  zeeRecord.setFieldValue('custentity_deed_of_variation', id);
 
   nlapiSubmitRecord(zeeRecord);
 
   var records = new Array();
+  records['partner'] = zeeId;
 
+  var subject = 'Deed of Variation – Exit Program';
+  var body =
+    'Dear Franchisee, \n\nAs discussed, to support you in selling your MailPlus Franchise Business, can I kindly ask you to execute & return the attached deed of variation exit program assistance offer, whilst remembering to select your preferred option.\n\nOn receipt of your executed deed, our Franchise Development manager will be in touch to formally commence the exit program.\n\nThanks\nMichael McDaid';
 
-  nlapiSendEmail(409635,'ankith,ravindran@mailplus.com.au',subject,body,['michael.mcdaid@mailplus.com.au', 'ankith.ravindran@mailplus.com.au'],null,records)
+  var arrAttachments = [];
+  arrAttachments.push(nlapiLoadFile(parseInt(id)));
+
+  nlapiSendEmail(25537, email, subject, body, [
+    'michael.mcdaid@mailplus.com.au', 'ankith.ravindran@mailplus.com.au'
+  ], null, records, arrAttachments)
 
 
 }
