@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-01-27T11:29:39+11:00
+ * @Last modified time: 2022-03-31T14:55:41+11:00
  */
 
 
@@ -502,9 +502,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             var linkURL =
               '<button class="form-control btn btn-xs btn-primary" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
               zeeSalesLeads_row.internalID +
-              '" class="viewZeeLead" style="cursor: pointer !important;color: white;">VIEW</a></button> <button class="form-control btn btn-xs btn-success" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
-              zeeSalesLeads_row.internalID +
-              '" class="qualifyZeeLead" style="cursor: pointer !important;color: white;">QUALIFY</a></button> <button class="form-control btn btn-xs btn-danger" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
+              '" class="viewZeeLead" style="cursor: pointer !important;color: white;">VIEW</a></button> <button class="form-control btn btn-xs btn-danger" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
               zeeSalesLeads_row.internalID +
               '" class="lostZeeLead" style="cursor: pointer !important;color: white;">LOST</a></button>';
           } else if (zeeSalesLeads_row.stageID == 3) {
@@ -516,9 +514,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             var linkURL =
               '<button class="form-control btn btn-xs btn-primary" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
               zeeSalesLeads_row.internalID +
-              '" class="viewZeeLead" style="cursor: pointer !important;color: white;">VIEW</a></button> <button class="form-control btn btn-xs btn-success" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
-              zeeSalesLeads_row.internalID +
-              '" class="opportunityZeeLead" style="cursor: pointer !important;color: white;">OPPORTUNITY</a></button> <button class="form-control btn btn-xs btn-danger" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
+              '" class="viewZeeLead" style="cursor: pointer !important;color: white;">VIEW</a></button> <button class="form-control btn btn-xs btn-danger" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
               zeeSalesLeads_row.internalID +
               '" class="noTerritoryZeeLead" style="cursor: pointer !important;color: white;">NO TERRITORY</a></button>';
           } else if (zeeSalesLeads_row.stageID == 5) {
@@ -534,9 +530,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
               zeeSalesLeads_row.internalID +
               '" class="viewZeeLead" style="cursor: pointer !important;color: white;">VIEW</a></button> <button class="form-control btn btn-xs btn-danger" style="cursor: not-allowed !important;width: fit-content;" disabled><a data-id="' +
               zeeSalesLeads_row.internalID +
-              '" class="" style="cursor: pointer !important;color: white;" disabled>NO TERRITORY</a></button> <button class="form-control btn btn-xs btn-success" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
-              zeeSalesLeads_row.internalID +
-              '" class="opportunityZeeLead" style="cursor: pointer !important;color: white;">OPPORTUNITY</a></button>';
+              '" class="" style="cursor: pointer !important;color: white;" disabled>NO TERRITORY</a></button>';
           } else if (zeeSalesLeads_row.stageID == 6) {
             var linkURL =
               '<button class="form-control btn btn-xs btn-danger" style="cursor: not-allowed !important;width: fit-content;" disabled><a data-id="' +

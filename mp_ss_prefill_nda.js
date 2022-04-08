@@ -7,7 +7,7 @@
  * Description: Prefill NDA
  *
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-03-24T09:17:47+11:00
+ * @Last modified time: 2022-04-06T14:07:49+10:00
  *
  */
 
@@ -85,7 +85,7 @@ function main() {
   var arrAttachments = [];
   arrAttachments.push(nlapiLoadFile(parseInt(id)));
 
-  nlapiSendEmail(112209, email, 'Non-Disclosure Agreement', emailBody, [
+  nlapiSendEmail(690145, email, 'Non-Disclosure Agreement', emailBody, [
     'michael.mcdaid@mailplus.com.au', 'ankith.ravindran@mailplus.com.au'
   ], null, records, arrAttachments);
 

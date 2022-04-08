@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T08:26:00+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-03-24T09:46:53+11:00
+ * @Last modified time: 2022-04-06T12:00:06+10:00
  */
 
 
@@ -711,6 +711,20 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml +=
         '<div class="col-xs-4 name_section"><div class="input-group"><span class="input-group-addon">ULTIMATE EXPIRY DATE <span class="mandatory">*</span></span><input id="ultimateExpiryDate" class="form-control ultimateExpiryDate" type="date" value="' +
         formattedUltimateExpiryDate + '" readonly/></div></div>';
+
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      inlineHtml += '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-3 name_section"><div class="input-group"><span class="input-group-addon">UNLIMTED TERM OFFER<span class="mandatory">*</span></span><select id="unlimitedTermOffer" class="form-control unlimitedTermOffer" readonly>';
+      if (unlimitedTermOffer == 1) {
+        inlineHtml += '<option value="1" selected>Yes</option>';
+      } else {
+        inlineHtml += '<option value="2">No</option>';
+      }
+      inlineHtml += '</select></div></div>';
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
