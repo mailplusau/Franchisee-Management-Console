@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-03-16T17:01:09+11:00
+ * @Last modified time: 2022-04-12T17:24:19+10:00
  */
 
 
@@ -184,59 +184,59 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         rowCallback: function(row, data, index) {}
       });
 
-      dataTable = $('#status_table').DataTable({
-        destroy: true,
-        data: zeeSalesLeadDataSetByStatus,
-        pageLength: 1000,
-        order: [],
-        columns: [{
-          title: 'LINK'
-        }, {
-          title: 'Date Lead Entered - Week'
-        }, {
-          title: 'New Lead'
-        }, {
-          title: 'Qualified'
-        }, {
-          title: 'Opportunity'
-        }, {
-          title: 'IM Sent'
-        }, {
-          title: 'NDA Sent'
-        }, {
-          title: 'OPERATIONS MEETING'
-        }, {
-          title: 'SALES MEETING'
-        }, {
-          title: 'FINANCE MEETING'
-        }, {
-          title: 'EOI SENT'
-        }, {
-          title: 'INTERVIEW'
-        }, {
-          title: 'LEAD LOST'
-        }, {
-          title: 'OPPORTUNITY DENIED'
-        }, {
-          title: 'QUALIFIED LEAD - NO TERRITORY'
-        }, {
-          title: 'Total Lead Count'
-        }],
-        columnDefs: [{
-          targets: [1, 2, 15],
-          className: 'bolded'
-        }],
-        rowCallback: function(row, data, index) {
-          if (parseInt(data[2]) > 0) {
-            $(row).find('td:eq(2)').css('background-color', '#398AB9');
-            $(row).find('td:eq(2)').css('color', '#fffff');
-          }
-          if (parseInt(data[12]) > 0) {
-            $(row).find('td:eq(12)').css('background-color', '#E83A14');
-            $(row).find('td:eq(12)').css('color', '#fffff');
-          }
-        }
-      });
+      // dataTable = $('#status_table').DataTable({
+      //   destroy: true,
+      //   data: zeeSalesLeadDataSetByStatus,
+      //   pageLength: 1000,
+      //   order: [],
+      //   columns: [{
+      //     title: 'LINK'
+      //   }, {
+      //     title: 'Date Lead Entered - Week'
+      //   }, {
+      //     title: 'New Lead'
+      //   }, {
+      //     title: 'Qualified'
+      //   }, {
+      //     title: 'Opportunity'
+      //   }, {
+      //     title: 'IM Sent'
+      //   }, {
+      //     title: 'NDA Sent'
+      //   }, {
+      //     title: 'OPERATIONS MEETING'
+      //   }, {
+      //     title: 'SALES MEETING'
+      //   }, {
+      //     title: 'FINANCE MEETING'
+      //   }, {
+      //     title: 'EOI SENT'
+      //   }, {
+      //     title: 'INTERVIEW'
+      //   }, {
+      //     title: 'LEAD LOST'
+      //   }, {
+      //     title: 'OPPORTUNITY DENIED'
+      //   }, {
+      //     title: 'QUALIFIED LEAD - NO TERRITORY'
+      //   }, {
+      //     title: 'Total Lead Count'
+      //   }],
+      //   columnDefs: [{
+      //     targets: [1, 2, 15],
+      //     className: 'bolded'
+      //   }],
+      //   rowCallback: function(row, data, index) {
+      //     if (parseInt(data[2]) > 0) {
+      //       $(row).find('td:eq(2)').css('background-color', '#398AB9');
+      //       $(row).find('td:eq(2)').css('color', '#fffff');
+      //     }
+      //     if (parseInt(data[12]) > 0) {
+      //       $(row).find('td:eq(12)').css('background-color', '#E83A14');
+      //       $(row).find('td:eq(12)').css('color', '#fffff');
+      //     }
+      //   }
+      // });
 
 
 
@@ -645,179 +645,191 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           name: 'internalid',
           summary: "COUNT"
         }));
-        var date = zeeLeadsListResultSet4.getValue({
-          name: "custrecord_zee_lead_date_entered",
-          summary: "GROUP"
-        });
+        // var date = zeeLeadsListResultSet4.getValue({
+        //   name: "custrecord_zee_lead_date_entered",
+        //   summary: "GROUP"
+        // });
 
         var leadStage = zeeLeadsListResultSet4.getValue({
           name: "custrecord_zee_lead_stage",
           summary: "GROUP",
         });
+        var leadStageText = zeeLeadsListResultSet4.getText({
+          name: "custrecord_zee_lead_stage",
+          summary: "GROUP",
+        });
 
 
-        if (old_date4 != null && old_date4 != date) {
-          zeeSalesLeadSetByStatus.push({
-            date: old_date4,
-            leadCount: total_count4,
-            newLeadCount: newLeadCount,
-            qualifiedLeadCount: qualifiedLeadCount,
-            opportunitycount: opportunitycount,
-            imSentCount: imSentCount,
-            ndaSentCount: ndaSentCount,
-            operationsCount: operationsCount,
-            salesCount: salesCount,
-            financeCount: financeCount,
-            eoiSentCount: eoiSentCount,
-            interviewCount: interviewCount,
-            leadLostCount: leadLostCount,
-            opportunityDeniedCount: opportunityDeniedCount,
-            qualifiedNoterritoryCount: qualifiedNoterritoryCount,
-          });
 
-          total_count4 = 0;
-          newLeadCount = 0;
-          qualifiedLeadCount = 0;
-          opportunitycount = 0;
-          imSentCount = 0;
-          ndaSentCount = 0;
-          operationsCount = 0;
-          salesCount = 0;
-          financeCount = 0;
-          eoiSentCount = 0;
-          interviewCount = 0;
-          leadLostCount = 0;
-          opportunityDeniedCount = 0;
-          qualifiedNoterritoryCount = 0;
+        zeeSalesLeadSetByStatus.push({
+          leadStage: leadStage,
+          leadCount: leadCount,
+          leadStageText: leadStageText
+        });
 
-          /*
-            New Lead	1
-            Qualified Lead	2
-            Lead Lost	3
-            Qualified Lead - No Territory	4
-            Opportunity	5
-            IM Sent	13
-            Opportunity Denied	6
-            NDA Sent	7
-            Operations	8
-            EOI Uploaded	9
-            Finance	10
-            Presentation	11
-            Interview	12
-           */
 
-          if (leadStage == '1') {
-            newLeadCount = newLeadCount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '2') {
-            qualifiedLeadCount = qualifiedLeadCount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '3') {
-            leadLostCount = leadLostCount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '4') {
-            qualifiedNoterritoryCount = qualifiedNoterritoryCount +
-              leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '5') {
-            opportunitycount = opportunitycount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '6') {
-            opportunityDeniedCount = opportunityDeniedCount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '7') {
-            ndaSentCount = ndaSentCount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '8') {
-            operationsCount = operationsCount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '9') {
-            eoiSentCount = eoiSentCount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '10') {
-            financeCount = financeCount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '11') {
-            salesCount = salesCount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '12') {
-            interviewCount = interviewCount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '13') {
-            imSentCount = imSentCount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          }
+        // if (old_date4 != null && old_date4 != date) {
+        //   zeeSalesLeadSetByStatus.push({
+        //     date: old_date4,
+        //     leadCount: total_count4,
+        //     newLeadCount: newLeadCount,
+        //     qualifiedLeadCount: qualifiedLeadCount,
+        //     opportunitycount: opportunitycount,
+        //     imSentCount: imSentCount,
+        //     ndaSentCount: ndaSentCount,
+        //     operationsCount: operationsCount,
+        //     salesCount: salesCount,
+        //     financeCount: financeCount,
+        //     eoiSentCount: eoiSentCount,
+        //     interviewCount: interviewCount,
+        //     leadLostCount: leadLostCount,
+        //     opportunityDeniedCount: opportunityDeniedCount,
+        //     qualifiedNoterritoryCount: qualifiedNoterritoryCount,
+        //   });
+        //
+        //   total_count4 = 0;
+        //   newLeadCount = 0;
+        //   qualifiedLeadCount = 0;
+        //   opportunitycount = 0;
+        //   imSentCount = 0;
+        //   ndaSentCount = 0;
+        //   operationsCount = 0;
+        //   salesCount = 0;
+        //   financeCount = 0;
+        //   eoiSentCount = 0;
+        //   interviewCount = 0;
+        //   leadLostCount = 0;
+        //   opportunityDeniedCount = 0;
+        //   qualifiedNoterritoryCount = 0;
+        //
+        //   /*
+        //     New Lead	1
+        //     Qualified Lead	2
+        //     Lead Lost	3
+        //     Qualified Lead - No Territory	4
+        //     Opportunity	5
+        //     IM Sent	13
+        //     Opportunity Denied	6
+        //     NDA Sent	7
+        //     Operations	8
+        //     EOI Uploaded	9
+        //     Finance	10
+        //     Presentation	11
+        //     Interview	12
+        //    */
+        //
+        //   if (leadStage == '1') {
+        //     newLeadCount = newLeadCount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '2') {
+        //     qualifiedLeadCount = qualifiedLeadCount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '3') {
+        //     leadLostCount = leadLostCount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '4') {
+        //     qualifiedNoterritoryCount = qualifiedNoterritoryCount +
+        //       leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '5') {
+        //     opportunitycount = opportunitycount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '6') {
+        //     opportunityDeniedCount = opportunityDeniedCount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '7') {
+        //     ndaSentCount = ndaSentCount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '8') {
+        //     operationsCount = operationsCount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '9') {
+        //     eoiSentCount = eoiSentCount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '10') {
+        //     financeCount = financeCount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '11') {
+        //     salesCount = salesCount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '12') {
+        //     interviewCount = interviewCount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '13') {
+        //     imSentCount = imSentCount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   }
+        //
+        // } else {
+        //
+        //   if (leadStage == '1') {
+        //     newLeadCount = newLeadCount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '2') {
+        //     qualifiedLeadCount = qualifiedLeadCount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '3') {
+        //     leadLostCount = leadLostCount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '4') {
+        //     qualifiedNoterritoryCount = qualifiedNoterritoryCount +
+        //       leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '5') {
+        //     opportunitycount = opportunitycount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '6') {
+        //     opportunityDeniedCount = opportunityDeniedCount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '7') {
+        //     ndaSentCount = ndaSentCount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '8') {
+        //     operationsCount = operationsCount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '9') {
+        //     eoiSentCount = eoiSentCount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '10') {
+        //     financeCount = financeCount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '11') {
+        //     salesCount = salesCount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '12') {
+        //     interviewCount = interviewCount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   } else if (leadStage == '13') {
+        //     imSentCount = imSentCount + leadCount
+        //     total_count4 = total_count4 + parseInt(leadCount);
+        //   }
+        //
+        // }
 
-        } else {
-
-          if (leadStage == '1') {
-            newLeadCount = newLeadCount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '2') {
-            qualifiedLeadCount = qualifiedLeadCount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '3') {
-            leadLostCount = leadLostCount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '4') {
-            qualifiedNoterritoryCount = qualifiedNoterritoryCount +
-              leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '5') {
-            opportunitycount = opportunitycount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '6') {
-            opportunityDeniedCount = opportunityDeniedCount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '7') {
-            ndaSentCount = ndaSentCount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '8') {
-            operationsCount = operationsCount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '9') {
-            eoiSentCount = eoiSentCount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '10') {
-            financeCount = financeCount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '11') {
-            salesCount = salesCount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '12') {
-            interviewCount = interviewCount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          } else if (leadStage == '13') {
-            imSentCount = imSentCount + leadCount
-            total_count4 = total_count4 + parseInt(leadCount);
-          }
-
-        }
-
-        old_date4 = date;
+        // old_date4 = date;
         count4++;
         return true;
       });
 
-      if (count3 > 0) {
-        zeeSalesLeadSetByStatus.push({
-          date: old_date4,
-          leadCount: total_count4,
-          newLeadCount: newLeadCount,
-          qualifiedLeadCount: qualifiedLeadCount,
-          opportunitycount: opportunitycount,
-          imSentCount: imSentCount,
-          ndaSentCount: ndaSentCount,
-          operationsCount: operationsCount,
-          salesCount: salesCount,
-          financeCount: financeCount,
-          eoiSentCount: eoiSentCount,
-          interviewCount: interviewCount,
-          leadLostCount: leadLostCount,
-          opportunityDeniedCount: opportunityDeniedCount,
-          qualifiedNoterritoryCount: qualifiedNoterritoryCount,
-        });
-      }
+      // if (count3 > 0) {
+      //   zeeSalesLeadSetByStatus.push({
+      //     date: old_date4,
+      //     leadCount: total_count4,
+      //     newLeadCount: newLeadCount,
+      //     qualifiedLeadCount: qualifiedLeadCount,
+      //     opportunitycount: opportunitycount,
+      //     imSentCount: imSentCount,
+      //     ndaSentCount: ndaSentCount,
+      //     operationsCount: operationsCount,
+      //     salesCount: salesCount,
+      //     financeCount: financeCount,
+      //     eoiSentCount: eoiSentCount,
+      //     interviewCount: interviewCount,
+      //     leadLostCount: leadLostCount,
+      //     opportunityDeniedCount: opportunityDeniedCount,
+      //     qualifiedNoterritoryCount: qualifiedNoterritoryCount,
+      //   });
+      // }
 
 
 
@@ -943,6 +955,38 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         });
       }
 
+      // if (!isNullorEmpty(zeeSalesLeadSetByStatus_rows)) {
+      //   zeeSalesLeadSetByStatus_rows.forEach(function(
+      //     zeeSalesLeadSetByStatus_row, index) {
+      //
+      //     var linkURL =
+      //       '<button class="form-control btn btn-xs btn-primary" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
+      //       zeeSalesLeadSetByStatus_row.date +
+      //       '" class="viewZeeLead" style="cursor: pointer !important;color: white;">LIST VIEW</a></button>';
+      //
+      //     zeeSalesLeadDataSetByStatus.push([linkURL,
+      //       zeeSalesLeadSetByStatus_row.date, parseInt(
+      //         zeeSalesLeadSetByStatus_row.newLeadCount), parseInt(
+      //         zeeSalesLeadSetByStatus_row.qualifiedLeadCount),
+      //       parseInt(
+      //         zeeSalesLeadSetByStatus_row.opportunitycount), parseInt(
+      //         zeeSalesLeadSetByStatus_row.imSentCount), parseInt(
+      //         zeeSalesLeadSetByStatus_row.ndaSentCount),
+      //       parseInt(
+      //         zeeSalesLeadSetByStatus_row.operationsCount), parseInt(
+      //         zeeSalesLeadSetByStatus_row.salesCount), parseInt(
+      //         zeeSalesLeadSetByStatus_row.financeCount), parseInt(
+      //         zeeSalesLeadSetByStatus_row.eoiSentCount), parseInt(
+      //         zeeSalesLeadSetByStatus_row.interviewCount), parseInt(
+      //         zeeSalesLeadSetByStatus_row.leadLostCount), parseInt(
+      //         zeeSalesLeadSetByStatus_row.opportunityDeniedCount),
+      //       parseInt(
+      //         zeeSalesLeadSetByStatus_row.qualifiedNoterritoryCount),
+      //       zeeSalesLeadSetByStatus_row.leadCount
+      //     ]);
+      //   });
+      // }
+
       if (!isNullorEmpty(zeeSalesLeadSetByStatus_rows)) {
         zeeSalesLeadSetByStatus_rows.forEach(function(
           zeeSalesLeadSetByStatus_row, index) {
@@ -953,24 +997,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             '" class="viewZeeLead" style="cursor: pointer !important;color: white;">LIST VIEW</a></button>';
 
           zeeSalesLeadDataSetByStatus.push([linkURL,
-            zeeSalesLeadSetByStatus_row.date, parseInt(
-              zeeSalesLeadSetByStatus_row.newLeadCount), parseInt(
-              zeeSalesLeadSetByStatus_row.qualifiedLeadCount),
-            parseInt(
-              zeeSalesLeadSetByStatus_row.opportunitycount), parseInt(
-              zeeSalesLeadSetByStatus_row.imSentCount), parseInt(
-              zeeSalesLeadSetByStatus_row.ndaSentCount),
-            parseInt(
-              zeeSalesLeadSetByStatus_row.operationsCount), parseInt(
-              zeeSalesLeadSetByStatus_row.salesCount), parseInt(
-              zeeSalesLeadSetByStatus_row.financeCount), parseInt(
-              zeeSalesLeadSetByStatus_row.eoiSentCount), parseInt(
-              zeeSalesLeadSetByStatus_row.interviewCount), parseInt(
-              zeeSalesLeadSetByStatus_row.leadLostCount), parseInt(
-              zeeSalesLeadSetByStatus_row.opportunityDeniedCount),
-            parseInt(
-              zeeSalesLeadSetByStatus_row.qualifiedNoterritoryCount),
-            zeeSalesLeadSetByStatus_row.leadCount
+            zeeSalesLeadSetByStatus_row.leadStageText, parseInt(
+              zeeSalesLeadSetByStatus_row.leadCount)
           ]);
         });
       }
@@ -991,15 +1019,16 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       datatable3.rows.add(zeeSalesLeadDataSetBySource);
       datatable3.draw();
 
-      var datatable4 = $('#status_table').DataTable();
-      datatable4.clear();
-      datatable4.rows.add(zeeSalesLeadDataSetByStatus);
-      datatable4.draw();
+      // var datatable4 = $('#status_table').DataTable();
+      // datatable4.clear();
+      // datatable4.rows.add(zeeSalesLeadDataSetByStatus);
+      // datatable4.draw();
 
       var data = datatable.rows().data();
       var data2 = datatable2.rows().data();
       var data3 = datatable3.rows().data();
-      var data4 = datatable4.rows().data();
+      // var data4 = datatable4.rows().data();
+      var data4 = zeeSalesLeadDataSetByStatus;
 
       var week = [];
       var week2 = [];
@@ -1151,22 +1180,26 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
        */
 
 
+      // for (var i = 0; i < data4.length; i++) {
+      //   week4.push(data4[i][1]);
+      //   leadCount4[data4[i][1]] = data4[i][15];
+      //   newLeadCountArray[data4[i][1]] = data4[i][2];
+      //   qualifiedLeadCountArray[data4[i][1]] = data4[i][3];
+      //   opportunitycountArray[data4[i][1]] = data4[i][4];
+      //   imSentCountArray[data4[i][1]] = data4[i][5];
+      //   ndaSentCountArray[data4[i][1]] = data4[i][6];
+      //   operationsCountArray[data4[i][1]] = data4[i][7];
+      //   salesCountArray[data4[i][1]] = data4[i][8];
+      //   financeCountArray[data4[i][1]] = data4[i][9];
+      //   eoiSentCountArray[data4[i][1]] = data4[i][10];
+      //   interviewCountArray[data4[i][1]] = data4[i][11];
+      //   leadLostCountArray[data4[i][1]] = data4[i][12];
+      //   opportunityDeniedCountArray[data4[i][1]] = data4[i][13];
+      //   qualifiedNoterritoryCountArray[data4[i][1]] = data4[i][14];
+      // }
       for (var i = 0; i < data4.length; i++) {
         week4.push(data4[i][1]);
-        leadCount4[data4[i][1]] = data4[i][15];
-        newLeadCountArray[data4[i][1]] = data4[i][2];
-        qualifiedLeadCountArray[data4[i][1]] = data4[i][3];
-        opportunitycountArray[data4[i][1]] = data4[i][4];
-        imSentCountArray[data4[i][1]] = data4[i][5];
-        ndaSentCountArray[data4[i][1]] = data4[i][6];
-        operationsCountArray[data4[i][1]] = data4[i][7];
-        salesCountArray[data4[i][1]] = data4[i][8];
-        financeCountArray[data4[i][1]] = data4[i][9];
-        eoiSentCountArray[data4[i][1]] = data4[i][10];
-        interviewCountArray[data4[i][1]] = data4[i][11];
-        leadLostCountArray[data4[i][1]] = data4[i][12];
-        opportunityDeniedCountArray[data4[i][1]] = data4[i][13];
-        qualifiedNoterritoryCountArray[data4[i][1]] = data4[i][14];
+        leadCount4[data4[i][1]] = data4[i][2];
       }
 
       var series_data = []; //creating empty array for highcharts series data
@@ -1238,27 +1271,33 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       var series_data_opportunityDenied = []; //creating empty array for highcharts series data
       var series_data_qualifiedNoterritory = []; //creating empty array for highcharts series data
       var categores4 = []; //creating empty array for highcharts categories
+      // Object.keys(leadCount4).map(function(item, key) {
+      //   series_data_newLead.push(parseInt(newLeadCountArray[item]));
+      //   series_data_qualifiedLead.push(parseInt(qualifiedLeadCountArray[
+      //     item]));
+      //   series_data_opportunity.push(parseInt(opportunitycountArray[item]));
+      //   series_data_imSent.push(parseInt(imSentCountArray[item]));
+      //   series_data_ndaSent.push(parseInt(
+      //     ndaSentCountArray[item]));
+      //   series_data_operations.push(parseInt(operationsCountArray[item]));
+      //   series_data_sales.push(parseInt(salesCountArray[item]));
+      //   series_data_finance.push(parseInt(financeCountArray[item]));
+      //   series_data_eoiSent.push(parseInt(eoiSentCountArray[item]));
+      //   series_data_interview.push(parseInt(interviewCountArray[item]));
+      //   series_data_leadLost.push(parseInt(leadLostCountArray[item]));
+      //   series_data_opportunityDenied.push(parseInt(
+      //     opportunityDeniedCountArray[item]));
+      //   series_data_qualifiedNoterritory.push(parseInt(
+      //     qualifiedNoterritoryCountArray[item]));
+      //
+      //   categores4.push(item)
+      // });
       Object.keys(leadCount4).map(function(item, key) {
-        series_data_newLead.push(parseInt(newLeadCountArray[item]));
-        series_data_qualifiedLead.push(parseInt(qualifiedLeadCountArray[
-          item]));
-        series_data_opportunity.push(parseInt(opportunitycountArray[item]));
-        series_data_imSent.push(parseInt(imSentCountArray[item]));
-        series_data_ndaSent.push(parseInt(
-          ndaSentCountArray[item]));
-        series_data_operations.push(parseInt(operationsCountArray[item]));
-        series_data_sales.push(parseInt(salesCountArray[item]));
-        series_data_finance.push(parseInt(financeCountArray[item]));
-        series_data_eoiSent.push(parseInt(eoiSentCountArray[item]));
-        series_data_interview.push(parseInt(interviewCountArray[item]));
-        series_data_leadLost.push(parseInt(leadLostCountArray[item]));
-        series_data_opportunityDenied.push(parseInt(
-          opportunityDeniedCountArray[item]));
-        series_data_qualifiedNoterritory.push(parseInt(
-          qualifiedNoterritoryCountArray[item]));
-
+        series_data_newLead.push(parseInt(leadCount4[item]));
         categores4.push(item)
       });
+
+      console.log('series_data_newLead ' + series_data_newLead)
 
       plotChart(series_data, categores, series_data2, series_data3,
         series_data4);
@@ -1269,13 +1308,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         series_data_canberra, series_data_northern_beaches,
         series_data_perth, series_data_sydney,
         categores3);
-      plotChart4(series_data_newLead, series_data_qualifiedLead,
-        series_data_opportunity,
-        series_data_imSent, series_data_ndaSent,
-        series_data_operations, series_data_sales, series_data_finance,
-        series_data_eoiSent, series_data_interview, series_data_leadLost,
-        series_data_opportunityDenied, series_data_qualifiedNoterritory,
-        categores4);
+      // plotChart4(series_data_newLead, series_data_qualifiedLead,
+      //   series_data_opportunity,
+      //   series_data_imSent, series_data_ndaSent,
+      //   series_data_operations, series_data_sales, series_data_finance,
+      //   series_data_eoiSent, series_data_interview, series_data_leadLost,
+      //   series_data_opportunityDenied, series_data_qualifiedNoterritory,
+      //   categores4);
+
+      plotChart4(series_data_newLead, categores4);
 
       return true;
     }
@@ -1515,13 +1556,137 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       });
     }
 
-    function plotChart4(series_data_newLead, series_data_qualifiedLead,
-      series_data_opportunity,
-      series_data_imSent, series_data_ndaSent,
-      series_data_operations, series_data_sales, series_data_finance,
-      series_data_eoiSent, series_data_interview, series_data_leadLost,
-      series_data_opportunityDenied, series_data_qualifiedNoterritory,
-      categores4) {
+    // function plotChart4(series_data_newLead, series_data_qualifiedLead,
+    //   series_data_opportunity,
+    //   series_data_imSent, series_data_ndaSent,
+    //   series_data_operations, series_data_sales, series_data_finance,
+    //   series_data_eoiSent, series_data_interview, series_data_leadLost,
+    //   series_data_opportunityDenied, series_data_qualifiedNoterritory,
+    //   categores4) {
+    //   // console.log(series_data)
+    //   Highcharts.chart('container7', {
+    //     chart: {
+    //       backgroundColor: '#CFE0CE',
+    //       type: 'column'
+    //     },
+    //     xAxis: {
+    //       categories: categores4,
+    //       crosshair: true,
+    //       style: {
+    //         fontWeight: 'bold',
+    //       }
+    //     },
+    //     yAxis: {
+    //       min: 0,
+    //       title: {
+    //         text: 'Total Lead Count'
+    //       },
+    //       stackLabels: {
+    //         enabled: true,
+    //         style: {
+    //           fontWeight: 'bold'
+    //         }
+    //       }
+    //     },
+    //     tooltip: {
+    //       headerFormat: '<b>{point.x}</b><br/>',
+    //       pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+    //     },
+    //     plotOptions: {
+    //       column: {
+    //         stacking: 'normal',
+    //         dataLabels: {
+    //           enabled: true
+    //         }
+    //       }
+    //     },
+    //     series: [{
+    //       name: 'NEW LEAD',
+    //       data: series_data_newLead,
+    //       color: '#398AB9',
+    //       style: {
+    //         fontWeight: 'bold',
+    //       }
+    //     }, {
+    //       name: 'QUALIFIED LEAD',
+    //       data: series_data_qualifiedLead,
+    //       style: {
+    //         fontWeight: 'bold',
+    //       }
+    //     }, {
+    //       name: 'OPPORTUNITY',
+    //       data: series_data_opportunity,
+    //       style: {
+    //         fontWeight: 'bold',
+    //       }
+    //     }, {
+    //       name: 'IM SENT',
+    //       data: series_data_imSent,
+    //       style: {
+    //         fontWeight: 'bold',
+    //       }
+    //     }, {
+    //       name: 'NDA SENT',
+    //       data: series_data_ndaSent,
+    //       style: {
+    //         fontWeight: 'bold',
+    //       }
+    //     }, {
+    //       name: 'OPERATIONS MEETING',
+    //       data: series_data_operations,
+    //       style: {
+    //         fontWeight: 'bold',
+    //       }
+    //     }, {
+    //       name: 'SALES MEETING',
+    //       data: series_data_sales,
+    //       style: {
+    //         fontWeight: 'bold',
+    //       }
+    //     }, {
+    //       name: 'FINANCE MEETING',
+    //       data: series_data_finance,
+    //       style: {
+    //         fontWeight: 'bold',
+    //       }
+    //     }, {
+    //       name: 'EOI SENT & UPLOADED',
+    //       data: series_data_eoiSent,
+    //       style: {
+    //         fontWeight: 'bold',
+    //       }
+    //     }, {
+    //       name: 'INTERVIEW',
+    //       data: series_data_interview,
+    //       color: '#008E89',
+    //       style: {
+    //         fontWeight: 'bold',
+    //       }
+    //     }, {
+    //       name: 'LEAD LOST',
+    //       data: series_data_leadLost,
+    //       color: '#E83A14',
+    //       style: {
+    //         fontWeight: 'bold',
+    //       }
+    //     }, {
+    //       name: 'OPPORTUNITY DENIED',
+    //       data: series_data_opportunityDenied,
+    //       color: '#e9d30a',
+    //       style: {
+    //         fontWeight: 'bold',
+    //       }
+    //     }, {
+    //       name: 'QUALIFIED LEAD - NO TERRITORY',
+    //       data: series_data_qualifiedNoterritory,
+    //       color: '#E45826',
+    //       style: {
+    //         fontWeight: 'bold',
+    //       }
+    //     }]
+    //   });
+    // }
+    function plotChart4(series_data_newLead, categores4) {
       // console.log(series_data)
       Highcharts.chart('container7', {
         chart: {
@@ -1553,6 +1718,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         },
         plotOptions: {
           column: {
+            colorByPoint: true,
             stacking: 'normal',
             dataLabels: {
               enabled: true
@@ -1560,85 +1726,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           }
         },
         series: [{
-          name: 'NEW LEAD',
+          name: 'SALES STAGE',
           data: series_data_newLead,
           color: '#398AB9',
-          style: {
-            fontWeight: 'bold',
-          }
-        }, {
-          name: 'QUALIFIED LEAD',
-          data: series_data_qualifiedLead,
-          style: {
-            fontWeight: 'bold',
-          }
-        }, {
-          name: 'OPPORTUNITY',
-          data: series_data_opportunity,
-          style: {
-            fontWeight: 'bold',
-          }
-        }, {
-          name: 'IM SENT',
-          data: series_data_imSent,
-          style: {
-            fontWeight: 'bold',
-          }
-        }, {
-          name: 'NDA SENT',
-          data: series_data_ndaSent,
-          style: {
-            fontWeight: 'bold',
-          }
-        }, {
-          name: 'OPERATIONS MEETING',
-          data: series_data_operations,
-          style: {
-            fontWeight: 'bold',
-          }
-        }, {
-          name: 'SALES MEETING',
-          data: series_data_sales,
-          style: {
-            fontWeight: 'bold',
-          }
-        }, {
-          name: 'FINANCE MEETING',
-          data: series_data_finance,
-          style: {
-            fontWeight: 'bold',
-          }
-        }, {
-          name: 'EOI SENT & UPLOADED',
-          data: series_data_eoiSent,
-          style: {
-            fontWeight: 'bold',
-          }
-        }, {
-          name: 'INTERVIEW',
-          data: series_data_interview,
-          color: '#008E89',
-          style: {
-            fontWeight: 'bold',
-          }
-        }, {
-          name: 'LEAD LOST',
-          data: series_data_leadLost,
-          color: '#E83A14',
-          style: {
-            fontWeight: 'bold',
-          }
-        }, {
-          name: 'OPPORTUNITY DENIED',
-          data: series_data_opportunityDenied,
-          color: '#e9d30a',
-          style: {
-            fontWeight: 'bold',
-          }
-        }, {
-          name: 'QUALIFIED LEAD - NO TERRITORY',
-          data: series_data_qualifiedNoterritory,
-          color: '#E45826',
           style: {
             fontWeight: 'bold',
           }

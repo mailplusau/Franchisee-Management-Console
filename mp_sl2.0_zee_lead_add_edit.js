@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T08:26:00+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-04-08T13:09:09+10:00
+ * @Last modified time: 2022-04-21T11:08:06+10:00
  */
 
 
@@ -326,6 +326,14 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         }).defaultValue = eoiSent
 
         form.addField({
+          id: 'custpage_eoitobesent',
+          type: ui.FieldType.TEXT,
+          label: 'Table CSV'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        })
+
+        form.addField({
           id: 'custpage_imsent',
           type: ui.FieldType.TEXT,
           label: 'Table CSV'
@@ -438,6 +446,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var param_ndasent = context.request.parameters.custpage_ndasent;
         var param_interestedzees = context.request.parameters.custpage_interestedzees;
         var param_upload_nda_clicked = context.request.parameters.custpage_upload_nda_clicked;
+        var param_eoi_to_be_sent = context.request.parameters.custpage_eoitobesent;
 
         log.debug({
           title: 'param_zeeleadid',
@@ -476,6 +485,23 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           reschedule.submit();
         } else if (param_imsent == '1' && param_ndasent == '1' &&
           param_upload_nda_clicked == 'false' && isNullorEmpty(file)) {
+          var params = {
+            custscript_new_zee_lead_id: param_zeeleadid
+          };
+          var reschedule = task.create({
+            taskType: task.TaskType.SCHEDULED_SCRIPT,
+            scriptId: 'customscript_ss_send_eoi',
+            deploymentId: 'customdeploy1',
+            params: params
+          });
+
+          log.debug({
+            title: 'rescheduling',
+            details: 'rescheduling'
+          });
+
+          reschedule.submit();
+        } else if (param_eoi_to_be_sent == '1') {
           var params = {
             custscript_zeeleadid_nda: param_zeeleadid
           };
@@ -1259,8 +1285,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       if (!isNullorEmpty(finalPurchasePrice)) {
         inlineHtml +=
           '<div class="col-xs-12 name_section"><div class="input-group"><span class="input-group-addon">SALE PRICE ($) </span><input id="finalPurchasePrice" class="form-control finalPurchasePrice" value="' +
-          finalPurchasePrice.toFixed(2).replace(
-            /\d(?=(\d{3})+\.)/g, "$&,") + '" readonly/></div></div>';
+          finalPurchasePrice + '" readonly/></div></div>';
       } else {
         inlineHtml +=
           '<div class="col-xs-12 name_section"><div class="input-group"><span class="input-group-addon">SALE PRICE ($) </span><input id="finalPurchasePrice" class="form-control finalPurchasePrice" value="' +

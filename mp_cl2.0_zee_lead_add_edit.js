@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-04-08T11:49:32+10:00
+ * @Last modified time: 2022-04-21T11:08:04+10:00
  */
 
 
@@ -275,35 +275,56 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           zeeSalesLeadRecord.save();
           createUpdateRecord();
 
-          var suiteletUrl =
-            'https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=395&deploy=1'
+          myRecord.setValue({
+            fieldId: 'custpage_eoitobesent',
+            value: '1'
+          })
 
-          suiteletUrl += '&rectype=customer&template=130';
-          suiteletUrl += '&recid=1646178&salesrep=409635&dear=' + '' +
-            '&contactid=' + null + '&userid=' + userId;
+          document.getElementById('submitter').click();
 
-          console.log(suiteletUrl);
-
-          var response = https.get({
-            url: suiteletUrl
-          });
-
-          var emailHtml = response.body;
-
-          console.log(emailHtml);
-
-          email.send({
-            author: 690145,
-            body: emailHtml,
-            recipients: leadEmail,
-            subject: 'MailPlus Expression of Interest Form'
-          });
-
-
-          var url = baseURL +
-            '/app/site/hosting/scriptlet.nl?script=1411&deploy=1&zeeleadid=' +
-            zeeleadid;
-          window.location.href = url;
+          // var suiteletUrl =
+          //   'https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=395&deploy=1'
+          //
+          // suiteletUrl += '&rectype=customer&template=130';
+          // suiteletUrl += '&recid=1646178&salesrep=409635&dear=' + '' +
+          //   '&contactid=' + null + '&userid=' + userId;
+          //
+          // console.log(suiteletUrl);
+          //
+          // var response = https.get({
+          //   url: suiteletUrl
+          // });
+          //
+          // var emailHtml = response.body;
+          //
+          // console.log(emailHtml);
+          //
+          // var arrAttachments = [];
+          // arrAttachments.push(5619482);
+          //
+          // var records = new Array();
+          // records['record'] = zeeleadid;
+          // records['recordtype'] = 'customrecord_zee_sales_leads';
+          //
+          // email.send({
+          //   author: 690145,
+          //   body: emailHtml,
+          //   recipients: leadEmail,
+          //   attachments: arrAttachments,
+          //   relatedRecords: {
+          //     customRecord: {
+          //       id: zeeleadid,
+          //       recordType: 1119 //an integer value
+          //     }
+          //   },
+          //   subject: 'MailPlus Expression of Interest Form'
+          // });
+          //
+          //
+          // var url = baseURL +
+          //   '/app/site/hosting/scriptlet.nl?script=1411&deploy=1&zeeleadid=' +
+          //   zeeleadid;
+          // window.location.href = url;
         }
 
       });
@@ -326,7 +347,18 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         postcode = $('#postcode').val();
         suburb = $('#city').val();
         // interestedZees = $('#zeeList').val()
-        listedForSaleZees = $('#zeeListedSale').val()
+        listedForSaleZees = $('#zeeListedSale').val();
+
+        lowPrice = $('#lowPrice').val();
+
+        var errorMessage = '';
+        if (isNullorEmpty(lowPrice)) {
+          errorMessage += 'Presales Details have not been completed</br>';
+          if (!isNullorEmpty(errorMessage)) {
+            showAlert(errorMessage);
+            return false;
+          }
+        }
 
         if (validate()) {
 

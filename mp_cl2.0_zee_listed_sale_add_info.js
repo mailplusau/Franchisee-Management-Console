@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-03-16T09:30:55+11:00
+ * @Last modified time: 2022-04-11T17:00:25+10:00
  */
 
 
@@ -264,6 +264,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         dailyRunTime = $('#dailyRunTime').val();
         termOnIM = $('#termOnIM').val();
 
+        console.log('finalPurchasePrice ' + finalPurchasePrice);
 
         if (validateRevenueComms()) {
 
@@ -478,8 +479,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         errorMessage += 'Please Enter NAB Accreditation Fee</br>';
       }
 
-      if (isNullorEmpty(finalPurchasePrice)) {
-        errorMessage += 'Please Enter Final Purchase Price</br>';
+      if (isNullorEmptyExcZero(finalPurchasePrice)) {
+        errorMessage += 'Please Enter Sale Price</br>';
       }
 
       if (isNullorEmpty(termOnIM)) {

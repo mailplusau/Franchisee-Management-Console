@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T08:26:00+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-04-06T12:00:06+10:00
+ * @Last modified time: 2022-04-11T17:00:23+10:00
  */
 
 
@@ -13,6 +13,11 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
   ],
   function(ui, email, runtime, search, record, http, log, redirect, format,
     file, task) {
+
+    var baseURL = 'https://1048144.app.netsuite.com/';
+    if (runtime.EnvType == "SANDBOX") {
+      baseURL = 'https://system.sandbox.netsuite.com';
+    }
 
     var zeeId = 0;
     var zeeAgreementId = 0;
@@ -51,10 +56,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     var termOnIM = '';
 
     function onRequest(context) {
-      var baseURL = 'https://system.na2.netsuite.com';
-      if (runtime.EnvType == "SANDBOX") {
-        baseURL = 'https://system.sandbox.netsuite.com';
-      }
+
       userId = runtime.getCurrentUser().id;
       role = runtime.getCurrentUser().role;
 
@@ -291,6 +293,14 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           }).defaultValue = deedOfVariationUploaded;
 
           form.addField({
+            id: 'custpage_terr_map_uploaded',
+            type: ui.FieldType.TEXT,
+            label: 'Day'
+          }).updateDisplayType({
+            displayType: ui.FieldDisplayType.HIDDEN
+          }).defaultValue = territoryMapDoc;
+
+          form.addField({
             id: 'custpage_dov_zee_name2',
             type: ui.FieldType.TEXT,
             label: 'Day'
@@ -334,7 +344,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
               breakType: ui.FieldBreakType.STARTROW
             }).isMandatory = true
           } else if (deedOfVariationSent == 1 &&
-            deedOfVariationUploaded == 1) {
+            deedOfVariationUploaded == 1 && isNullorEmpty(territoryMapDoc)) {
             form.addField({
               id: 'upload_file_2',
               type: 'file',
@@ -373,6 +383,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var param_mainContact = context.request.parameters.custpage_main_contact2;
         var param_email = context.request.parameters.custpage_email2;
         var param_address = context.request.parameters.custpage_address2;
+        var param_custpage_terr_map_uploaded = context.request.parameters.custpage_terr_map_uploaded;
 
         if (param_dov_sent != 1) {
           var params = {
@@ -428,7 +439,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             value: 1
           });
           zeeRec.save();
-        } else if (param_dov_sent == 1 && param_dov_uploaded == 1) {
+        } else if (param_dov_sent == 1 && param_dov_uploaded == 1 &&
+          isNullorEmpty(param_custpage_terr_map_uploaded)) {
           var file = context.request.files.upload_file_2;
           file.folder = 3193457;
           file.isonline = true;
@@ -764,11 +776,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           var fileObj = file.load({
             id: deedOfVariation
           });
+          var fullURL = baseURL + fileObj.url;
           inlineHtml +=
             '<div class="col-xs-2"></div>';
           inlineHtml +=
             '<div class="col-xs-8" style="text-align: center;"><iframe id="viewer" frameborder="0" scrolling="no" width="400" height="600" src="' +
-            fileObj.url + '"></iframe></div>';
+            fullURL + '"></iframe></div>';
           inlineHtml +=
             '<div class="col-xs-2"></div>';
           inlineHtml += '</div>';
@@ -792,7 +805,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         } else {
           inlineHtml +=
             '<div class="col-xs-12 name_section"><div class="input-group"><span class="input-group-addon">TERM ON FRANCHISEE IM <span class="mandatory">*</span></span><input id="termOnIM" class="form-control termOnIM" value="' +
-            termOnIM + '" readonly/></div></div>';
+            termOnIM + '" /></div></div>';
         }
         inlineHtml += '</div>';
         inlineHtml += '</div>';
@@ -891,11 +904,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           var fileObj2 = file.load({
             id: territoryMapDoc
           });
+          var fullURL = baseURL + fileObj2.url;
           inlineHtml +=
             '<div class="col-xs-2"></div>';
           inlineHtml +=
-            '<div class="col-xs-8" style="text-align: center;"><img id="viewer" src="' +
-            fileObj2.url + '" style="width: 100%; height: 100%;"/></div>';
+            '<div class="col-xs-8" style="text-align: center;"><iframe id="viewer" frameborder="0" scrolling="no" width="400" height="600" src="' +
+            fullURL + '"></iframe></div>';
           inlineHtml +=
             '<div class="col-xs-2"></div>';
           inlineHtml += '</div>';

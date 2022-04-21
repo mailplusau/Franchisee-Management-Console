@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-03-31T14:55:41+11:00
+ * @Last modified time: 2022-04-11T16:15:42+10:00
  */
 
 
@@ -276,9 +276,6 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           targets: [1, 6, 10],
           className: 'bolded'
         }, {
-          className: "col-sm-2",
-          "targets": [0]
-        }, {
           className: "text-center",
           targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         }],
@@ -536,6 +533,13 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
               '<button class="form-control btn btn-xs btn-danger" style="cursor: not-allowed !important;width: fit-content;" disabled><a data-id="' +
               zeeSalesLeads_row.internalID +
               '" class="" style="cursor: pointer !important;color: white;" disabled>OPPORTUNITY DENIED</a></button>';
+          } else {
+            var linkURL =
+              '<button class="form-control btn btn-xs btn-primary" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
+              zeeSalesLeads_row.internalID +
+              '" class="viewZeeLead" style="cursor: pointer !important;color: white;">VIEW</a></button> <button class="form-control btn btn-xs btn-danger" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
+              zeeSalesLeads_row.internalID +
+              '" class="lostZeeLead" style="cursor: pointer !important;color: white;">LOST</a></button>';
           }
 
           zeeSalesLeadDataSet.push([linkURL, zeeSalesLeads_row.date,
