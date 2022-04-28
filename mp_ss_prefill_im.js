@@ -7,7 +7,7 @@
  * Description: Prefill Franchisee IM
  *
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-04-06T14:08:03+10:00
+ * @Last modified time: 2022-04-29T09:07:50+10:00
  *
  */
 
@@ -99,7 +99,8 @@ function main() {
   var arrAttachments = [];
   arrAttachments.push(nlapiLoadFile(parseInt(id)));
   nlapiSendEmail(690145, email, 'Information Memorandum Brochure', emailBody, [
-    'michael.mcdaid@mailplus.com.au', 'ankith.ravindran@mailplus.com.au'
+    'michael.mcdaid@mailplus.com.au', 'ankith.ravindran@mailplus.com.au',
+    'david.gdanski@mailplus.com.au', 'luke.forbes@mailplus.com.au'
   ], null, records, arrAttachments);
 
 

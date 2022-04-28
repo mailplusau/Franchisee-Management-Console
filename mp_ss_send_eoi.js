@@ -7,11 +7,11 @@
  * Description: Prefill Franchisee IM
  *
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-04-21T11:05:11+10:00
+ * @Last modified time: 2022-04-29T09:07:05+10:00
  *
  */
 
-var franchisee_im_template = [340];
+var eoi_template = [347];
 
 var adhoc_inv_deploy = 'customdeploy2';
 var prev_inv_deploy = null;
@@ -30,7 +30,17 @@ function main() {
   var mobile = zeeSalesLeadRecord.getFieldValue('custrecord_zee_lead_mobile');
   var email = zeeSalesLeadRecord.getFieldValue('custrecord_zee_lead_email');
 
+  var merge = new Array();
+  merge['NLAPDATE'] = getDate();
 
+  var fileSCFORM = nlapiMergeRecord(eoi_template,
+    'customrecord_zee_sales_leads', zeeLeadID, null, null, merge);
+  fileSCFORM.setName('EOI - ' + firstName + ' - ' + getDate() +
+    '.pdf');
+  fileSCFORM.setIsOnline(true);
+  fileSCFORM.setFolder(3231089);
+
+  var id = nlapiSubmitFile(fileSCFORM);
 
   var mergeResult = nlapiCreateEmailMerger(332).merge();
   var emailBody = mergeResult.getBody();
@@ -41,10 +51,13 @@ function main() {
 
   var arrAttachments = [];
   arrAttachments.push(nlapiLoadFile(parseInt(5619482)));
+  arrAttachments.push(nlapiLoadFile(parseInt(id)));
 
-  nlapiSendEmail(690145, email, 'MailPlus Expression of Interest Form', emailBody, [
-    'michael.mcdaid@mailplus.com.au', 'ankith.ravindran@mailplus.com.au'
-  ], null, records, arrAttachments);
+  nlapiSendEmail(690145, email, 'MailPlus Expression of Interest Form',
+    emailBody, [
+      'michael.mcdaid@mailplus.com.au', 'ankith.ravindran@mailplus.com.au',
+      'david.gdanski@mailplus.com.au', 'luke.forbes@mailplus.com.au'
+    ], null, records, arrAttachments);
 
 
 
