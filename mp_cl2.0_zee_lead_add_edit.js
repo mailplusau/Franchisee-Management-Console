@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T09:19:53+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-04-21T11:08:04+10:00
+ * @Last modified time: 2022-05-10T13:11:10+10:00
  */
 
 
@@ -278,6 +278,16 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           myRecord.setValue({
             fieldId: 'custpage_eoitobesent',
             value: '1'
+          })
+
+          myRecord.setValue({
+            fieldId: 'custpage_imsent',
+            value: '2'
+          })
+
+          myRecord.setValue({
+            fieldId: 'custpage_ndasent',
+            value: '2'
           })
 
           document.getElementById('submitter').click();

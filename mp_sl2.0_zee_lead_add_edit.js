@@ -4,7 +4,7 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-12-24T08:26:00+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-04-21T11:08:06+10:00
+ * @Last modified time: 2022-05-10T13:11:13+10:00
  */
 
 
@@ -386,10 +386,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml += operationsSection();
         inlineHtml += areasOfInterestSection();
         if (zeeleadid != 0 && !isNullorEmpty(zeeleadid)) {
-          if (salesStage != 1) {
+          if (salesStage != 1 && salesStage != 4 && salesStage != 6) {
             inlineHtml += potentialZeesSection();
             inlineHtml += presalesDetails();
-
           }
         }
         inlineHtml += prefillNDASection();
@@ -485,12 +484,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           reschedule.submit();
         } else if (param_imsent == '1' && param_ndasent == '1' &&
           param_upload_nda_clicked == 'false' && isNullorEmpty(file)) {
+
           var params = {
-            custscript_new_zee_lead_id: param_zeeleadid
+            custscript_zeeleadid_nda: param_zeeleadid
           };
           var reschedule = task.create({
             taskType: task.TaskType.SCHEDULED_SCRIPT,
-            scriptId: 'customscript_ss_send_eoi',
+            scriptId: 'customscript_ss_prefill_nda',
             deploymentId: 'customdeploy1',
             params: params
           });
@@ -503,11 +503,11 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           reschedule.submit();
         } else if (param_eoi_to_be_sent == '1') {
           var params = {
-            custscript_zeeleadid_nda: param_zeeleadid
+            custscript_new_zee_lead_id: param_zeeleadid
           };
           var reschedule = task.create({
             taskType: task.TaskType.SCHEDULED_SCRIPT,
-            scriptId: 'customscript_ss_prefill_nda',
+            scriptId: 'customscript_ss_send_eoi',
             deploymentId: 'customdeploy1',
             params: params
           });
