@@ -4,13 +4,13 @@
  * @Author: Ankith Ravindran <ankithravindran>
  * @Date:   2021-11-15T07:25:50+11:00
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-03-09T10:03:34+11:00
+ * @Last modified time: 2022-02-24T15:27:26+11:00
  */
 
 define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
-    'N/http', 'N/log', 'N/redirect', 'N/format'
-  ],
-  function(ui, email, runtime, search, record, http, log, redirect, format) {
+  'N/http', 'N/log', 'N/redirect', 'N/format'
+],
+  function (ui, email, runtime, search, record, http, log, redirect, format) {
     var role = 0;
     var userId = 0;
     var zee = 0;
@@ -800,13 +800,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             '</br> Date: ' + getDateToday() +
             '</br> Franchisee NS ID: ' + zeeRecordId;
 
-          // email.send({
-          //   author: 112209,
-          //   recipients: ['michael.mcdaid@mailplus.com.au'],
-          //   subject: 'Listed for Sale - ' + zeeName + ' Franchisee',
-          //   body: email_body,
-          //   cc: ['ankith.ravindran@mailplus.com.au']
-          // });
+          email.send({
+            author: 112209,
+            recipients: ['michael.mcdaid@mailplus.com.au'],
+            subject: 'Listed for Sale - ' + zeeName + ' Franchisee',
+            body: email_body,
+            cc: ['ankith.ravindran@mailplus.com.au']
+          });
         }
 
         log.debug({
@@ -896,15 +896,15 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
 
             var deleteAddress = zeeRecord.removeSublistSubrecord({
-                sublistId: 'addressbook',
-                fieldId: 'addressbookaddress',
-                line: lineIndex
-              })
-              //
-              // deleteAddress.setValue({
-              //   fieldId: 'country',
-              //   value: 'AU'
-              // });
+              sublistId: 'addressbook',
+              fieldId: 'addressbookaddress',
+              line: lineIndex
+            })
+            //
+            // deleteAddress.setValue({
+            //   fieldId: 'country',
+            //   value: 'AU'
+            // });
           }
         }
 
@@ -1499,7 +1499,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
       var resultSetZees = searchZees.run();
 
-      resultSetZees.each(function(searchResultZees) {
+      resultSetZees.each(function (searchResultZees) {
         zeeId = searchResultZees.getValue('internalid');
         franchiseeName = searchResultZees.getValue('companyname');
         mainContact = searchResultZees.getValue('custentity3');
@@ -1560,7 +1560,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
       var resultSetZees = searchZees.run();
 
-      resultSetZees.each(function(searchResultZees) {
+      resultSetZees.each(function (searchResultZees) {
         zeeId = searchResultZees.getValue('internalid');
         franchiseeName = searchResultZees.getValue('companyname');
         mainContact = searchResultZees.getValue('custentity3');
@@ -1835,7 +1835,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml +=
         '<tbody id="resultOperatorTable" class="">';
 
-      resultSetZeeAgreements.each(function(searchResultZeeAgreements) {
+      resultSetZeeAgreements.each(function (searchResultZeeAgreements) {
 
         zeeAgreementID = searchResultZeeAgreements.getValue('internalid');
         zeeAgreementName = searchResultZeeAgreements.getValue('name');
@@ -1854,7 +1854,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         1182
 
         inlineHtml += '<tr>'
-          //SHOW EDIT/DELETE LINKS TO ONLY HEADOFFICE USERS
+        //SHOW EDIT/DELETE LINKS TO ONLY HEADOFFICE USERS
         if (role != 1000) {
           inlineHtml +=
             '<td><button class="form-control btn btn-xs btn-primary glyphicon glyphicon-pencil" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
@@ -2383,7 +2383,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       /*
         iOS	1
         Android	2
-	       Other	5
+         Other	5
          */
       inlineHtml +=
         '<option value=0></option><option value=1>iOS</option><option value=2>Android</option><option value=5>Other</option>';
@@ -2476,7 +2476,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml +=
         '<tbody id="resultOperatorTable" class="">';
 
-      resultSetOperators.each(function(searchResultOperators) {
+      resultSetOperators.each(function (searchResultOperators) {
 
         operatorID = searchResultOperators.getValue('internalid');
         operatorName = searchResultOperators.getValue('name');
@@ -2666,7 +2666,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml +=
         '<div class="col-xs-3"><div class="input-group"><span class="input-group-addon">OPERATOR <span class="mandatory">*</span></span><select id="vehicleOperator" class="form-control vehicleOperator" ><option value=0></option>';
 
-      resultSetOperators.each(function(searchResultOperators) {
+      resultSetOperators.each(function (searchResultOperators) {
 
         operatorID = searchResultOperators.getValue('internalid');
         operatorName = searchResultOperators.getValue('name');
@@ -2720,7 +2720,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml +=
         '<tbody id="resultOperatorTable" class="">';
 
-      resultSetZeeVehicles.each(function(searchResultZeeVehicles) {
+      resultSetZeeVehicles.each(function (searchResultZeeVehicles) {
         vehicleID = searchResultZeeVehicles.getValue('internalid');
         vehicleRegistration = searchResultZeeVehicles.getValue('name');
         vehicleModel = searchResultZeeVehicles.getValue(
@@ -2829,7 +2829,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       if (!isNullorEmpty(resultSetAddresses)) {
         //console.log("addresses work");
 
-        resultSetAddresses.each(function(searchResultAddresses) {
+        resultSetAddresses.each(function (searchResultAddresses) {
           var id = searchResultAddresses.getValue({
             name: 'addressinternalid',
             join: 'Address'
