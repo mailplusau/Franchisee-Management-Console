@@ -115,7 +115,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         }, {
           title: 'Franchisee'
         }, {
-          title: 'Lead Count'
+          title: 'Interested Lead Count'
         }],
         columnDefs: [{
           targets: [1, 2, 3],

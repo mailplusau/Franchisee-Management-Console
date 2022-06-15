@@ -237,7 +237,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     function dataTable(name) {
       var inlineHtml = '<style>table#' +
         name +
-        ' {color: #103D39 !important; font-size: 12px;text-align: center;border: none;}.dataTables_wrapper {font-size: 14px;}table#mpexusage-' +
+        ' {color: #103D39 !important; font-size: 12px;text-align: center;border: none;}.dataTables_wrapper {font-size: 14px;}table#' +
         name +
         ' th{text-align: center;} .bolded{font-weight: bold;}</style>';
       inlineHtml += '<table id="' +
