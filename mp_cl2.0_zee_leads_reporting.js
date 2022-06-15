@@ -9,9 +9,9 @@
 
 
 define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
-    'N/error', 'N/url', 'N/format', 'N/currentRecord'
-  ],
-  function(email, runtime, search, record, http, log, error, url, format,
+  'N/error', 'N/url', 'N/format', 'N/currentRecord'
+],
+  function (email, runtime, search, record, http, log, error, url, format,
     currentRecord) {
     var zee = 0;
     var userId = 0;
@@ -43,7 +43,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         $('#zee_leads_list_preview').show();
       }
 
-      $('#result_zee_leads_list').on('change', function() {
+      $('#result_zee_leads_list').on('change', function () {
         $('#zee_leads_list_preview').removeClass('hide');
         $('#zee_leads_list_preview').show();
       });
@@ -59,10 +59,14 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       $("#NS_MENU_ID0-item0 a").css("background-color", "#CFE0CE");
       $("#body").css("background-color", "#CFE0CE");
 
+      zeeListedForSaleDataSet = [];
+      zeeLeadsCountPerZeeListedForSaleDataSet = [];
       zeeSalesLeadDataSet = [];
       zeeSalesLeadDataSetByState = [];
       zeeSalesLeadDataSetBySource = [];
       zeeSalesLeadDataSetByStatus = [];
+      zeeListedForSaleSet = [];
+      zeeLeadsCountPerZeeListedForSaleSet = [];
       zeeSalesLeadSet = [];
       zeeSalesLeadSetByState = [];
       zeeSalesLeadSetBySource = [];
@@ -71,7 +75,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       // pageLoad();
       submitSearch();
 
-      $(".viewZeeLead").click(function() {
+      $(".viewZeeLead").click(function () {
         var dateFrom = $(this).attr("data-id");
         var url = baseURL +
           '/app/site/hosting/scriptlet.nl?script=1409&deploy=1&date_from=' +
@@ -80,7 +84,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       })
 
-      $(".createLead").click(function() {
+      $(".createLead").click(function () {
         var url = baseURL +
           '/app/site/hosting/scriptlet.nl?script=1411&deploy=1';
         window.location.href = url;
@@ -92,6 +96,28 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
     //Initialise the DataTable with headers.
     function submitSearch() {
+
+      dataTable = $('#franchisees_listed_for_sale').DataTable({
+        destroy: true,
+        data: zeeListedForSaleDataSet,
+        pageLength: 1000,
+        order: [3, 'desc'],
+        columns: [{
+          title: 'LINK'
+        }, {
+          title: 'Date Listed for Sale'
+        }, {
+          title: 'Franchisee'
+        }, {
+          title: 'Lead Count'
+        }],
+        columnDefs: [{
+          targets: [1, 2, 3],
+          className: 'bolded'
+        }],
+        rowCallback: function (row, data, index) { }
+      });
+
 
       dataTable = $('#zee_leads_list_preview').DataTable({
         destroy: true,
@@ -115,7 +141,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           targets: [1, 5],
           className: 'bolded'
         }],
-        rowCallback: function(row, data, index) {}
+        rowCallback: function (row, data, index) { }
       });
 
       dataTable = $('#state_table').DataTable({
@@ -148,7 +174,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           targets: [1, 9],
           className: 'bolded'
         }],
-        rowCallback: function(row, data, index) {}
+        rowCallback: function (row, data, index) { }
       });
 
       dataTable = $('#source_table').DataTable({
@@ -181,7 +207,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           targets: [1, 9],
           className: 'bolded'
         }],
-        rowCallback: function(row, data, index) {}
+        rowCallback: function (row, data, index) { }
       });
 
       // dataTable = $('#status_table').DataTable({
@@ -260,13 +286,283 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       var employment = [];
       var employmentCount = 0;
 
+      //NetSuite Search: Franchisees Listed for Sales
+      var searchZeeListedForSale = search.load({
+        id: 'customsearch_zee_listed_for_sales',
+        type: 'partner'
+      });
+
+      searchZeeListedForSale.run().each(function (
+        zeeListedForSaleResultSet) {
+
+        var zeeInternalID = zeeListedForSaleResultSet.getValue({
+          name: 'internalid'
+        });
+
+        var dateListedForSale = zeeListedForSaleResultSet.getValue({
+          name: 'custentity_date_listed_for_sale'
+        });
+
+        var zeeName = zeeListedForSaleResultSet.getValue({
+          name: 'companyname'
+        });
+
+        var zeeCompanyOwnedTerritory = zeeListedForSaleResultSet.getValue({
+          name: 'custentity_company_territory'
+        });
+
+        var deedOfVariationSent = zeeListedForSaleResultSet.getText({
+          name: 'custentity_deed_of_variation_sent'
+        });
+
+        var deedOfVariationUploaded = zeeListedForSaleResultSet.getText({
+          name: 'custentity_deed_uploaded'
+        });
+
+        if (zeeCompanyOwnedTerritory == true) {
+          zeeCompanyOwnedTerritory = 'Yes';
+        } else {
+          zeeCompanyOwnedTerritory = 'No';
+        }
+
+        zeeListedForSaleSet.push({
+          zeeInternalID: zeeInternalID,
+          dateListedForSale: dateListedForSale,
+          zeeName: zeeName,
+          zeeCompanyOwnedTerritory: zeeCompanyOwnedTerritory,
+          deedOfVariationSent: deedOfVariationSent,
+          deedOfVariationUploaded: deedOfVariationUploaded
+        });
+
+        return true;
+      });
+
+      var count5 = 0;
+      var oldZee = null;
+      var oldZeeText = null;
+      var totalCount = 0;
+
+      var newLeadCount = 0;
+      var qualifiedLeadCount = 0;
+      var opportunitycount = 0;
+      var imSentCount = 0;
+      var ndaSentCount = 0;
+      var operationsCount = 0;
+      var salesCount = 0;
+      var financeCount = 0;
+      var eoiSentCount = 0;
+      var interviewCount = 0;
+      var leadLostCount = 0;
+      var opportunityDeniedCount = 0;
+      var qualifiedNoterritoryCount = 0;
+
+      //NetSuite Search: FFranchisee Sales Leads - Count per Franchisee Listed for Sale
+      var searchCountOfLeadsPerZeeListedForSale = search.load({
+        id: 'customsearch_count_zee_lead_per_zee_list',
+        type: 'customrecord_zee_sales_leads'
+      });
+
+      searchCountOfLeadsPerZeeListedForSale.run().each(function (
+        countOfLeadsPerZeeListedForSaleResultSet) {
+
+        var leadCount = countOfLeadsPerZeeListedForSaleResultSet.getValue({
+          name: 'internalid',
+          summary: 'COUNT'
+        });
+
+        var zeeLeadInterestedFranchisees = countOfLeadsPerZeeListedForSaleResultSet.getValue({
+          name: 'custrecord_zee_leads_interested_zees',
+          summary: 'GROUP'
+        });
+
+        var zeeLeadInterestedFranchiseesText = countOfLeadsPerZeeListedForSaleResultSet.getText({
+          name: 'custrecord_zee_leads_interested_zees',
+          summary: 'GROUP'
+        });
+
+        var zeeLeadSalesStage = countOfLeadsPerZeeListedForSaleResultSet.getValue({
+          name: 'custrecord_zee_lead_stage',
+          summary: 'GROUP'
+        });
+
+        var zeeLeadSalesStageText = countOfLeadsPerZeeListedForSaleResultSet.getText({
+          name: 'custrecord_zee_lead_stage',
+          summary: 'GROUP'
+        });
+
+        if (oldZee != null && oldZee != zeeLeadInterestedFranchisees) {
+          zeeLeadsCountPerZeeListedForSaleSet.push({
+            zeeLeadInterestedFranchisees: oldZee,
+            zeeLeadInterestedFranchiseesText: oldZeeText,
+            totalCount: totalCount,
+            newLeadCount: newLeadCount,
+            qualifiedLeadCount: qualifiedLeadCount,
+            opportunitycount: opportunitycount,
+            imSentCount: imSentCount,
+            ndaSentCount: ndaSentCount,
+            operationsCount: operationsCount,
+            salesCount: salesCount,
+            financeCount: financeCount,
+            eoiSentCount: eoiSentCount,
+            interviewCount: interviewCount,
+            leadLostCount: leadLostCount,
+            opportunityDeniedCount: opportunityDeniedCount,
+            qualifiedNoterritoryCount: qualifiedNoterritoryCount,
+          });
+
+          totalCount = 0;
+          newLeadCount = 0;
+          qualifiedLeadCount = 0;
+          opportunitycount = 0;
+          imSentCount = 0;
+          ndaSentCount = 0;
+          operationsCount = 0;
+          salesCount = 0;
+          financeCount = 0;
+          eoiSentCount = 0;
+          interviewCount = 0;
+          leadLostCount = 0;
+          opportunityDeniedCount = 0;
+          qualifiedNoterritoryCount = 0;
+
+          /*
+            New Lead	1
+            Qualified Lead	2
+            Lead Lost	3
+            Qualified Lead - No Territory	4
+            Opportunity	5
+            IM Sent	13
+            Opportunity Denied	6
+            NDA Sent	7
+            Operations	8
+            EOI Uploaded	9
+            Finance	10
+            Presentation	11
+            Interview	12
+           */
+
+          if (zeeLeadSalesStage == '1') {
+            newLeadCount = newLeadCount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '2') {
+            qualifiedLeadCount = qualifiedLeadCount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '3') {
+            leadLostCount = leadLostCount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '4') {
+            qualifiedNoterritoryCount = qualifiedNoterritoryCount +
+              leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '5') {
+            opportunitycount = opportunitycount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '6') {
+            opportunityDeniedCount = opportunityDeniedCount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '7') {
+            ndaSentCount = ndaSentCount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '8') {
+            operationsCount = operationsCount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '9') {
+            eoiSentCount = eoiSentCount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '10') {
+            financeCount = financeCount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '11') {
+            salesCount = salesCount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '12') {
+            interviewCount = interviewCount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '13') {
+            imSentCount = imSentCount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          }
+
+        } else {
+
+          if (zeeLeadSalesStage == '1') {
+            newLeadCount = newLeadCount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '2') {
+            qualifiedLeadCount = qualifiedLeadCount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '3') {
+            leadLostCount = leadLostCount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '4') {
+            qualifiedNoterritoryCount = qualifiedNoterritoryCount +
+              leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '5') {
+            opportunitycount = opportunitycount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '6') {
+            opportunityDeniedCount = opportunityDeniedCount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '7') {
+            ndaSentCount = ndaSentCount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '8') {
+            operationsCount = operationsCount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '9') {
+            eoiSentCount = eoiSentCount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '10') {
+            financeCount = financeCount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '11') {
+            salesCount = salesCount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '12') {
+            interviewCount = interviewCount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          } else if (zeeLeadSalesStage == '13') {
+            imSentCount = imSentCount + leadCount
+            totalCount = totalCount + parseInt(leadCount);
+          }
+
+        }
+
+        count5++;
+        oldZee = zeeLeadInterestedFranchisees;
+        oldZeeText = zeeLeadInterestedFranchiseesText;
+        return true;
+      });
+
+      if (count5 > 0) {
+        zeeLeadsCountPerZeeListedForSaleSet.push({
+          zeeLeadInterestedFranchisees: oldZee,
+          zeeLeadInterestedFranchiseesText: oldZeeText,
+          totalCount: totalCount,
+          newLeadCount: newLeadCount,
+          qualifiedLeadCount: qualifiedLeadCount,
+          opportunitycount: opportunitycount,
+          imSentCount: imSentCount,
+          ndaSentCount: ndaSentCount,
+          operationsCount: operationsCount,
+          salesCount: salesCount,
+          financeCount: financeCount,
+          eoiSentCount: eoiSentCount,
+          interviewCount: interviewCount,
+          leadLostCount: leadLostCount,
+          opportunityDeniedCount: opportunityDeniedCount,
+          qualifiedNoterritoryCount: qualifiedNoterritoryCount,
+        });
+      }
+
       //NetSuite Search: Franchisee Weekly Sales Leads - Website
       var searchZeeLeadsList = search.load({
         id: 'customsearch_zee_sales_lead_list_2',
         type: 'customrecord_zee_sales_leads'
       });
 
-      searchZeeLeadsList.run().each(function(
+      searchZeeLeadsList.run().each(function (
         zeeLeadsListResultSet) {
 
         var leadCount = zeeLeadsListResultSet.getValue({
@@ -359,7 +655,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         type: 'customrecord_zee_sales_leads'
       });
 
-      searchZeeLeadsList2.run().each(function(
+      searchZeeLeadsList2.run().each(function (
         zeeLeadsListResultSet2) {
 
         var leadCount = parseInt(zeeLeadsListResultSet2.getValue({
@@ -486,7 +782,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         type: 'customrecord_zee_sales_leads'
       });
 
-      searchZeeLeadsList3.run().each(function(
+      searchZeeLeadsList3.run().each(function (
         zeeLeadsListResultSet3) {
 
         var leadCount = parseInt(zeeLeadsListResultSet3.getValue({
@@ -638,7 +934,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         type: 'customrecord_zee_sales_leads'
       });
 
-      searchZeeLeadsList4.run().each(function(
+      searchZeeLeadsList4.run().each(function (
         zeeLeadsListResultSet4) {
 
         var leadCount = parseInt(zeeLeadsListResultSet4.getValue({
@@ -835,15 +1131,23 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       console.log(zeeSalesLeadSetByState)
 
-      loadDatatable(zeeSalesLeadSet, zeeSalesLeadSetByState,
-        zeeSalesLeadSetBySource, zeeSalesLeadSetByStatus);
+      console.log('zeeListedForSaleSet');
+      console.log(zeeListedForSaleSet);
+
+      console.log('zeeLeadsCountPerZeeListedForSaleSet')
+      console.log(zeeLeadsCountPerZeeListedForSaleSet)
+
+      loadDatatable(zeeListedForSaleSet, zeeSalesLeadSet, zeeSalesLeadSetByState,
+        zeeSalesLeadSetBySource, zeeSalesLeadSetByStatus, zeeLeadsCountPerZeeListedForSaleSet);
       zeeSalesLeadSet = [];
 
     }
 
-    function loadDatatable(zeeSalesLeads_rows, zeeSalesLeadSetByState_rows,
-      zeeSalesLeadSetBySource_rows, zeeSalesLeadSetByStatus_rows) {
+    function loadDatatable(zeeListedForSale_rows, zeeSalesLeads_rows, zeeSalesLeadSetByState_rows,
+      zeeSalesLeadSetBySource_rows, zeeSalesLeadSetByStatus_rows, zeeLeadsCountPerZeeListedForSale_rows) {
 
+      zeeListedForSaleDataSet = [];
+      zeeLeadsCountPerZeeListedForSaleSet = [];
       zeeSalesLeadDataSet = [];
       zeeSalesLeadDataSetByState = [];
       zeeSalesLeadDataSetBySource = [];
@@ -852,8 +1156,29 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       var chartDataSet = [];
 
+      if (!isNullorEmpty(zeeListedForSale_rows)) {
+        zeeListedForSale_rows.forEach(function (zeeListedForSale_row, index) {
+
+          var linkURL =
+            '<button class="form-control btn btn-xs btn-primary" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
+            zeeListedForSale_row.zeeInternalID +
+            '" class="viewZee" style="cursor: pointer !important;color: white;">VIEW FRANCHISEE</a></button>';
+          var totalLeadCount = 0;
+
+          zeeLeadsCountPerZeeListedForSale_rows.forEach(function (zeeLeadsCountPerZeeListedForSale_row, index) {
+            if (zeeLeadsCountPerZeeListedForSale_row.zeeLeadInterestedFranchisees == zeeListedForSale_row.zeeInternalID) {
+              totalLeadCount = zeeLeadsCountPerZeeListedForSale_row.totalCount;
+            }
+          });
+
+          zeeListedForSaleDataSet.push([linkURL, zeeListedForSale_row.dateListedForSale,
+            zeeListedForSale_row.zeeName, totalLeadCount
+          ]);
+        });
+      }
+
       if (!isNullorEmpty(zeeSalesLeads_rows)) {
-        zeeSalesLeads_rows.forEach(function(zeeSalesLeads_row, index) {
+        zeeSalesLeads_rows.forEach(function (zeeSalesLeads_row, index) {
 
           var linkURL =
             '<button class="form-control btn btn-xs btn-primary" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
@@ -863,7 +1188,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           zeeSalesLeadDataSet.push([linkURL, zeeSalesLeads_row.date,
             parseInt(zeeSalesLeads_row.investorCount), parseInt(
               zeeSalesLeads_row.ownerCount), parseInt(
-              zeeSalesLeads_row.employmentCount),
+                zeeSalesLeads_row.employmentCount),
             zeeSalesLeads_row.leadCount
           ]);
         });
@@ -888,7 +1213,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
        */
 
       if (!isNullorEmpty(zeeSalesLeadSetByState_rows)) {
-        zeeSalesLeadSetByState_rows.forEach(function(
+        zeeSalesLeadSetByState_rows.forEach(function (
           zeeSalesLeadSetByState_row, index) {
 
           var linkURL =
@@ -899,12 +1224,12 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           zeeSalesLeadDataSetByState.push([linkURL,
             zeeSalesLeadSetByState_row.date, parseInt(
               zeeSalesLeadSetByState_row.actCount), parseInt(
-              zeeSalesLeadSetByState_row.nswCount), parseInt(
-              zeeSalesLeadSetByState_row.saCount), parseInt(
-              zeeSalesLeadSetByState_row.qldCount), parseInt(
-              zeeSalesLeadSetByState_row.vicCount), parseInt(
-              zeeSalesLeadSetByState_row.waCount), parseInt(
-              zeeSalesLeadSetByState_row.tasCount),
+                zeeSalesLeadSetByState_row.nswCount), parseInt(
+                  zeeSalesLeadSetByState_row.saCount), parseInt(
+                    zeeSalesLeadSetByState_row.qldCount), parseInt(
+                      zeeSalesLeadSetByState_row.vicCount), parseInt(
+                        zeeSalesLeadSetByState_row.waCount), parseInt(
+                          zeeSalesLeadSetByState_row.tasCount),
             zeeSalesLeadSetByState_row.leadCount
           ]);
         });
@@ -931,7 +1256,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
 
       if (!isNullorEmpty(zeeSalesLeadSetBySource_rows)) {
-        zeeSalesLeadSetBySource_rows.forEach(function(
+        zeeSalesLeadSetBySource_rows.forEach(function (
           zeeSalesLeadSetBySource_row, index) {
 
           var linkURL =
@@ -942,53 +1267,49 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           zeeSalesLeadDataSetBySource.push([linkURL,
             zeeSalesLeadSetBySource_row.date, parseInt(
               zeeSalesLeadSetBySource_row.manualCount), parseInt(
-              zeeSalesLeadSetBySource_row.becomeFranchiseeCount),
+                zeeSalesLeadSetBySource_row.becomeFranchiseeCount),
             parseInt(
               zeeSalesLeadSetBySource_row.brisbaneCount), parseInt(
-              zeeSalesLeadSetBySource_row.canberraCount), parseInt(
-              zeeSalesLeadSetBySource_row.northernBeachesCount),
+                zeeSalesLeadSetBySource_row.canberraCount), parseInt(
+                  zeeSalesLeadSetBySource_row.northernBeachesCount),
             parseInt(
               zeeSalesLeadSetBySource_row.perthCount), parseInt(
-              zeeSalesLeadSetBySource_row.sydneyCount),
+                zeeSalesLeadSetBySource_row.sydneyCount),
             zeeSalesLeadSetBySource_row.leadCount
           ]);
         });
       }
 
-      // if (!isNullorEmpty(zeeSalesLeadSetByStatus_rows)) {
-      //   zeeSalesLeadSetByStatus_rows.forEach(function(
-      //     zeeSalesLeadSetByStatus_row, index) {
-      //
-      //     var linkURL =
-      //       '<button class="form-control btn btn-xs btn-primary" style="cursor: not-allowed !important;width: fit-content;"><a data-id="' +
-      //       zeeSalesLeadSetByStatus_row.date +
-      //       '" class="viewZeeLead" style="cursor: pointer !important;color: white;">LIST VIEW</a></button>';
-      //
-      //     zeeSalesLeadDataSetByStatus.push([linkURL,
-      //       zeeSalesLeadSetByStatus_row.date, parseInt(
-      //         zeeSalesLeadSetByStatus_row.newLeadCount), parseInt(
-      //         zeeSalesLeadSetByStatus_row.qualifiedLeadCount),
-      //       parseInt(
-      //         zeeSalesLeadSetByStatus_row.opportunitycount), parseInt(
-      //         zeeSalesLeadSetByStatus_row.imSentCount), parseInt(
-      //         zeeSalesLeadSetByStatus_row.ndaSentCount),
-      //       parseInt(
-      //         zeeSalesLeadSetByStatus_row.operationsCount), parseInt(
-      //         zeeSalesLeadSetByStatus_row.salesCount), parseInt(
-      //         zeeSalesLeadSetByStatus_row.financeCount), parseInt(
-      //         zeeSalesLeadSetByStatus_row.eoiSentCount), parseInt(
-      //         zeeSalesLeadSetByStatus_row.interviewCount), parseInt(
-      //         zeeSalesLeadSetByStatus_row.leadLostCount), parseInt(
-      //         zeeSalesLeadSetByStatus_row.opportunityDeniedCount),
-      //       parseInt(
-      //         zeeSalesLeadSetByStatus_row.qualifiedNoterritoryCount),
-      //       zeeSalesLeadSetByStatus_row.leadCount
-      //     ]);
-      //   });
-      // }
+      if (!isNullorEmpty(zeeLeadsCountPerZeeListedForSale_rows)) {
+        zeeLeadsCountPerZeeListedForSale_rows.forEach(function (
+          zeeLeadsCountPerZeeListedForSale_row, index) {
+
+
+          zeeLeadsCountPerZeeListedForSaleSet.push([zeeLeadsCountPerZeeListedForSale_row.zeeLeadInterestedFranchisees,
+          zeeLeadsCountPerZeeListedForSale_row.zeeLeadInterestedFranchiseesText, parseInt(
+            zeeLeadsCountPerZeeListedForSale_row.newLeadCount), parseInt(
+              zeeLeadsCountPerZeeListedForSale_row.qualifiedLeadCount),
+          parseInt(
+            zeeLeadsCountPerZeeListedForSale_row.opportunitycount), parseInt(
+              zeeLeadsCountPerZeeListedForSale_row.imSentCount), parseInt(
+                zeeLeadsCountPerZeeListedForSale_row.ndaSentCount),
+          parseInt(
+            zeeLeadsCountPerZeeListedForSale_row.operationsCount), parseInt(
+              zeeLeadsCountPerZeeListedForSale_row.salesCount), parseInt(
+                zeeLeadsCountPerZeeListedForSale_row.financeCount), parseInt(
+                  zeeLeadsCountPerZeeListedForSale_row.eoiSentCount), parseInt(
+                    zeeLeadsCountPerZeeListedForSale_row.interviewCount), parseInt(
+                      zeeLeadsCountPerZeeListedForSale_row.leadLostCount), parseInt(
+                        zeeLeadsCountPerZeeListedForSale_row.opportunityDeniedCount),
+          parseInt(
+            zeeLeadsCountPerZeeListedForSale_row.qualifiedNoterritoryCount),
+          zeeLeadsCountPerZeeListedForSale_row.totalCount
+          ]);
+        });
+      }
 
       if (!isNullorEmpty(zeeSalesLeadSetByStatus_rows)) {
-        zeeSalesLeadSetByStatus_rows.forEach(function(
+        zeeSalesLeadSetByStatus_rows.forEach(function (
           zeeSalesLeadSetByStatus_row, index) {
 
           var linkURL =
@@ -1019,6 +1340,11 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       datatable3.rows.add(zeeSalesLeadDataSetBySource);
       datatable3.draw();
 
+      var datatable5 = $('#franchisees_listed_for_sale').DataTable();
+      datatable5.clear();
+      datatable5.rows.add(zeeListedForSaleDataSet);
+      datatable5.draw();
+
       // var datatable4 = $('#status_table').DataTable();
       // datatable4.clear();
       // datatable4.rows.add(zeeSalesLeadDataSetByStatus);
@@ -1029,6 +1355,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       var data3 = datatable3.rows().data();
       // var data4 = datatable4.rows().data();
       var data4 = zeeSalesLeadDataSetByStatus;
+      var data5 = zeeLeadsCountPerZeeListedForSaleSet;
 
       var week = [];
       var week2 = [];
@@ -1038,6 +1365,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       var leadCount2 = [];
       var leadCount3 = [];
       var leadCount4 = [];
+      var leadCount5 = [];
+      var zeeListedForSale = [];
 
 
       var investorCountArray = [];
@@ -1180,23 +1509,24 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
        */
 
 
-      // for (var i = 0; i < data4.length; i++) {
-      //   week4.push(data4[i][1]);
-      //   leadCount4[data4[i][1]] = data4[i][15];
-      //   newLeadCountArray[data4[i][1]] = data4[i][2];
-      //   qualifiedLeadCountArray[data4[i][1]] = data4[i][3];
-      //   opportunitycountArray[data4[i][1]] = data4[i][4];
-      //   imSentCountArray[data4[i][1]] = data4[i][5];
-      //   ndaSentCountArray[data4[i][1]] = data4[i][6];
-      //   operationsCountArray[data4[i][1]] = data4[i][7];
-      //   salesCountArray[data4[i][1]] = data4[i][8];
-      //   financeCountArray[data4[i][1]] = data4[i][9];
-      //   eoiSentCountArray[data4[i][1]] = data4[i][10];
-      //   interviewCountArray[data4[i][1]] = data4[i][11];
-      //   leadLostCountArray[data4[i][1]] = data4[i][12];
-      //   opportunityDeniedCountArray[data4[i][1]] = data4[i][13];
-      //   qualifiedNoterritoryCountArray[data4[i][1]] = data4[i][14];
-      // }
+      for (var i = 0; i < data5.length; i++) {
+        zeeListedForSale.push(data5[i][1]);
+        leadCount5[data5[i][1]] = data5[i][15];
+        newLeadCountArray[data5[i][1]] = data5[i][2];
+        qualifiedLeadCountArray[data5[i][1]] = data5[i][3];
+        opportunitycountArray[data5[i][1]] = data5[i][4];
+        imSentCountArray[data5[i][1]] = data5[i][5];
+        ndaSentCountArray[data5[i][1]] = data5[i][6];
+        operationsCountArray[data5[i][1]] = data5[i][7];
+        salesCountArray[data5[i][1]] = data5[i][8];
+        financeCountArray[data5[i][1]] = data5[i][9];
+        eoiSentCountArray[data5[i][1]] = data5[i][10];
+        interviewCountArray[data5[i][1]] = data5[i][11];
+        leadLostCountArray[data5[i][1]] = data5[i][12];
+        opportunityDeniedCountArray[data5[i][1]] = data5[i][13];
+        qualifiedNoterritoryCountArray[data5[i][1]] = data5[i][14];
+      }
+
       for (var i = 0; i < data4.length; i++) {
         week4.push(data4[i][1]);
         leadCount4[data4[i][1]] = data4[i][2];
@@ -1207,7 +1537,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       var series_data3 = []; //creating empty array for highcharts series data
       var series_data4 = []; //creating empty array for highcharts series data
       var categores = []; //creating empty array for highcharts categories
-      Object.keys(leadCount).map(function(item, key) {
+      Object.keys(leadCount).map(function (item, key) {
         series_data.push(parseInt(leadCount[item]));
         series_data2.push(parseInt(investorCountArray[item]));
         series_data3.push(parseInt(ownerCountArray[item]));
@@ -1224,7 +1554,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       var series_data_wa = []; //creating empty array for highcharts series data
       var series_data_tas = []; //creating empty array for highcharts series data
       var categores2 = []; //creating empty array for highcharts categories
-      Object.keys(leadCount2).map(function(item, key) {
+      Object.keys(leadCount2).map(function (item, key) {
         series_data_act.push(parseInt(actCountArray[item]));
         series_data_nsw.push(parseInt(nswCountArray[item]));
         series_data_sa.push(parseInt(saCountArray[item]));
@@ -1244,7 +1574,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       var series_data_perth = []; //creating empty array for highcharts series data
       var series_data_sydney = []; //creating empty array for highcharts series data
       var categores3 = []; //creating empty array for highcharts categories
-      Object.keys(leadCount3).map(function(item, key) {
+      Object.keys(leadCount3).map(function (item, key) {
         series_data_manual.push(parseInt(manualCountArray[item]));
         series_data_main.push(parseInt(becomeFranchiseeCountArray[item]));
         series_data_brisbane.push(parseInt(brisbaneCountArray[item]));
@@ -1270,30 +1600,35 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       var series_data_leadLost = []; //creating empty array for highcharts series data
       var series_data_opportunityDenied = []; //creating empty array for highcharts series data
       var series_data_qualifiedNoterritory = []; //creating empty array for highcharts series data
+      var categores5 = []; //creating empty array for highcharts categories
+
+      Object.keys(leadCount5).map(function (item, key) {
+        series_data_newLead.push(parseInt(newLeadCountArray[item]));
+        series_data_qualifiedLead.push(parseInt(qualifiedLeadCountArray[
+          item]));
+        series_data_opportunity.push(parseInt(opportunitycountArray[item]));
+        series_data_imSent.push(parseInt(imSentCountArray[item]));
+        series_data_ndaSent.push(parseInt(
+          ndaSentCountArray[item]));
+        series_data_operations.push(parseInt(operationsCountArray[item]));
+        series_data_sales.push(parseInt(salesCountArray[item]));
+        series_data_finance.push(parseInt(financeCountArray[item]));
+        series_data_eoiSent.push(parseInt(eoiSentCountArray[item]));
+        series_data_interview.push(parseInt(interviewCountArray[item]));
+        series_data_leadLost.push(parseInt(leadLostCountArray[item]));
+        series_data_opportunityDenied.push(parseInt(
+          opportunityDeniedCountArray[item]));
+        series_data_qualifiedNoterritory.push(parseInt(
+          qualifiedNoterritoryCountArray[item]));
+
+        categores5.push(item)
+      });
+
       var categores4 = []; //creating empty array for highcharts categories
-      // Object.keys(leadCount4).map(function(item, key) {
-      //   series_data_newLead.push(parseInt(newLeadCountArray[item]));
-      //   series_data_qualifiedLead.push(parseInt(qualifiedLeadCountArray[
-      //     item]));
-      //   series_data_opportunity.push(parseInt(opportunitycountArray[item]));
-      //   series_data_imSent.push(parseInt(imSentCountArray[item]));
-      //   series_data_ndaSent.push(parseInt(
-      //     ndaSentCountArray[item]));
-      //   series_data_operations.push(parseInt(operationsCountArray[item]));
-      //   series_data_sales.push(parseInt(salesCountArray[item]));
-      //   series_data_finance.push(parseInt(financeCountArray[item]));
-      //   series_data_eoiSent.push(parseInt(eoiSentCountArray[item]));
-      //   series_data_interview.push(parseInt(interviewCountArray[item]));
-      //   series_data_leadLost.push(parseInt(leadLostCountArray[item]));
-      //   series_data_opportunityDenied.push(parseInt(
-      //     opportunityDeniedCountArray[item]));
-      //   series_data_qualifiedNoterritory.push(parseInt(
-      //     qualifiedNoterritoryCountArray[item]));
-      //
-      //   categores4.push(item)
-      // });
-      Object.keys(leadCount4).map(function(item, key) {
-        series_data_newLead.push(parseInt(leadCount4[item]));
+      var series_data_newLead2 = [];
+
+      Object.keys(leadCount4).map(function (item, key) {
+        series_data_newLead2.push(parseInt(leadCount4[item]));
         categores4.push(item)
       });
 
@@ -1308,15 +1643,16 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         series_data_canberra, series_data_northern_beaches,
         series_data_perth, series_data_sydney,
         categores3);
-      // plotChart4(series_data_newLead, series_data_qualifiedLead,
-      //   series_data_opportunity,
-      //   series_data_imSent, series_data_ndaSent,
-      //   series_data_operations, series_data_sales, series_data_finance,
-      //   series_data_eoiSent, series_data_interview, series_data_leadLost,
-      //   series_data_opportunityDenied, series_data_qualifiedNoterritory,
-      //   categores4);
 
-      plotChart4(series_data_newLead, categores4);
+      plotChart5(series_data_newLead, series_data_qualifiedLead,
+        series_data_opportunity,
+        series_data_imSent, series_data_ndaSent,
+        series_data_operations, series_data_sales, series_data_finance,
+        series_data_eoiSent, series_data_interview, series_data_leadLost,
+        series_data_opportunityDenied, series_data_qualifiedNoterritory,
+        categores5);
+
+      plotChart4(series_data_newLead2, categores4);
 
       return true;
     }
@@ -1556,136 +1892,137 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       });
     }
 
-    // function plotChart4(series_data_newLead, series_data_qualifiedLead,
-    //   series_data_opportunity,
-    //   series_data_imSent, series_data_ndaSent,
-    //   series_data_operations, series_data_sales, series_data_finance,
-    //   series_data_eoiSent, series_data_interview, series_data_leadLost,
-    //   series_data_opportunityDenied, series_data_qualifiedNoterritory,
-    //   categores4) {
-    //   // console.log(series_data)
-    //   Highcharts.chart('container7', {
-    //     chart: {
-    //       backgroundColor: '#CFE0CE',
-    //       type: 'column'
-    //     },
-    //     xAxis: {
-    //       categories: categores4,
-    //       crosshair: true,
-    //       style: {
-    //         fontWeight: 'bold',
-    //       }
-    //     },
-    //     yAxis: {
-    //       min: 0,
-    //       title: {
-    //         text: 'Total Lead Count'
-    //       },
-    //       stackLabels: {
-    //         enabled: true,
-    //         style: {
-    //           fontWeight: 'bold'
-    //         }
-    //       }
-    //     },
-    //     tooltip: {
-    //       headerFormat: '<b>{point.x}</b><br/>',
-    //       pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-    //     },
-    //     plotOptions: {
-    //       column: {
-    //         stacking: 'normal',
-    //         dataLabels: {
-    //           enabled: true
-    //         }
-    //       }
-    //     },
-    //     series: [{
-    //       name: 'NEW LEAD',
-    //       data: series_data_newLead,
-    //       color: '#398AB9',
-    //       style: {
-    //         fontWeight: 'bold',
-    //       }
-    //     }, {
-    //       name: 'QUALIFIED LEAD',
-    //       data: series_data_qualifiedLead,
-    //       style: {
-    //         fontWeight: 'bold',
-    //       }
-    //     }, {
-    //       name: 'OPPORTUNITY',
-    //       data: series_data_opportunity,
-    //       style: {
-    //         fontWeight: 'bold',
-    //       }
-    //     }, {
-    //       name: 'IM SENT',
-    //       data: series_data_imSent,
-    //       style: {
-    //         fontWeight: 'bold',
-    //       }
-    //     }, {
-    //       name: 'NDA SENT',
-    //       data: series_data_ndaSent,
-    //       style: {
-    //         fontWeight: 'bold',
-    //       }
-    //     }, {
-    //       name: 'OPERATIONS MEETING',
-    //       data: series_data_operations,
-    //       style: {
-    //         fontWeight: 'bold',
-    //       }
-    //     }, {
-    //       name: 'SALES MEETING',
-    //       data: series_data_sales,
-    //       style: {
-    //         fontWeight: 'bold',
-    //       }
-    //     }, {
-    //       name: 'FINANCE MEETING',
-    //       data: series_data_finance,
-    //       style: {
-    //         fontWeight: 'bold',
-    //       }
-    //     }, {
-    //       name: 'EOI SENT & UPLOADED',
-    //       data: series_data_eoiSent,
-    //       style: {
-    //         fontWeight: 'bold',
-    //       }
-    //     }, {
-    //       name: 'INTERVIEW',
-    //       data: series_data_interview,
-    //       color: '#008E89',
-    //       style: {
-    //         fontWeight: 'bold',
-    //       }
-    //     }, {
-    //       name: 'LEAD LOST',
-    //       data: series_data_leadLost,
-    //       color: '#E83A14',
-    //       style: {
-    //         fontWeight: 'bold',
-    //       }
-    //     }, {
-    //       name: 'OPPORTUNITY DENIED',
-    //       data: series_data_opportunityDenied,
-    //       color: '#e9d30a',
-    //       style: {
-    //         fontWeight: 'bold',
-    //       }
-    //     }, {
-    //       name: 'QUALIFIED LEAD - NO TERRITORY',
-    //       data: series_data_qualifiedNoterritory,
-    //       color: '#E45826',
-    //       style: {
-    //         fontWeight: 'bold',
-    //       }
-    //     }]
-    //   });
-    // }
+    function plotChart5(series_data_newLead, series_data_qualifiedLead,
+      series_data_opportunity,
+      series_data_imSent, series_data_ndaSent,
+      series_data_operations, series_data_sales, series_data_finance,
+      series_data_eoiSent, series_data_interview, series_data_leadLost,
+      series_data_opportunityDenied, series_data_qualifiedNoterritory,
+      categores5) {
+
+      Highcharts.chart('container1', {
+        chart: {
+          backgroundColor: '#CFE0CE',
+          type: 'column'
+        },
+        xAxis: {
+          categories: categores5,
+          crosshair: true,
+          style: {
+            fontWeight: 'bold',
+          }
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            text: 'Total Lead Count/Franchisee Listed For Sale'
+          },
+          stackLabels: {
+            enabled: true,
+            style: {
+              fontWeight: 'bold'
+            }
+          }
+        },
+        tooltip: {
+          headerFormat: '<b>{point.x}</b><br/>',
+          pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+        },
+        plotOptions: {
+          column: {
+            stacking: 'normal',
+            dataLabels: {
+              enabled: true
+            }
+          }
+        },
+        series: [{
+          name: 'NEW LEAD',
+          data: series_data_newLead,
+          color: '#398AB9',
+          style: {
+            fontWeight: 'bold',
+          }
+        }, {
+          name: 'QUALIFIED LEAD',
+          data: series_data_qualifiedLead,
+          style: {
+            fontWeight: 'bold',
+          }
+        }, {
+          name: 'OPPORTUNITY',
+          data: series_data_opportunity,
+          style: {
+            fontWeight: 'bold',
+          }
+        }, {
+          name: 'IM SENT',
+          data: series_data_imSent,
+          style: {
+            fontWeight: 'bold',
+          }
+        }, {
+          name: 'NDA SENT',
+          data: series_data_ndaSent,
+          style: {
+            fontWeight: 'bold',
+          }
+        }, {
+          name: 'OPERATIONS MEETING',
+          data: series_data_operations,
+          style: {
+            fontWeight: 'bold',
+          }
+        }, {
+          name: 'SALES MEETING',
+          data: series_data_sales,
+          style: {
+            fontWeight: 'bold',
+          }
+        }, {
+          name: 'FINANCE MEETING',
+          data: series_data_finance,
+          style: {
+            fontWeight: 'bold',
+          }
+        }, {
+          name: 'EOI SENT & UPLOADED',
+          data: series_data_eoiSent,
+          style: {
+            fontWeight: 'bold',
+          }
+        }, {
+          name: 'INTERVIEW',
+          data: series_data_interview,
+          color: '#008E89',
+          style: {
+            fontWeight: 'bold',
+          }
+        }, {
+          name: 'LEAD LOST',
+          data: series_data_leadLost,
+          color: '#E83A14',
+          style: {
+            fontWeight: 'bold',
+          }
+        }, {
+          name: 'OPPORTUNITY DENIED',
+          data: series_data_opportunityDenied,
+          color: '#e9d30a',
+          style: {
+            fontWeight: 'bold',
+          }
+        }, {
+          name: 'QUALIFIED LEAD - NO TERRITORY',
+          data: series_data_qualifiedNoterritory,
+          color: '#E45826',
+          style: {
+            fontWeight: 'bold',
+          }
+        }]
+      });
+    }
+
     function plotChart4(series_data_newLead, categores4) {
       // console.log(series_data)
       Highcharts.chart('container7', {
@@ -1738,7 +2075,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
 
 
-    function saveRecord() {}
+    function saveRecord() { }
 
     function getDateToday() {
       var date = new Date();

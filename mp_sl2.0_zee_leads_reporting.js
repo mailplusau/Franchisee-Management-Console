@@ -9,9 +9,9 @@
 
 
 define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
-    'N/http', 'N/log', 'N/redirect', 'N/format'
-  ],
-  function(ui, email, runtime, search, record, http, log, redirect, format) {
+  'N/http', 'N/log', 'N/redirect', 'N/format'
+],
+  function (ui, email, runtime, search, record, http, log, redirect, format) {
 
     var color_array = ['blue', 'red', 'green', 'orange', 'black'];
 
@@ -170,7 +170,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         '<div style="width: 95%; margin:auto; margin-bottom: 30px"><ul class="nav nav-pills nav-justified main-tabs-sections " style="margin:0%; ">';
 
       inlineHtml +=
-        '<li role="presentation" class="active"><a data-toggle="tab" href="#type"><b>LEAD COUNT - BY TYPE</b></a></li>';
+        '<li role="presentation" class="active"><a data-toggle="tab" href="#overview"><b>OVERVIEW</b></a></li>';
+      inlineHtml +=
+        '<li role="presentation" class=""><a data-toggle="tab" href="#type"><b>LEAD COUNT - BY TYPE</b></a></li>';
       inlineHtml +=
         '<li role="presentation" class=""><a data-toggle="tab" href="#source"><b>LEAD COUNT - BY SOURCE</b></a></li>';
       inlineHtml +=
@@ -186,7 +188,14 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       // Tabs content
       inlineHtml += '<div class="tab-content">';
 
-      inlineHtml += '<div role="tabpanel" class="tab-pane active" id="type">';
+      inlineHtml += '<div role="tabpanel" class="tab-pane active" id="overview">';
+      inlineHtml += '<figure class="highcharts-figure">';
+      inlineHtml += '<div id="container1"></div>';
+      inlineHtml += '</figure><br></br>';
+      inlineHtml += dataTable('franchisees_listed_for_sale');
+      inlineHtml += '</div>';
+
+      inlineHtml += '<div role="tabpanel" class="tab-pane" id="type">';
       inlineHtml += '<figure class="highcharts-figure">';
       inlineHtml += '<div id="container"></div>';
       inlineHtml += '</figure><br></br>';
