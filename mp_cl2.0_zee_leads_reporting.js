@@ -84,6 +84,12 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       })
 
+      $(".viewZee").click(function () {
+        var zeeId = $(this).attr("data-id");
+        window.location.href = 'https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1399&deploy=1&zee=' + zeeId;
+
+      })
+
       $(".createLead").click(function () {
         var url = baseURL +
           '/app/site/hosting/scriptlet.nl?script=1411&deploy=1';
