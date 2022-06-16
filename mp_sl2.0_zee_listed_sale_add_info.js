@@ -9,9 +9,9 @@
 
 
 define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
-    'N/http', 'N/log', 'N/redirect', 'N/format', 'N/file', 'N/task'
-  ],
-  function(ui, email, runtime, search, record, http, log, redirect, format,
+  'N/http', 'N/log', 'N/redirect', 'N/format', 'N/file', 'N/task'
+],
+  function (ui, email, runtime, search, record, http, log, redirect, format,
     file, task) {
 
     var baseURL = 'https://1048144.app.netsuite.com/';
@@ -122,6 +122,10 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             fieldId: 'custentity_date_listed_for_sale'
           });
 
+          businessValuationApproved = zeeSalesLeadRecord.getValue({
+            fieldId: 'custentity_valuation_approved'
+          });
+
           abn = zeeSalesLeadRecord.getValue({
             fieldId: 'custentity_abn_franchiserecord'
           });
@@ -199,7 +203,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
           searchZeeAgreements.filters.push(new_filter);
 
-          searchZeeAgreements.run().each(function(
+          searchZeeAgreements.run().each(function (
             searchZeeAgreementsResultSet) {
             zeeAgreementId = searchZeeAgreementsResultSet.getValue(
               'internalid');
@@ -544,7 +548,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml +=
         '<div class="form-group container zee_available_buttons_section">';
       inlineHtml += '<div class="row">';
-      if (deedOfVariationSent != 1) {
+      if (isNullorEmpty(businessValuationApproved) || businessValuationApproved == 2) {
+        // inlineHtml +=
+        //   '<div class="col-xs-6 sendDeed"><input type="button" value="SEND DEED OF VARIATION - EXIT PROGRAM ASSISTANCE OFFER" class="form-control btn btn-info" id="sendDeed" /></div>'
+        inlineHtml +=
+          '<div class="col-xs-12 saveZeeLead"><input type="button" value="BUSINESS VALUATION APPROVED" class="form-control btn btn-primary" id="businessValuationApproved" /></div>'
+      } else if (deedOfVariationSent != 1 && businessValuationApproved == 1) {
         inlineHtml +=
           '<div class="col-xs-6 sendDeed"><input type="button" value="SEND DEED OF VARIATION - EXIT PROGRAM ASSISTANCE OFFER" class="form-control btn btn-info" id="sendDeed" /></div>'
         inlineHtml +=

@@ -9,9 +9,9 @@
 
 
 define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
-    'N/error', 'N/url', 'N/format', 'N/currentRecord', 'N/https'
-  ],
-  function(email, runtime, search, record, http, log, error, url, format,
+  'N/error', 'N/url', 'N/format', 'N/currentRecord', 'N/https'
+],
+  function (email, runtime, search, record, http, log, error, url, format,
     currentRecord, https) {
     var zee = '0';
     var userId = 0;
@@ -107,7 +107,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         console.log(place.address_components[i])
 
         if (place.address_components[i].types[0] == 'street_number' || place.address_components[
-            i].types[0] == 'route') {
+          i].types[0] == 'route') {
           addressComponent += place.address_components[i]['short_name'] + " ";
           $('#address2').val(addressComponent);
         }
@@ -146,7 +146,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       $('.ui.dropdown').dropdown();
 
       //Google Dropdown for the address2 field
-      $(document).on('focus', '#address2', function(event) {
+      $(document).on('focus', '#address2', function (event) {
         // alert('onfocus')
         initAutocomplete();
       });
@@ -156,11 +156,11 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       /**
        * Close the Alert box on click
        */
-      $(document).on('click', '#alert .close', function(e) {
+      $(document).on('click', '#alert .close', function (e) {
         $(this).parent().hide();
       });
 
-      $(document).on("click", "#sendDeed", function(e) {
+      $(document).on("click", "#sendDeed", function (e) {
 
         tradingEntity = $('#tradingEntity').val();
         mainContact = $('#mainContact').val();
@@ -200,7 +200,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       });
 
-      $(document).on("click", "#uploadDeed", function(e) {
+      $(document).on("click", "#uploadDeed", function (e) {
 
         tradingEntity = $('#tradingEntity').val();
         mainContact = $('#mainContact').val();
@@ -240,7 +240,25 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       });
 
-      $(document).on("click", "#saveZeeLead", function(e) {
+      $(document).on("click", "#businessValuationApproved", function (e) {
+
+        if (zeeleadid != 0) {
+          var zeeRecord = record.load({
+            type: record.Type.PARTNER,
+            id: zeeleadid
+          });
+
+          zeeRecord.setValue({
+            fieldId: 'custentity_valuation_approved',
+            value: 1
+          });
+          zeeRecord.save();
+        }
+
+        document.getElementById('submitter').click();
+      });
+
+      $(document).on("click", "#saveZeeLead", function (e) {
 
         tradingEntity = $('#tradingEntity').val();
         mainContact = $('#mainContact').val();
@@ -350,7 +368,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       afterLoad();
 
-      $(document).on("click", '#backButton', function(e) {
+      $(document).on("click", '#backButton', function (e) {
         var url = baseURL +
           '/app/site/hosting/scriptlet.nl?script=1427&deploy=1'
         window.location.href = url;
@@ -372,7 +390,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       $('#alert').show();
       document.body.scrollTop = 0; // For Safari
       document.documentElement.scrollTop = 0;
-      setTimeout(function() {
+      setTimeout(function () {
         $('#alert').hide();
       }, 5000);
     }
