@@ -336,29 +336,32 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             layoutType: ui.FieldLayoutType.MIDROW,
           }).defaultValue = inlineHtml;
 
-          if (deedOfVariationSent == 1 && isNullorEmpty(deedOfVariation) &&
-            deedOfVariationUploaded != 1) {
-            form.addField({
-              id: 'upload_file_1',
-              type: 'file',
-              label: 'Upload Signed Deed of Variation'
-            }).updateLayoutType({
-              layoutType: ui.FieldLayoutType.OUTSIDEBELOW,
-            }).updateBreakType({
-              breakType: ui.FieldBreakType.STARTROW
-            }).isMandatory = true
-          } else if (deedOfVariationSent == 1 &&
-            deedOfVariationUploaded == 1 && isNullorEmpty(territoryMapDoc)) {
-            form.addField({
-              id: 'upload_file_2',
-              type: 'file',
-              label: 'Upload Territory Map'
-            }).updateLayoutType({
-              layoutType: ui.FieldLayoutType.OUTSIDEBELOW,
-            }).updateBreakType({
-              breakType: ui.FieldBreakType.STARTROW
-            }).isMandatory = true
+          if (businessValuationApproved == 1) {
+            if (deedOfVariationSent == 1 && isNullorEmpty(deedOfVariation) &&
+              deedOfVariationUploaded != 1) {
+              form.addField({
+                id: 'upload_file_1',
+                type: 'file',
+                label: 'Upload Signed Deed of Variation'
+              }).updateLayoutType({
+                layoutType: ui.FieldLayoutType.OUTSIDEBELOW,
+              }).updateBreakType({
+                breakType: ui.FieldBreakType.STARTROW
+              }).isMandatory = true
+            } else if (deedOfVariationSent == 1 &&
+              deedOfVariationUploaded == 1 && isNullorEmpty(territoryMapDoc)) {
+              form.addField({
+                id: 'upload_file_2',
+                type: 'file',
+                label: 'Upload Territory Map'
+              }).updateLayoutType({
+                layoutType: ui.FieldLayoutType.OUTSIDEBELOW,
+              }).updateBreakType({
+                breakType: ui.FieldBreakType.STARTROW
+              }).isMandatory = true
+            }
           }
+
 
 
           form.addSubmitButton({
