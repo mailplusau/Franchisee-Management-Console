@@ -255,7 +255,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           zeeRecord.save();
         }
 
-        document.getElementById('submitter').click();
+        var url = baseURL +
+          '/app/site/hosting/scriptlet.nl?script=1430&deploy=1&zeeid=' + zeeleadid;
+        window.location.href = url;
       });
 
       $(document).on("click", "#saveZeeLead", function (e) {
