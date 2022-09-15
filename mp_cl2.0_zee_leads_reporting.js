@@ -207,10 +207,12 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         }, {
           title: 'Sydney - Become a Franchisee Web Page'
         }, {
+          title: 'Refer a Friend Web Page'
+        }, {
           title: 'Total Lead Count'
         }],
         columnDefs: [{
-          targets: [1, 9],
+          targets: [1, 10],
           className: 'bolded'
         }],
         rowCallback: function (row, data, index) { }
@@ -781,6 +783,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       var perthCount = 0;
       var northernBeachesCount = 0;
       var sydneyCount = 0;
+      var referCount = 0;
 
       //NetSuite Search: Franchisee Weekly Leads - By Website Page
       var searchZeeLeadsList3 = search.load({
@@ -816,7 +819,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             canberraCount: canberraCount,
             perthCount: perthCount,
             northernBeachesCount: northernBeachesCount,
-            sydneyCount: sydneyCount
+            sydneyCount: sydneyCount,
+            referCount: referCount
           });
 
           total_count3 = 0;
@@ -827,6 +831,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           perthCount = 0;
           northernBeachesCount = 0;
           sydneyCount = 0;
+          referCount = 0;
 
           if (websitePage == '/perth-franchise-for-sale/') {
             perthCount = perthCount + leadCount
@@ -846,6 +851,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             total_count3 = total_count3 + parseInt(leadCount);
           } else if (websitePage == '/sydney-franchise-for-sale/') {
             sydneyCount = sydneyCount + leadCount
+            total_count3 = total_count3 + parseInt(leadCount);
+          } else if (websitePage == '/refer-a-friend-cash-incentive/') {
+            referCount = referCount + leadCount
             total_count3 = total_count3 + parseInt(leadCount);
           } else if (isNullorEmpty(websitePage)) {
             manualCount = manualCount + leadCount
@@ -873,6 +881,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           } else if (websitePage == '/sydney-franchise-for-sale/') {
             sydneyCount = sydneyCount + leadCount
             total_count3 = total_count3 + parseInt(leadCount);
+          } else if (websitePage == '/refer-a-friend-cash-incentive/') {
+            referCount = referCount + leadCount
+            total_count3 = total_count3 + parseInt(leadCount);
           } else if (isNullorEmpty(websitePage)) {
             manualCount = manualCount + leadCount
             total_count3 = total_count3 + parseInt(leadCount);
@@ -895,7 +906,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           canberraCount: canberraCount,
           perthCount: perthCount,
           northernBeachesCount: northernBeachesCount,
-          sydneyCount: sydneyCount
+          sydneyCount: sydneyCount,
+          referCount: referCount
         });
       }
 
@@ -1280,7 +1292,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                   zeeSalesLeadSetBySource_row.northernBeachesCount),
             parseInt(
               zeeSalesLeadSetBySource_row.perthCount), parseInt(
-                zeeSalesLeadSetBySource_row.sydneyCount),
+                zeeSalesLeadSetBySource_row.sydneyCount), parseInt(
+                  zeeSalesLeadSetBySource_row.referCount),
             zeeSalesLeadSetBySource_row.leadCount
           ]);
         });
@@ -1394,6 +1407,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       var northernBeachesCountArray = [];
       var perthCountArray = [];
       var sydneyCountArray = [];
+      var referCountArray = [];
 
       var newLeadCountArray = [];
       var qualifiedLeadCountArray = [];
@@ -1481,6 +1495,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         northernBeachesCountArray[data3[i][1]] = data3[i][6];
         perthCountArray[data3[i][1]] = data3[i][7];
         sydneyCountArray[data3[i][1]] = data3[i][8];
+        referCountArray[data3[i][1]] = data3[i][9];
       }
 
 
@@ -1579,6 +1594,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       var series_data_northern_beaches = []; //creating empty array for highcharts series data
       var series_data_perth = []; //creating empty array for highcharts series data
       var series_data_sydney = []; //creating empty array for highcharts series data
+      var series_data_refer = []; //creating empty array for highcharts series data
       var categores3 = []; //creating empty array for highcharts categories
       Object.keys(leadCount3).map(function (item, key) {
         series_data_manual.push(parseInt(manualCountArray[item]));
@@ -1589,6 +1605,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
           northernBeachesCountArray[item]));
         series_data_perth.push(parseInt(perthCountArray[item]));
         series_data_sydney.push(parseInt(sydneyCountArray[item]));
+        series_data_refer.push(parseInt(referCountArray[item]));
 
         categores3.push(item)
       });
@@ -1647,7 +1664,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         categores2);
       plotChart3(series_data_manual, series_data_main, series_data_brisbane,
         series_data_canberra, series_data_northern_beaches,
-        series_data_perth, series_data_sydney,
+        series_data_perth, series_data_sydney, series_data_refer,
         categores3);
 
       plotChart5(series_data_newLead, series_data_qualifiedLead,
@@ -1813,7 +1830,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
     function plotChart3(series_data_manual, series_data_main,
       series_data_brisbane,
       series_data_canberra, series_data_northern_beaches,
-      series_data_perth, series_data_sydney,
+      series_data_perth, series_data_sydney, series_data_refer, 
       categores3) {
       // console.log(series_data)
       Highcharts.chart('container6', {
@@ -1891,6 +1908,12 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         }, {
           name: 'WEB PAGE - SYDNEY',
           data: series_data_sydney,
+          style: {
+            fontWeight: 'bold',
+          }
+        }, {
+          name: 'WEB PAGE - REFER A FRIEND',
+          data: series_data_refer,
           style: {
             fontWeight: 'bold',
           }

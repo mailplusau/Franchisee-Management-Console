@@ -5,14 +5,14 @@
  * @Date:   2021-12-24T08:26:00+11:00
  * @Description: List of Franchisee leads synced from the MailPlus Website - Split into 2 tabs (Investor or Owner & Seeking Employment).
  * @Last modified by:   ankithravindran
- * @Last modified time: 2022-01-27T11:03:17+11:00
+ * @Last modified time: 2022-01-27T10:51:08+11:00
  */
 
 
 define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
-    'N/http', 'N/log', 'N/redirect', 'N/format'
-  ],
-  function(ui, email, runtime, search, record, http, log, redirect, format) {
+  'N/http', 'N/log', 'N/redirect', 'N/format'
+],
+  function (ui, email, runtime, search, record, http, log, redirect, format) {
 
     var color_array = ['blue', 'red', 'green', 'orange', 'black'];
 
