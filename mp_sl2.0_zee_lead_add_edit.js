@@ -9,9 +9,9 @@
 
 
 define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
-    'N/http', 'N/log', 'N/redirect', 'N/format', 'N/file', 'N/task'
-  ],
-  function(ui, email, runtime, search, record, http, log, redirect, format,
+  'N/http', 'N/log', 'N/redirect', 'N/format', 'N/file', 'N/task'
+],
+  function (ui, email, runtime, search, record, http, log, redirect, format,
     file, task) {
 
     var color_array = ['blue', 'red', 'green', 'orange', 'black'];
@@ -365,6 +365,14 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           displayType: ui.FieldDisplayType.HIDDEN
         }).defaultValue = false
 
+        form.addField({
+          id: 'custpage_save_button',
+          type: ui.FieldType.TEXT,
+          label: 'save'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        }).defaultValue = false
+
 
         inlineHtml += lostZeeLeadModal();
 
@@ -447,6 +455,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var param_upload_nda_clicked = context.request.parameters.custpage_upload_nda_clicked;
         var param_eoi_to_be_sent = context.request.parameters.custpage_eoitobesent;
 
+        var save_button_clicked = context.request.parameters.custpage_save_button;
+
         log.debug({
           title: 'param_zeeleadid',
           details: param_zeeleadid
@@ -464,91 +474,15 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           details: param_interestedzees
         });
 
-        if (param_imsent == '1' && param_ndasent == '2') {
-          var params = {
-            custscript_zeeleadid: param_zeeleadid,
-            custscript_interestedzees: param_interestedzees
-          };
-          var reschedule = task.create({
-            taskType: task.TaskType.SCHEDULED_SCRIPT,
-            scriptId: 'customscript_ss_prefill_im',
-            deploymentId: 'customdeploy1',
-            params: params
-          });
-
-          log.debug({
-            title: 'rescheduling',
-            details: 'rescheduling'
-          });
-
-          reschedule.submit();
-        } else if (param_imsent == '1' && param_ndasent == '1' &&
-          param_upload_nda_clicked == 'false' && isNullorEmpty(file)) {
-
-          var params = {
-            custscript_zeeleadid_nda: param_zeeleadid
-          };
-          var reschedule = task.create({
-            taskType: task.TaskType.SCHEDULED_SCRIPT,
-            scriptId: 'customscript_ss_prefill_nda',
-            deploymentId: 'customdeploy1',
-            params: params
-          });
-
-          log.debug({
-            title: 'rescheduling',
-            details: 'rescheduling'
-          });
-
-          reschedule.submit();
-        } else if (param_eoi_to_be_sent == '1') {
-          var params = {
-            custscript_new_zee_lead_id: param_zeeleadid
-          };
-          var reschedule = task.create({
-            taskType: task.TaskType.SCHEDULED_SCRIPT,
-            scriptId: 'customscript_ss_send_eoi',
-            deploymentId: 'customdeploy1',
-            params: params
-          });
-
-          log.debug({
-            title: 'rescheduling',
-            details: 'rescheduling'
-          });
-
-          reschedule.submit();
-        }
-
-        if (!isNullorEmpty(file)) {
-
-          file.folder = 3162671;
-          var file_type = file.fileType;
-          if (!isNullorEmpty(file_type) && file_type != 'undefined') {
-            var file_name = 'EOI_' + getDateToday() + '_' + param_zeeleadid +
-              '.' +
-              file_type;
-            // Create file and upload it to the file cabinet.
-            file.name = file_name;
-            var f_id = file.save();
-
-            var rec = record.load({
-              type: 'customrecord_zee_sales_leads',
-              id: param_zeeleadid
-            });
-            rec.setValue({
-              fieldId: 'custrecord_eoi_doc_id',
-              value: f_id
-            });
-            rec.save();
-
+        if (save_button_clicked == false) {
+          if (param_imsent == '1' && param_ndasent == '2') {
             var params = {
-              custscript_mmc_zee_lead_id: param_zeeleadid,
-              custscript_email_type: 'eoi'
+              custscript_zeeleadid: param_zeeleadid,
+              custscript_interestedzees: param_interestedzees
             };
             var reschedule = task.create({
               taskType: task.TaskType.SCHEDULED_SCRIPT,
-              scriptId: 'customscript_ss_send_email_mmc',
+              scriptId: 'customscript_ss_prefill_im',
               deploymentId: 'customdeploy1',
               params: params
             });
@@ -559,56 +493,15 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             });
 
             reschedule.submit();
-
-          }
-
-
-        }
-        if (!isNullorEmpty(file2)) {
-
-          file2.folder = 3199521;
-          var file_type2 = file2.fileType;
-          log.debug({
-            title: 'file_type2',
-            value: file_type2
-          })
-          if (!isNullorEmpty(file_type2) && file_type2 != 'undefined') {
-            var file_name2 = 'NDA_' + getDateToday() + '_' + param_zeeleadid +
-              '.' +
-              file_type2;
-            // Create file and upload it to the file cabinet.
-            file2.name = file_name2;
-            var f_id2 = file2.save();
-
-            var rec = record.load({
-              type: 'customrecord_zee_sales_leads',
-              id: param_zeeleadid
-            });
-            rec.setValue({
-              fieldId: 'custrecord_signed_nda_doc',
-              value: f_id2
-            });
-            rec.setValue({
-              fieldId: 'custrecord_zee_lead_stage',
-              value: 8
-            });
-            rec.setValue({
-              fieldId: 'custrecord_date_signed_nda_uploaded',
-              value: getDateToday()
-            });
-            rec.setValue({
-              fieldId: 'custrecord_date_michael_approved',
-              value: getDateToday()
-            });
-            rec.save();
+          } else if (param_imsent == '1' && param_ndasent == '1' &&
+            param_upload_nda_clicked == 'false' && isNullorEmpty(file)) {
 
             var params = {
-              custscript_mmc_zee_lead_id: param_zeeleadid,
-              custscript_email_type: 'nda'
+              custscript_zeeleadid_nda: param_zeeleadid
             };
             var reschedule = task.create({
               taskType: task.TaskType.SCHEDULED_SCRIPT,
-              scriptId: 'customscript_ss_send_email_mmc',
+              scriptId: 'customscript_ss_prefill_nda',
               deploymentId: 'customdeploy1',
               params: params
             });
@@ -619,10 +512,131 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             });
 
             reschedule.submit();
+          } else if (param_eoi_to_be_sent == '1') {
+            var params = {
+              custscript_new_zee_lead_id: param_zeeleadid
+            };
+            var reschedule = task.create({
+              taskType: task.TaskType.SCHEDULED_SCRIPT,
+              scriptId: 'customscript_ss_send_eoi',
+              deploymentId: 'customdeploy1',
+              params: params
+            });
 
+            log.debug({
+              title: 'rescheduling',
+              details: 'rescheduling'
+            });
+
+            reschedule.submit();
           }
 
+          if (!isNullorEmpty(file)) {
+
+            file.folder = 3162671;
+            var file_type = file.fileType;
+            if (!isNullorEmpty(file_type) && file_type != 'undefined') {
+              var file_name = 'EOI_' + getDateToday() + '_' + param_zeeleadid +
+                '.' +
+                file_type;
+              // Create file and upload it to the file cabinet.
+              file.name = file_name;
+              var f_id = file.save();
+
+              var rec = record.load({
+                type: 'customrecord_zee_sales_leads',
+                id: param_zeeleadid
+              });
+              rec.setValue({
+                fieldId: 'custrecord_eoi_doc_id',
+                value: f_id
+              });
+              rec.save();
+
+              var params = {
+                custscript_mmc_zee_lead_id: param_zeeleadid,
+                custscript_email_type: 'eoi'
+              };
+              var reschedule = task.create({
+                taskType: task.TaskType.SCHEDULED_SCRIPT,
+                scriptId: 'customscript_ss_send_email_mmc',
+                deploymentId: 'customdeploy1',
+                params: params
+              });
+
+              log.debug({
+                title: 'rescheduling',
+                details: 'rescheduling'
+              });
+
+              reschedule.submit();
+
+            }
+
+
+          }
+          if (!isNullorEmpty(file2)) {
+
+            file2.folder = 3199521;
+            var file_type2 = file2.fileType;
+            log.debug({
+              title: 'file_type2',
+              value: file_type2
+            })
+            if (!isNullorEmpty(file_type2) && file_type2 != 'undefined') {
+              var file_name2 = 'NDA_' + getDateToday() + '_' + param_zeeleadid +
+                '.' +
+                file_type2;
+              // Create file and upload it to the file cabinet.
+              file2.name = file_name2;
+              var f_id2 = file2.save();
+
+              var rec = record.load({
+                type: 'customrecord_zee_sales_leads',
+                id: param_zeeleadid
+              });
+              rec.setValue({
+                fieldId: 'custrecord_signed_nda_doc',
+                value: f_id2
+              });
+              rec.setValue({
+                fieldId: 'custrecord_zee_lead_stage',
+                value: 8
+              });
+              rec.setValue({
+                fieldId: 'custrecord_date_signed_nda_uploaded',
+                value: getDateToday()
+              });
+              rec.setValue({
+                fieldId: 'custrecord_date_michael_approved',
+                value: getDateToday()
+              });
+              rec.save();
+
+              var params = {
+                custscript_mmc_zee_lead_id: param_zeeleadid,
+                custscript_email_type: 'nda'
+              };
+              var reschedule = task.create({
+                taskType: task.TaskType.SCHEDULED_SCRIPT,
+                scriptId: 'customscript_ss_send_email_mmc',
+                deploymentId: 'customdeploy1',
+                params: params
+              });
+
+              log.debug({
+                title: 'rescheduling',
+                details: 'rescheduling'
+              });
+
+              reschedule.submit();
+
+            }
+
+          }
         }
+
+
 
         redirect.toSuitelet({
           scriptId: 'customscript_sl2_zee_new_leads_list',
@@ -1026,7 +1040,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
         searchZeeAgreements.filters.push(new_filter);
 
-        searchZeeAgreements.run().each(function(
+        searchZeeAgreements.run().each(function (
           searchZeeAgreementsResultSet) {
           zeeAgreementId = searchZeeAgreementsResultSet.getValue(
             'internalid');
@@ -1567,7 +1581,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         '"><div class="input-group"><span class="input-group-addon" id="zeeListedSale_text">TERRITORIES AVAILABLE </span><select id="zeeListedSale" class="form-control ui fluid search dropdown zeeListedSale" data-old="" json="" style="font-size: 12px" ' +
         readonlyField + '><option value=0></option>';
 
-      resultSetZeesListed.each(function(searchResultZeesListed) {
+      resultSetZeesListed.each(function (searchResultZeesListed) {
         zeeId = searchResultZeesListed.getValue('internalid');
         franchiseeName = searchResultZeesListed.getValue('companyname');
 
@@ -2008,7 +2022,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           id: 'customsearch_active_employees'
         });
         var employeeResultSet = employeeSearch.run();
-        employeeResultSet.each(function(employeeResult) {
+        employeeResultSet.each(function (employeeResult) {
           var employee_id = employeeResult.id;
           var employee_firstname = employeeResult.getValue('firstname');
           var employee_lastname = employeeResult.getValue('lastname');

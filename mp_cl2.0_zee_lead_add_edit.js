@@ -9,9 +9,9 @@
 
 
 define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
-    'N/error', 'N/url', 'N/format', 'N/currentRecord', 'N/https'
-  ],
-  function(email, runtime, search, record, http, log, error, url, format,
+  'N/error', 'N/url', 'N/format', 'N/currentRecord', 'N/https'
+],
+  function (email, runtime, search, record, http, log, error, url, format,
     currentRecord, https) {
     var zee = '0';
     var userId = 0;
@@ -78,8 +78,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
     function initAutocomplete() {
       console.log('inside initAutocomplete')
-        // Create the autocomplete object, restricting the search to geographical location types.
-        // types is empty to get all places, not only address. Previously it was types: ['geocode']
+      // Create the autocomplete object, restricting the search to geographical location types.
+      // types is empty to get all places, not only address. Previously it was types: ['geocode']
       var options = {
         types: [],
         componentRestrictions: {
@@ -135,7 +135,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         console.log(place.address_components[i])
 
         if (place.address_components[i].types[0] == 'street_number' || place.address_components[
-            i].types[0] == 'route') {
+          i].types[0] == 'route') {
           addressComponent += place.address_components[i]['short_name'] + " ";
           $('#ndaaddress2').val(addressComponent);
         }
@@ -154,7 +154,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
     function fillInAddress() {
       console.log('Inside fill Address ')
-        // Get the place details from the autocomplete object.
+      // Get the place details from the autocomplete object.
       var place = autocomplete.getPlace();
 
       // Get each component of the address from the place details and fill the corresponding field on the form.
@@ -165,7 +165,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         console.log(place.address_components[i])
 
         if (place.address_components[i].types[0] == 'street_number' || place.address_components[
-            i].types[0] == 'route') {
+          i].types[0] == 'route') {
           addressComponent += place.address_components[i]['short_name'] + " ";
           $('#address2').val(addressComponent);
         }
@@ -207,11 +207,11 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       $('.ui.dropdown').dropdown();
 
       //Google Dropdown for the address2 field
-      $(document).on('focus', '#address2', function(event) {
+      $(document).on('focus', '#address2', function (event) {
         // alert('onfocus')
         initAutocomplete();
       });
-      $(document).on('focus', '#ndaaddress2', function(event) {
+      $(document).on('focus', '#ndaaddress2', function (event) {
         // alert('onfocus')
         initAutocompleteNDA();
       });
@@ -221,19 +221,19 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       /**
        * Close the Alert box on click
        */
-      $(document).on('click', '#alert .close', function(e) {
+      $(document).on('click', '#alert .close', function (e) {
         $(this).parent().hide();
       });
 
       afterLoad();
 
-      $(document).on("click", '#backButton', function(e) {
+      $(document).on("click", '#backButton', function (e) {
         var url = baseURL +
           '/app/site/hosting/scriptlet.nl?script=1409&deploy=1'
         window.location.href = url;
       });
 
-      $(document).on("click", "#sendEOI", function(e) {
+      $(document).on("click", "#sendEOI", function (e) {
 
         firstName = $('#firstName').val();
         lastName = $('#lastName').val();
@@ -339,7 +339,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       });
 
-      $(document).on("click", "#sendIM", function(e) {
+      $(document).on("click", "#sendIM", function (e) {
 
         firstName = $('#firstName').val();
         lastName = $('#lastName').val();
@@ -388,7 +388,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       });
 
-      $(document).on("click", "#sendNDA", function(e) {
+      $(document).on("click", "#sendNDA", function (e) {
 
         firstName = $('#firstName').val();
         lastName = $('#lastName').val();
@@ -469,7 +469,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       });
 
-      $(document).on("click", "#saveZeeLead", function(e) {
+      $(document).on("click", "#saveZeeLead", function (e) {
 
         firstName = $('#firstName').val();
         lastName = $('#lastName').val();
@@ -504,12 +504,18 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         ndapostcode = $('#ndapostcode').val();
 
         if (validate()) {
+
+          myRecord.setValue({
+            fieldId: 'custpage_save_button',
+            value: true
+          })
+
           document.getElementById('submitter').click();
         }
 
       });
 
-      $('#salePrice').focusout(function(e) {
+      $('#salePrice').focusout(function (e) {
         salePrice = $('#salePrice').val()
         incGST = $('#incGST').val()
 
@@ -524,7 +530,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       });
 
 
-      $(document).on("change", "#zeeListedSale", function(e) {
+      $(document).on("change", "#zeeListedSale", function (e) {
         selectedZees = $(this).val();
         for (var i = 0; i < selectedZees.length; i++) {
 
@@ -598,7 +604,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       });
 
-      $(document).on("change", "#incGST", function(e) {
+      $(document).on("change", "#incGST", function (e) {
         salePrice = $('#salePrice').val()
         incGST = $('#incGST').val()
 
@@ -612,7 +618,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         $('#totalPrice').val(totalSalePrice)
       });
 
-      $(document).on("change", "#franchiseeTypeOfOwner", function(e) {
+      $(document).on("change", "#franchiseeTypeOfOwner", function (e) {
         franchiseeTypeOfOwner = $('#franchiseeTypeOfOwner').val();
 
         if (franchiseeTypeOfOwner == 2 || franchiseeTypeOfOwner == 3) {
@@ -652,7 +658,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       });
 
-      $(document).on('click', '.stageNewLead', function(e) {
+      $(document).on('click', '.stageNewLead', function (e) {
         zeeleadid = $(this).attr("data-id");
 
         firstName = $('#firstName').val();
@@ -717,7 +723,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       });
 
-      $(document).on('click', '.stageQualified', function(e) {
+      $(document).on('click', '.stageQualified', function (e) {
         zeeleadid = $(this).attr("data-id");
 
         firstName = $('#firstName').val();
@@ -790,7 +796,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       });
 
-      $(document).on('click', '.stageOpportunity', function(e) {
+      $(document).on('click', '.stageOpportunity', function (e) {
         zeeleadid = $(this).attr("data-id");
 
         firstName = $('#firstName').val();
@@ -905,7 +911,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       });
 
-      $(document).on('click', '.eoiApprovedMichael', function(e) {
+      $(document).on('click', '.eoiApprovedMichael', function (e) {
         zeeleadid = $(this).attr("data-id");
 
         firstName = $('#firstName').val();
@@ -977,7 +983,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       });
 
-      $(document).on('click', '.eoiApprovedChris', function(e) {
+      $(document).on('click', '.eoiApprovedChris', function (e) {
         zeeleadid = $(this).attr("data-id");
 
         firstName = $('#firstName').val();
@@ -1049,7 +1055,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       });
 
-      $(document).on('click', '#uploadEOI', function(e) {
+      $(document).on('click', '#uploadEOI', function (e) {
         zeeleadid = $(this).attr("data-id");
 
         firstName = $('#firstName').val();
@@ -1127,7 +1133,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       });
 
 
-      $(document).on('click', '#uploadNDA', function(e) {
+      $(document).on('click', '#uploadNDA', function (e) {
         zeeleadid = $(this).attr("data-id");
 
         firstName = $('#firstName').val();
@@ -1170,7 +1176,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         }
       });
 
-      $(document).on('click', '.salesMeeting', function(e) {
+      $(document).on('click', '.salesMeeting', function (e) {
         zeeleadid = $(this).attr("data-id");
 
         firstName = $('#firstName').val();
@@ -1230,7 +1236,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         }
       });
 
-      $(document).on('click', '.financeMeeting', function(e) {
+      $(document).on('click', '.financeMeeting', function (e) {
         zeeleadid = $(this).attr("data-id");
 
         firstName = $('#firstName').val();
@@ -1290,7 +1296,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         }
       });
 
-      $(document).on('click', '.interview', function(e) {
+      $(document).on('click', '.interview', function (e) {
         zeeleadid = $(this).attr("data-id");
 
         firstName = $('#firstName').val();
@@ -1386,7 +1392,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         }
       });
 
-      $(document).on('click', '.leadWon', function(e) {
+      $(document).on('click', '.leadWon', function (e) {
         zeeleadid = $(this).attr("data-id");
 
         firstName = $('#firstName').val();
@@ -1506,7 +1512,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         }
       });
 
-      $(document).on('click', '.financialsStep', function(e) {
+      $(document).on('click', '.financialsStep', function (e) {
         zeeleadid = $(this).attr("data-id");
 
         firstName = $('#firstName').val();
@@ -1599,13 +1605,13 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
       });
 
-      $('#listforSale').click(function() {
+      $('#listforSale').click(function () {
         var url = baseURL +
           '/app/site/hosting/scriptlet.nl?script=1399&deploy=1';
         window.location.href = url;
       });
 
-      $('#editPresales').click(function() {
+      $('#editPresales').click(function () {
         var zeeid = $(this).attr("data-id");
         var url = baseURL +
           '/app/site/hosting/scriptlet.nl?script=1430&deploy=1&zeeid=' +
@@ -1613,24 +1619,24 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         window.location.href = url;
       });
 
-      $("#zeeLeadLost").click(function() {
-          zeeleadid = $(this).attr("data-id");
-          $('.input-group').removeClass('input-group');
-          $('.reason_input_group').addClass('input-group');
-          console.log('inside modal')
-          console.log(zeeleadid)
-          $("#zeeleadid").val(zeeleadid);
+      $("#zeeLeadLost").click(function () {
+        zeeleadid = $(this).attr("data-id");
+        $('.input-group').removeClass('input-group');
+        $('.reason_input_group').addClass('input-group');
+        console.log('inside modal')
+        console.log(zeeleadid)
+        $("#zeeleadid").val(zeeleadid);
 
-          $("#myModal").show();
+        $("#myModal").show();
 
 
-        })
-        //On click of close icon in the modal
-      $('.close').click(function() {
+      })
+      //On click of close icon in the modal
+      $('.close').click(function () {
         location.reload();
       });
       //Update the customer record on click of the button in the modal
-      $('#leadLost').click(function() {
+      $('#leadLost').click(function () {
         zeeleadid = $("#zeeleadid").val();
 
         firstName = $('#firstName').val();
@@ -1704,7 +1710,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         window.location.href = url;
       });
 
-      $('#zeeNoTerritory').click(function() {
+      $('#zeeNoTerritory').click(function () {
         zeeleadid = $(this).attr("data-id");
 
         firstName = $('#firstName').val();
@@ -1779,7 +1785,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         window.location.href = url;
       });
 
-      $('#opportunityDenied').click(function() {
+      $('#opportunityDenied').click(function () {
         zeeleadid = $(this).attr("data-id");
 
         firstName = $('#firstName').val();
@@ -1868,7 +1874,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
       $('#alert').show();
       document.body.scrollTop = 0; // For Safari
       document.documentElement.scrollTop = 0;
-      setTimeout(function() {
+      setTimeout(function () {
         $('#alert').hide();
       }, 5000);
     }
