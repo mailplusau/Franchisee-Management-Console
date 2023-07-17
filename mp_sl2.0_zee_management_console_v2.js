@@ -38,6 +38,15 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     var franchiseeSendleSecondaryLocations = '';
     var franchiseeListedForSale = '';
 
+
+    var franchiseeStdSuburbs = "";
+    var franchiseeExpressSuburbs = "";
+    var franchiseePartnershipSuburbs = "";
+
+    var mpexLodgementPointsString = null;
+    var mpstdLodgementPointsString = null;
+    var sendleexpLodgementPointsString = null;
+
     var color_array = ['blue', 'red', 'green', 'orange', 'black'];
 
     function onRequest(context) {
@@ -65,7 +74,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
         //INITIALIZATION OF JQUERY AND BOOTSTRAP
         var inlineHtml =
-          '<meta name="viewport" content="width=device-width, initial-scale=1.0"><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><script src="//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js"></script><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA92XGDo8rx11izPYT7z2L-YPMMJ6Ih1s0&callback=initMap&libraries=places"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/OverlappingMarkerSpiderfier/1.0.3/oms.min.js"></script></script><link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" /><script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script><link type="text/css" rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css"><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&amp;c=1048144&amp;h=9ee6accfd476c9cae718&amp;_xt=.css"><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&amp;c=1048144&amp;h=ef2cda20731d146b5e98&amp;_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&amp;c=1048144&amp;h=a0ef6ac4e28f91203dfe&amp;_xt=.css"><script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script><script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-resource.min.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&amp;c=1048144&amp;h=a0ef6ac4e28f91203dfe&amp;_xt=.css"><style>.mandatory{color:red;}.clearfix:after {clear: both;content: "";display: block;height: 0;}.wrapper {vertical-align: middle;}.nav {margin-top: 40px;}.pull-right {float: right;}a, a:active {color: #212121;text-decoration: none;}a:hover {color: #999;}.arrow-steps .step {font-size: 14px;text-align: center;color: #fff;cursor: default;margin: 0 3px;padding: 10px 10px 10px 30px;float: left;position: relative;background-color: #379e8f;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none; transition: background-color 0.2s ease;}.arrow-steps .step:after,.arrow-steps .step:before {content: " ";position: absolute;top: 0;right: -17px;width: 0;height: 40px;border-top: 19px solid transparent;border-bottom: 17px solid transparent;border-left: 17px solid #379e8f;	z-index: 2;transition: border-color 0.2s ease;}.arrow-steps .step:before {right: auto;left: 0;border-left: 17px solid #fff;	z-index: 0;}.arrow-steps .step:first-child:before {border: none;}.arrow-steps .step:first-child {border-top-left-radius: 4px;border-bottom-left-radius: 4px;}.arrow-steps .step span {position: relative;}.arrow-steps .step span:before {opacity: 0;content: "✔";position: absolute;top: -2px;left: -20px;color: #06ac77;}.arrow-steps .step.done span:before {opacity: 1;-webkit-transition: opacity 0.3s ease 0.5s;-moz-transition: opacity 0.3s ease 0.5s;-ms-transition: opacity 0.3s ease 0.5s;transition: opacity 0.3s ease 0.5s;}.arrow-steps .step.current {color: #103d39;font-weight: bold;background-color: #fbea51;}.arrow-steps .step.current:after {border-left: 17px solid #fbea51;	}.nav > li.active > a, .nav > li.active > a:focus, .nav > li.active > a:hover { background-color: #379E8F; color: #fff }.nav > li > a, .nav > li > a:focus, .nav > li > a:hover { margin-left: 5px; margin-right: 5px; border: 2px solid #379E8F; color: #379E8F; }</style>';
+          '<meta name="viewport" content="width=device-width, initial-scale=1.0"><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><script src="//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js"></script><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA92XGDo8rx11izPYT7z2L-YPMMJ6Ih1s0&callback=initMap&libraries=places"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/OverlappingMarkerSpiderfier/1.0.3/oms.min.js"></script></script><link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" /><script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script><link type="text/css" rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css"><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&amp;c=1048144&amp;h=9ee6accfd476c9cae718&amp;_xt=.css"><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&amp;c=1048144&amp;h=ef2cda20731d146b5e98&amp;_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&amp;c=1048144&amp;h=a0ef6ac4e28f91203dfe&amp;_xt=.css"><script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script><script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-resource.min.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&amp;c=1048144&amp;h=a0ef6ac4e28f91203dfe&amp;_xt=.css"><style>.mandatory{color:red;}.clearfix:after {clear: both;content: "";display: block;height: 0;}.wrapper {vertical-align: middle;}.nav {margin-top: 40px;}.pull-right {float: right;}a, a:active {color: #212121;text-decoration: none;}a:hover {color: #999;}.arrow-steps .step {font-size: 14px;text-align: center;color: #fff;cursor: default;margin: 0 3px;padding: 10px 10px 10px 30px;float: left;position: relative;background-color: #095c7b;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none; transition: background-color 0.2s ease;}.arrow-steps .step:after,.arrow-steps .step:before {content: " ";position: absolute;top: 0;right: -17px;width: 0;height: 40px;border-top: 19px solid transparent;border-bottom: 17px solid transparent;border-left: 17px solid #095c7b;	z-index: 2;transition: border-color 0.2s ease;}.arrow-steps .step:before {right: auto;left: 0;border-left: 17px solid #fff;	z-index: 0;}.arrow-steps .step:first-child:before {border: none;}.arrow-steps .step:first-child {border-top-left-radius: 4px;border-bottom-left-radius: 4px;}.arrow-steps .step span {position: relative;}.arrow-steps .step span:before {opacity: 0;content: "✔";position: absolute;top: -2px;left: -20px;color: #095c7b;}.arrow-steps .step.done span:before {opacity: 1;-webkit-transition: opacity 0.3s ease 0.5s;-moz-transition: opacity 0.3s ease 0.5s;-ms-transition: opacity 0.3s ease 0.5s;transition: opacity 0.3s ease 0.5s;}.arrow-steps .step.current {color: #103d39;font-weight: bold;background-color: #fbea51;}.arrow-steps .step.current:after {border-left: 17px solid #fbea51;	}.nav > li.active > a, .nav > li.active > a:focus, .nav > li.active > a:hover { background-color: #095c7b; color: #fff }.nav > li > a, .nav > li > a:focus, .nav > li > a:hover { margin-left: 5px; margin-right: 5px; border: 2px solid #095c7b; color: #095c7b; }</style>';
 
         //ERROR SECTION
         inlineHtml +=
@@ -1452,8 +1461,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '</div>';
 
       inlineHtml += '<div role="tabpanel" class="tab-pane " id="tollMPEX">';
-      inlineHtml += franchiseeTOLLMPEX()
-      inlineHtml += franchiseeAdhoc()
+      inlineHtml += franchiseeTOLLMPEX(zee, resultSetOperators)
+      inlineHtml += franchiseeStd(zee, resultSetOperators)
+      inlineHtml += franchiseeAdhoc(zee, resultSetOperators)
       inlineHtml += '</div>';
 
       //BREACH NOTICE & TERMINATION ONLY SEEN BY HEAD OFFICE USERS
@@ -1583,12 +1593,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           'custentity__toll_pickup_dx_no');
         franchiseeTOLLLodgementDX = searchResultZees.getText(
           'custentity_toll_lodge_dx_no');
-        franchiseeSendlePrimaryLocations = searchResultZees.getText(
-          'custentity_sendle_hubbed_locations');
-        franchiseeLastMileLocations = searchResultZees.getText(
-          'custentity_lastmile_suburb');
-        franchiseeSendleSecondaryLocations = searchResultZees.getText(
-          'custentity_sendle_hubbed_location_sec');
+        franchiseeExpressSuburbs = searchResultZees.getValue(
+          'custentity_zee_territory');
+        franchiseeStdSuburbs = searchResultZees.getValue(
+          'custentity_network_matrix_main');
+        franchiseePartnershipSuburbs = searchResultZees.getValue(
+          'custentity_sendle_recovery_suburbs_main');
         franchiseeTypeOfOwner = searchResultZees.getValue(
           'custentity_type_of_owner');
         vaccinationStatus = searchResultZees.getValue(
@@ -1605,6 +1615,14 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           'custentity_kin_relationship');
         franchiseeListedForSale = searchResultZees.getValue(
           'custentity_listed_for_sale');
+
+        mpexLodgementPointsString = searchResultZees.getValue(
+          'custentity_mpex_lodgement_point');
+        mpstdLodgementPointsString = searchResultZees.getValue(
+          'custentity_mp_std_lodgement_point');
+        sendleexpLodgementPointsString = searchResultZees.getValue(
+          'custentity_sendle_exp_lodgement_point');
+
 
         return true;
       });
@@ -1815,7 +1833,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml +=
         '<table id="zeeAgreementsTable" class="table table-responsive table-striped zeeAgreementsTable tablesorter" style="width: 100%;border: 1px solid #103d39;">';
       inlineHtml +=
-        '<thead style="color: white;background-color: #379E8F;font-weight: bold;">';
+        '<thead style="color: white;background-color: #095c7b;font-weight: bold;">';
       inlineHtml += '<tr class="text-center">';
       //ABILITY TO ADD/EDIT ONLY FOR HEADOFFICE USERS
       if (role != 1000) {
@@ -1896,30 +1914,254 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
      * RETURNS : INLINEHTML
      *   NOTES :
      */
-    function franchiseeTOLLMPEX() {
+    function franchiseeTOLLMPEX(zee, resultSetOperators) {
       var inlineHtml =
         '<div class="form-group container">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #103D39;">TOLL - MPEX</span></h4></div>';
+        '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #103D39;">MP EXPRESS - TOLL</span></h4></div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      // inlineHtml += '<div class="form-group container">';
+      // inlineHtml += '<div class="row">';
+      // inlineHtml +=
+      //   '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">TOLL Account Number</span><input id="franchiseeTOLLAccountNumber" class="form-control franchiseeTOLLAccountNumber" value="' +
+      //   franchiseeTOLLAccountNumber + '" readonly/></div></div>';
+      // inlineHtml += '</div>';
+      // inlineHtml += '</div>';
+      // inlineHtml += '<div class="form-group container">';
+      // inlineHtml += '<div class="row">';
+      // inlineHtml +=
+      //   '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">TOLL Pickup DX </span><input id="franchiseeTOLLPickupDX" class="form-control franchiseeTOLLPickupDX" readonly value="' +
+      //   franchiseeTOLLPickupDX + '" /></div></div>';
+      // inlineHtml +=
+      //   '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">TOLL Lodgement DX </span><input id="franchiseeTOLLLodgementDX" class="form-control franchiseeTOLLLodgementDX" readonly value="' +
+      //   franchiseeTOLLLodgementDX + '" /></div></div>';
+      // inlineHtml += '</div>';
+      // inlineHtml += '</div>';
+
+      inlineHtml += '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">Express Suburbs</span><textarea rows="10" id="franchiseeExpressSuburbs" class="form-control franchiseeExpressSuburbs" value="' +
+        franchiseeExpressSuburbs + '" readonly>' + franchiseeExpressSuburbs + '</textarea></div></div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+      inlineHtml += '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-12 name_section">';
+      inlineHtml +=
+        '<div class="table-responsive"><table border="1" cellpadding="10" id="table_ncl" cellspacing="0" class="table text-centered" style="width: 100%;"><thead style="color: white;background-color: #095c7b;"><tr><th style="text-align: center;"><b>NAME</b></th><th style="text-align: center;"><b>ADDRESS</b></th><th style="text-align: center;"><b>TYPE</b></th><th style="text-align: center;"><b>PRIMARY OPERATOR</b></th></tr></thead><tbody><tr></tr>';
+      if (!isNullorEmpty(mpexLodgementPointsString)) {
+        mpexLodgementPointsJSON = JSON.parse(mpexLodgementPointsString);
+        var data = mpexLodgementPointsJSON.data;
+
+
+        for (var x = 0; x < data.length; x++) {
+          inlineHtml += '<tr>';
+          // inlineHtml +=
+          //   '<td style="text-align: center;"><button class="btn btn-danger btn-sm remove_class glyphicon glyphicon-trash" type="button" data-toggle="tooltip" data-placement="right" title="Delete" data-id="' + data[x].ncl_id + '" ></button><input type="text" class="ncl_id" value="' + data[x].ncl_id + '" hidden/></td>';
+          // inlineHtml +=
+          //   '<td><input type="text" class="form-control" value="MailPlus Express" readonly/></td>'
+          inlineHtml += '<td class="col-xs-2"><input type="text" class="form-control tableNCLName" value="' +
+            data[x].ncl_name + '" readonly /></td><td class="col-xs-4"><input type="text" class="form-control tableNCLAddress" value="' + data[x].ncl_address +
+            '" readonly /></td><td class="col-xs-1"><input type="text" class="form-control tableNCLType" value="' + data[x].ncl_type +
+            '" readonly /></td>';
+          inlineHtml +=
+            '<td><select class="form-control tableOpSelect" data-zeeid="' + zee + '">';
+          // var operatorSearch = search.load({
+          //   id: 'customsearch_rta_operator_load',
+          //   type: 'customrecord_operator'
+          // });
+
+          // if (!isNullorEmpty(zee)) {
+          //   operatorSearch.filters.push(search.createFilter({
+          //     name: 'custrecord_operator_franchisee2',
+          //     join: null,
+          //     operator: search.Operator.ANYOF,
+          //     values: zee_array[0]
+          //   }));
+          // }
+
+          // var resultSetOperatorSearch = operatorSearch.run();
+
+          resultSetOperators.each(function (searchResultOperators) {
+
+            var operator_id = searchResultOperators.getValue('internalid');
+            var operator_name = searchResultOperators.getValue('name');
+
+            if (data[x].op_primary_id == operator_id) {
+              inlineHtml += '<option value="' + operator_id +
+                '" selected="selected">' + operator_name + '</option>';
+            } else {
+
+              inlineHtml += '<option value="' + operator_id + '">' +
+                operator_name + '</option>';
+            }
+
+            return true;
+          });
+
+
+          // var operatorSearch = nlapiLoadSearch('customrecord_operator',
+          //   'customsearch_rta_operator_load');
+          // var newFilters = new Array();
+          // newFilters[newFilters.length] = new nlobjSearchFilter(
+          //   'custrecord_operator_franchisee2', null, 'anyof', zee_array[0]);
+          // operatorSearch.addFilters(newFilters);
+          // var operatorSet = operatorSearch.runSearch();
+
+          // operatorSet.forEachResult(function (operatorResult) {
+          //   var operator_id = operatorResult.getValue("internalid", null,
+          //     "GROUP");
+          //   var operator_name = operatorResult.getValue("name", null, "GROUP");
+
+          //   if (data[x].op_primary_id == operator_id) {
+          //     inlineQty += '<option value="' + operator_id +
+          //       '" selected="selected">' + operator_name + '</option>';
+          //   } else {
+
+          //     inlineQty += '<option value="' + operator_id + '">' +
+          //       operator_name + '</option>';
+          //   }
+
+          //   return true;
+          // });
+          if (data[x].op_primary_name == 'All') {
+            inlineHtml += '<option value="0" selected="selected">All</option>';
+          } else {
+            inlineHtml += '<option value="0">All</option>';
+          }
+          inlineHtml += '</select></td>';
+
+          inlineHtml += '</tr>';
+        }
+      }
+      inlineHtml += '</tbody></table></div></div>';
+      // inlineHtml += '</div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      return inlineHtml;
+    }
+
+    /*
+     * PURPOSE : MP STANDARD RELATED DATA.
+     *  PARAMS :
+     * RETURNS : INLINEHTML
+     *   NOTES :
+     */
+    function franchiseeStd(zee, resultSetOperators) {
+      var inlineHtml =
+        '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #103D39;">MP STANDARD - COURIER PLEASE / ARAMEX</span></h4></div>';
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
       inlineHtml += '<div class="form-group container">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">TOLL Account Number</span><input id="franchiseeTOLLAccountNumber" class="form-control franchiseeTOLLAccountNumber" value="' +
-        franchiseeTOLLAccountNumber + '" readonly/></div></div>';
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">Standard Suburbs</span><textarea rows="10" id="franchiseeStdSuburbs" class="form-control franchiseeStdSuburbs" value="' +
+        franchiseeStdSuburbs + '" readonly>' + franchiseeStdSuburbs + '</textarea></div></div>';
       inlineHtml += '</div>';
       inlineHtml += '</div>';
       inlineHtml += '<div class="form-group container">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">TOLL Pickup DX </span><input id="franchiseeTOLLPickupDX" class="form-control franchiseeTOLLPickupDX" readonly value="' +
-        franchiseeTOLLPickupDX + '" /></div></div>';
+        '<div class="col-xs-12 name_section">';
       inlineHtml +=
-        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">TOLL Lodgement DX </span><input id="franchiseeTOLLLodgementDX" class="form-control franchiseeTOLLLodgementDX" readonly value="' +
-        franchiseeTOLLLodgementDX + '" /></div></div>';
+        '<div class="table-responsive"><table border="1" cellpadding="10" id="table_ncl" cellspacing="0" class="table text-centered" style="width: 100%;"><thead style="color: white;background-color: #095c7b;"><tr><th style="text-align: center;"><b>NAME</b></th><th style="text-align: center;"><b>ADDRESS</b></th><th style="text-align: center;"><b>TYPE</b></th><th style="text-align: center;"><b>PRIMARY OPERATOR</b></th></tr></thead><tbody><tr></tr>';
+      if (!isNullorEmpty(mpstdLodgementPointsString)) {
+        mpstdLodgementPointsJSON = JSON.parse(mpstdLodgementPointsString);
+        var data = mpstdLodgementPointsJSON.data;
+
+
+        for (var x = 0; x < data.length; x++) {
+          inlineHtml += '<tr>';
+          // inlineHtml +=
+          //   '<td style="text-align: center;"><button class="btn btn-danger btn-sm remove_class glyphicon glyphicon-trash" type="button" data-toggle="tooltip" data-placement="right" title="Delete" data-id="' + data[x].ncl_id + '" ></button><input type="text" class="ncl_id" value="' + data[x].ncl_id + '" hidden/></td>';
+          // inlineHtml +=
+          //   '<td><input type="text" class="form-control" value="MailPlus Standard" readonly/></td>'
+          inlineHtml += '<td class="col-xs-2"><input type="text" class="form-control tableNCLName" value="' +
+            data[x].ncl_name + '" readonly /></td><td class="col-xs-4"><input type="text" class="form-control tableNCLAddress" value="' + data[x].ncl_address +
+            '" readonly /></td><td class="col-xs-1"><input type="text" class="form-control tableNCLType" value="' + data[x].ncl_type +
+            '" readonly /></td>';
+          inlineHtml +=
+            '<td><select class="form-control tableOpSelect" data-zeeid="' + zee + '">';
+          // var operatorSearch = search.load({
+          //   id: 'customsearch_rta_operator_load',
+          //   type: 'customrecord_operator'
+          // });
+
+          // if (!isNullorEmpty(zee)) {
+          //   operatorSearch.filters.push(search.createFilter({
+          //     name: 'custrecord_operator_franchisee2',
+          //     join: null,
+          //     operator: search.Operator.ANYOF,
+          //     values: zee_array[0]
+          //   }));
+          // }
+
+          // var resultSetOperatorSearch = operatorSearch.run();
+
+          resultSetOperators.each(function (searchResultOperators) {
+
+            var operator_id = searchResultOperators.getValue('internalid');
+            var operator_name = searchResultOperators.getValue('name');
+
+            if (data[x].op_primary_id == operator_id) {
+              inlineHtml += '<option value="' + operator_id +
+                '" selected="selected">' + operator_name + '</option>';
+            } else {
+
+              inlineHtml += '<option value="' + operator_id + '">' +
+                operator_name + '</option>';
+            }
+
+            return true;
+          });
+
+
+          // var operatorSearch = nlapiLoadSearch('customrecord_operator',
+          //   'customsearch_rta_operator_load');
+          // var newFilters = new Array();
+          // newFilters[newFilters.length] = new nlobjSearchFilter(
+          //   'custrecord_operator_franchisee2', null, 'anyof', zee_array[0]);
+          // operatorSearch.addFilters(newFilters);
+          // var operatorSet = operatorSearch.runSearch();
+
+          // operatorSet.forEachResult(function (operatorResult) {
+          //   var operator_id = operatorResult.getValue("internalid", null,
+          //     "GROUP");
+          //   var operator_name = operatorResult.getValue("name", null, "GROUP");
+
+          //   if (data[x].op_primary_id == operator_id) {
+          //     inlineQty += '<option value="' + operator_id +
+          //       '" selected="selected">' + operator_name + '</option>';
+          //   } else {
+
+          //     inlineQty += '<option value="' + operator_id + '">' +
+          //       operator_name + '</option>';
+          //   }
+
+          //   return true;
+          // });
+          if (data[x].op_primary_name == 'All') {
+            inlineHtml += '<option value="0" selected="selected">All</option>';
+          } else {
+            inlineHtml += '<option value="0">All</option>';
+          }
+          inlineHtml += '</select></td>';
+
+          inlineHtml += '</tr>';
+        }
+      }
+      inlineHtml += '</tbody></table></div></div>';
+      // inlineHtml += '</div>';
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
@@ -2129,39 +2371,133 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
      * RETURNS : INLINEHTML
      *   NOTES :
      */
-    function franchiseeAdhoc() {
+    function franchiseeAdhoc(zee, resultSetOperators) {
       var inlineHtml =
         '<div class="form-group container">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #103D39;">ADHOC</span></h4></div>';
+        '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #103D39;">PARTNERSHIP</span></h4></div>';
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
       inlineHtml += '<div class="form-group container">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">First Mile Primary Location</span><input id="franchiseeSendlePrimaryLocations" class="form-control franchiseeSendlePrimaryLocations" value="' +
-        franchiseeSendlePrimaryLocations + '" readonly/></div></div>';
-      inlineHtml +=
-        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">First Mile Secondary Location</span><input id="franchiseeSendleSecondaryLocations" class="form-control franchiseeSendleSecondaryLocations" value="' +
-        franchiseeSendleSecondaryLocations + '" readonly/></div></div>';
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">Partnership Suburbs</span><textarea rows="10" id="franchiseeSendlePrimaryLocations" class="form-control franchiseeSendlePrimaryLocations" value="' +
+        franchiseePartnershipSuburbs + '" readonly>' + franchiseePartnershipSuburbs + '</textarea></div></div>';
+
       inlineHtml += '</div>';
       inlineHtml += '</div>';
-
-      //ABILITY TO ADD/EDIT FIRST MILE SUBURBS
-      inlineHtml += franchiseeAddEditFirstMile()
-
       inlineHtml += '<div class="form-group container">';
       inlineHtml += '<div class="row">';
       inlineHtml +=
-        '<div class="col-xs-12 name_section"><div class="input-group"><span class="input-group-addon">Last Mile Primary Location</span><input id="franchiseeLastMileLocations" class="form-control franchiseeLastMileLocations" value="' +
-        franchiseeLastMileLocations + '" readonly/></div></div>';
+        '<div class="col-xs-12 name_section">';
+      inlineHtml +=
+        '<div class="table-responsive"><table border="1" cellpadding="10" id="table_ncl" cellspacing="0" class="table text-centered" style="width: 100%;"><thead style="color: white;background-color: #095c7b;"><tr><th style="text-align: center;"><b>NAME</b></th><th style="text-align: center;"><b>ADDRESS</b></th><th style="text-align: center;"><b>TYPE</b></th><th style="text-align: center;"><b>PRIMARY OPERATOR</b></th></tr></thead><tbody><tr></tr>';
+      if (!isNullorEmpty(sendleexpLodgementPointsString)) {
+        sendleexpLodgementPointsJSON = JSON.parse(sendleexpLodgementPointsString);
+        var data = sendleexpLodgementPointsJSON.data;
+
+
+        for (var x = 0; x < data.length; x++) {
+          inlineHtml += '<tr>';
+          // inlineHtml +=
+          //   '<td style="text-align: center;"><button class="btn btn-danger btn-sm remove_class glyphicon glyphicon-trash" type="button" data-toggle="tooltip" data-placement="right" title="Delete" data-id="' + data[x].ncl_id + '" ></button><input type="text" class="ncl_id" value="' + data[x].ncl_id + '" hidden/></td>';
+          // inlineHtml +=
+          //   '<td><input type="text" class="form-control" value="Sendle AU Express" readonly/></td>'
+          inlineHtml += '<td class=col-xs-2""><input type="text" class="form-control tableNCLName" value="' +
+            data[x].ncl_name + '" readonly /></td><td class="col-xs-4"><input type="text" class="form-control tableNCLAddress" value="' + data[x].ncl_address +
+            '" readonly /></td><td class="col-xs-1"><input type="text" class="form-control tableNCLType" value="' + data[x].ncl_type +
+            '" readonly /></td>';
+          inlineHtml +=
+            '<td><select class="form-control tableOpSelect" data-zeeid="' + zee + '">';
+
+          // var operatorSearch = search.load({
+          //   id: 'customsearch_rta_operator_load',
+          //   type: 'customrecord_operator'
+          // });
+
+          // if (!isNullorEmpty(zee)) {
+          //   operatorSearch.filters.push(search.createFilter({
+          //     name: 'custrecord_operator_franchisee2',
+          //     join: null,
+          //     operator: search.Operator.ANYOF,
+          //     values: zee_array[0]
+          //   }));
+          // }
+
+          // var resultSetOperatorSearch = operatorSearch.run();
+
+          resultSetOperators.each(function (searchResultOperators) {
+
+            var operator_id = searchResultOperators.getValue('internalid');
+            var operator_name = searchResultOperators.getValue('name');
+
+            if (data[x].op_primary_id == operator_id) {
+              inlineHtml += '<option value="' + operator_id +
+                '" selected="selected">' + operator_name + '</option>';
+            } else {
+
+              inlineHtml += '<option value="' + operator_id + '">' +
+                operator_name + '</option>';
+            }
+
+            return true;
+          });
+
+
+          // var operatorSearch = nlapiLoadSearch('customrecord_operator',
+          //   'customsearch_rta_operator_load');
+          // var newFilters = new Array();
+          // newFilters[newFilters.length] = new nlobjSearchFilter(
+          //   'custrecord_operator_franchisee2', null, 'anyof', zee_array[0]);
+          // operatorSearch.addFilters(newFilters);
+          // var operatorSet = operatorSearch.runSearch();
+
+          // operatorSet.forEachResult(function (operatorResult) {
+          //   var operator_id = operatorResult.getValue("internalid", null,
+          //     "GROUP");
+          //   var operator_name = operatorResult.getValue("name", null, "GROUP");
+
+          //   if (data[x].op_primary_id == operator_id) {
+          //     inlineQty += '<option value="' + operator_id +
+          //       '" selected="selected">' + operator_name + '</option>';
+          //   } else {
+
+          //     inlineQty += '<option value="' + operator_id + '">' +
+          //       operator_name + '</option>';
+          //   }
+
+          //   return true;
+          // });
+          if (data[x].op_primary_name == 'All') {
+            inlineHtml += '<option value="0" selected="selected">All</option>';
+          } else {
+            inlineHtml += '<option value="0">All</option>';
+          }
+          inlineHtml += '</select></td>';
+
+          inlineHtml += '</tr>';
+        }
+      }
+      inlineHtml += '</tbody></table></div></div>';
+      // inlineHtml += '</div>';
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
-      //BUTTON TO ADD/EDIT LAST MILE SUBURBS
-      inlineHtml += franchiseeAddEditLastMile()
+      // //ABILITY TO ADD/EDIT FIRST MILE SUBURBS
+      // inlineHtml += franchiseeAddEditFirstMile()
+
+      // inlineHtml += '<div class="form-group container">';
+      // inlineHtml += '<div class="row">';
+      // inlineHtml +=
+      //   '<div class="col-xs-12 name_section"><div class="input-group"><span class="input-group-addon">Last Mile Primary Location</span><input id="franchiseeLastMileLocations" class="form-control franchiseeLastMileLocations" value="' +
+      //   franchiseeLastMileLocations + '" readonly/></div></div>';
+      // inlineHtml += '</div>';
+      // inlineHtml += '</div>';
+
+      // //BUTTON TO ADD/EDIT LAST MILE SUBURBS
+      // inlineHtml += franchiseeAddEditLastMile()
 
       return inlineHtml;
     }
@@ -2459,7 +2795,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml +=
         '<table id="operatorTable" class="table table-responsive table-striped operatorTable tablesorter" style="width: 100%;border: 1px solid #103d39;">';
       inlineHtml +=
-        '<thead style="color: white;background-color: #379E8F;font-weight: bold;">';
+        '<thead style="color: white;background-color: #095c7b;font-weight: bold;">';
       inlineHtml += '<tr class="text-center">';
       inlineHtml += '<td>LINK</td>'
       inlineHtml += '<td>NAME</td>'
@@ -2467,8 +2803,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '<td>PHONE</td>'
       inlineHtml += '<td>ROLE</td>'
       inlineHtml += '<td>EMPLOYMENT TYPE</td>'
-      inlineHtml += '<td>CONTINGENCY DRIVER</td>'
       inlineHtml += '<td>PRIMARY DRIVER</td>'
+      inlineHtml += '<td>CONTINGENCY DRIVER</td>'
       inlineHtml += '<td>MOBILE DEVICE</td>'
       inlineHtml += '</tr>';
       inlineHtml += '</thead>';
@@ -2561,12 +2897,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml += '<td><input value="' + operatorEmploymentType +
           '" readonly class="form-control operatorEmploymentTypeTable"/><input id="" class="operatorEmploymentTypeID" value="' +
           operatorEmploymentTypeID + '" type="hidden"/></td>'
-        inlineHtml += '<td><input value="' + operatorDDS +
-          '" readonly class="form-control operatorDDSTable" /><input id="" class="operatorDDSID" value="' +
-          operatorDDSID + '" type="hidden"/></td>'
         inlineHtml += '<td><input value="' + operatorPrimaryOperator +
           '" readonly class="form-control operatorPrimaryOperatorTable" /><input id="" class="operatorPrimaryOperatorID" value="' +
           operatorPrimaryOperatorID + '" type="hidden"/></td>'
+        inlineHtml += '<td><input value="' + operatorDDS +
+          '" readonly class="form-control operatorDDSTable" /><input id="" class="operatorDDSID" value="' +
+          operatorDDSID + '" type="hidden"/></td>'
+
         inlineHtml += '<td><input value="' + operatorMobileDev +
           '" readonly class="form-control operatorMobileDevTable" /><input id="" class="operatorMobileDevID" value="' +
           operatorMobileDevID + '" type="hidden"/></td>'
@@ -2702,7 +3039,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml +=
         '<table id="fleetTable" class="table table-responsive table-striped fleetTable tablesorter" style="width: 100%;border: 1px solid #103d39;">';
       inlineHtml +=
-        '<thead style="color: white;background-color: #379E8F;font-weight: bold;">';
+        '<thead style="color: white;background-color: #095c7b;font-weight: bold;">';
       inlineHtml += '<tr class="text-center">';
       inlineHtml += '<td>LINK</td>'
       inlineHtml += '<td>REGISTRATION</td>'
@@ -2824,7 +3161,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineQty += '<div class="row">';
       inlineQty += '<div class="col-xs-12 address_div">';
       inlineQty +=
-        '<table border="0" cellpadding="15" id="address" class="table table-responsive table-striped address tablesorter" cellspacing="0" style="width: 100%;border: 1px solid #103d39;font-size: 12px;text-align: center;"><thead style="color: white;background-color: #379E8F;"><tr><th style="vertical-align: middle;text-align: center;">LINK</th><th style="vertical-align: middle;text-align: center;">ID</th><th style="vertical-align: middle;text-align: center;"><b>SUIT/LEVEL/UNIT </b></th><th style="vertical-align: middle;text-align: center;"><b>STREET NO. & NAME </b></th><th style="vertical-align: middle;text-align: center;"><b>SUBURB </b></th><th style="vertical-align: middle;text-align: center;"><b>STATE </b></th><th style="vertical-align: middle;text-align: center;"><b>POSTCODE </b></th></tr></thead><tbody>';
+        '<table border="0" cellpadding="15" id="address" class="table table-responsive table-striped address tablesorter" cellspacing="0" style="width: 100%;border: 1px solid #103d39;font-size: 12px;text-align: center;"><thead style="color: white;background-color: #095c7b;"><tr><th style="vertical-align: middle;text-align: center;">LINK</th><th style="vertical-align: middle;text-align: center;">ID</th><th style="vertical-align: middle;text-align: center;"><b>SUIT/LEVEL/UNIT </b></th><th style="vertical-align: middle;text-align: center;"><b>STREET NO. & NAME </b></th><th style="vertical-align: middle;text-align: center;"><b>SUBURB </b></th><th style="vertical-align: middle;text-align: center;"><b>STATE </b></th><th style="vertical-align: middle;text-align: center;"><b>POSTCODE </b></th></tr></thead><tbody>';
 
       if (!isNullorEmpty(resultSetAddresses)) {
         //console.log("addresses work");

@@ -9,10 +9,10 @@
 
 
 define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
-    'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
-    'N/error', 'N/url', 'N/format', 'N/currentRecord'
-  ],
-  function(moment, email, runtime, search, record, http, log, error, url,
+  'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
+  'N/error', 'N/url', 'N/format', 'N/currentRecord'
+],
+  function (moment, email, runtime, search, record, http, log, error, url,
     format,
     currentRecord) {
     var zee = 0;
@@ -89,7 +89,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         console.log(place.address_components[i])
 
         if (place.address_components[i].types[0] == 'street_number' || place.address_components[
-            i].types[0] == 'route') {
+          i].types[0] == 'route') {
           addressComponent += place.address_components[i]['short_name'] + " ";
           $('#address2').val(addressComponent);
         }
@@ -157,12 +157,12 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
             'https://1048144.app.netsuite.com/core/media/media.nl?id=3772482&c=1048144&h=4579935b386159057056&_xt=.js'
           );
           //map.data.loadGeoJson('https://1048144-sb3.app.netsuite.com/core/media/media.nl?id=3771516&c=1048144_SB3&h=afd38c5aed85b40b9cc0&_xt=.js');
-          map.data.addListener('mouseover', function(event) {
+          map.data.addListener('mouseover', function (event) {
             $('#zee_territory').val(event.feature.getProperty('Territory'));
             console.log('event.feature.getProperty(Name)', event.feature.getProperty(
               'Territory'));
           });
-          map.data.addListener('mouseout', function(event) {
+          map.data.addListener('mouseout', function (event) {
             $('#zee_territory').val('');
           });
         }
@@ -200,9 +200,9 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
             waypoint_json[y] = '[';
             waypoint_otherproperties[y] = '[';
             for (var x = (parseInt(each_request_length * y)); x < (parseInt(
-                each_request_length * (y + 1))); x++) {
+              each_request_length * (y + 1))); x++) {
               if (!isNullorEmpty(parsedStopFreq.data[x - y] && !isNullorEmpty(
-                  parsedStopFreq.data[x - y].address))) {
+                parsedStopFreq.data[x - y].address))) {
                 waypoint_json[y] += '{"location": "' + parsedStopFreq.data[x -
                   y].address + '",'; //x - y so that the first element of an array is the last element of the previous array
                 if (isNullorEmpty(parsedStopFreq.data[x - y].ncl)) {
@@ -283,7 +283,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       }
 
       //On click of the cancel button, hide all the fields
-      $(document).on('focus', '#cancel', function(event) {
+      $(document).on('focus', '#cancel', function (event) {
         $('.row_address1').addClass('hide')
         $('.city_state_postcode').addClass('hide')
         $('.saveaddress_section').addClass('hide')
@@ -297,7 +297,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       });
 
       //Google Dropdown for the address2 field
-      $(document).on('focus', '#address2', function(event) {
+      $(document).on('focus', '#address2', function (event) {
         // alert('onfocus')
         initAutocomplete();
       });
@@ -305,7 +305,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       afterLoad();
 
       //Reload the page with the selected franchisee from the dropdown
-      $(document).on("change", "#zee_dropdown", function(e) {
+      $(document).on("change", "#zee_dropdown", function (e) {
         var zee = $(this).val();
         var url = baseURL +
           "/app/site/hosting/scriptlet.nl?script=1399&deploy=1";
@@ -316,7 +316,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       });
 
       //Redirect page to the Franchise Service Network Page
-      $(document).on("click", "#serviceNetwork", function(e) {
+      $(document).on("click", "#serviceNetwork", function (e) {
         var zee = $('#zee_dropdown').val();
         var url = baseURL +
           "/app/site/hosting/scriptlet.nl?script=887&deploy=1";
@@ -327,7 +327,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       });
 
       //Redirect page to the New Zee Agreement Page
-      $(document).on("click", "#newAgreement", function(e) {
+      $(document).on("click", "#newAgreement", function (e) {
         var zee = $('#zee_dropdown').val();
         var url =
           'https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1297&deploy=1&custparam_params={%22new_agreement%22:true,%22zee_id%22:%22' +
@@ -338,7 +338,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
 
 
       //Redirect page to the First Mile Suburb Selection Page
-      $(document).on("click", "#firstMile", function(e) {
+      $(document).on("click", "#firstMile", function (e) {
         var zee = $('#zee_dropdown').val();
 
         var url =
@@ -348,7 +348,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       });
 
       //Redirect page to the Last Mile Suburb Selection Page
-      $(document).on("click", "#lastMile", function(e) {
+      $(document).on("click", "#lastMile", function (e) {
         var zee = $('#zee_dropdown').val();
         var url =
           'https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1401&deploy=1'
@@ -357,7 +357,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       });
 
       //On click of Add Address. unhide the fields
-      $(document).on("click", "#reviewaddress", function(e) {
+      $(document).on("click", "#reviewaddress", function (e) {
         $('.row_address1').removeClass('hide')
         $('.city_state_postcode').removeClass('hide')
         $('.saveaddress_section').removeClass('hide')
@@ -365,7 +365,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       });
 
       //On click of Add Operator, unhide the fields
-      $(document).on("click", "#addOperator", function(e) {
+      $(document).on("click", "#addOperator", function (e) {
         $('.row_operator_details').removeClass('hide');
         $('.row_operatorRole').removeClass('hide');
         $('.saveoperator_section').removeClass('hide');
@@ -373,7 +373,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       });
 
       //On click of Add Fleet, unhide the fields
-      $(document).on("click", "#addFleet", function(e) {
+      $(document).on("click", "#addFleet", function (e) {
 
         $('.row_fleet_details').removeClass('hide');
         $('.row_fleet_details2').removeClass('hide');
@@ -383,12 +383,12 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       });
 
       //On click of Edit Fleet, populate the fields with the values from the respective row that is being edited
-      $(document).on("click", ".editFleetTable", function(e) {
+      $(document).on("click", ".editFleetTable", function (e) {
 
         //get Operator Vehicle internal id
         var vehicleInternalId = $(this).closest('tr').find(
           '.editFleetTable').attr(
-          'data-id')
+            'data-id')
         console.log(id)
         $('#vehicleInternalId').val(vehicleInternalId)
 
@@ -441,7 +441,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       });
 
       //On click of Edit Address, populate the fields with the values from the respective row that is being edited
-      $(document).on("click", ".editAddressTable", function(e) {
+      $(document).on("click", ".editAddressTable", function (e) {
 
         //Get the Address Internal ID
         var id = $(this).closest('tr').find('.editAddressTable').attr(
@@ -470,7 +470,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       });
 
       //On click of Edit Operator, populate the fields with the values from the respective row that is being edited
-      $(document).on("click", ".editOperatorTable", function(e) {
+      $(document).on("click", ".editOperatorTable", function (e) {
 
         //Get the App Operator Internal ID
         var operatorId = $(this).closest('tr').find('.editOperatorTable')
@@ -539,7 +539,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       });
 
       //On click of Save Address, either create a new row in the table or update the existing row with the values from the fields
-      $(document).on("click", "#saveAddress", function(e) {
+      $(document).on("click", "#saveAddress", function (e) {
 
         //get values from the fields
         var errorMessage = '';
@@ -649,7 +649,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       });
 
       //On click of Save Operator, either create a new row in the table or update the existing row with the values from the fields
-      $(document).on("click", "#saveOperator", function(e) {
+      $(document).on("click", "#saveOperator", function (e) {
 
         //Get values from the fields
         var errorMessage = '';
@@ -663,13 +663,13 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
           '.operatorEmploymentType option:selected').val();
         var operatorEmploymentTypeText = $(
           '.operatorEmploymentType option:selected').text();
-        var operatorDDSID = $('.operatorPrimaryOperator option:selected')
+        var operatorPrimaryOperatorID = $('.operatorPrimaryOperator option:selected')
           .val();
-        var operatorDDSText = $(
-          '.operatorPrimaryOperator option:selected').text();
-        var operatorPrimaryOperatorID = $(
-          '.operatorContingency option:selected').val();
         var operatorPrimaryOperatorText = $(
+          '.operatorPrimaryOperator option:selected').text();
+        var operatorDDSID = $(
+          '.operatorContingency option:selected').val();
+        var operatorDDSText = $(
           '.operatorContingency option:selected').text();
         var operatorMobileDevID = $('.operatorMobileDev option:selected')
           .val();
@@ -787,12 +787,12 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
                 operator_type_elem[i].value = operatorEmploymentTypeText;
                 operator_typeid_elem[i].value =
                   operatorEmploymentTypeID;
-                operator_dds_elem[i].value = operatorDDSText;
-                operator_ddsid_elem[i].value = operatorDDSID;
                 operator_primary_elem[i].value =
                   operatorPrimaryOperatorText;
                 operator_primaryid_elem[i].value =
                   operatorPrimaryOperatorID;
+                operator_dds_elem[i].value = operatorDDSText;
+                operator_ddsid_elem[i].value = operatorDDSID;
                 operator_mobdev_elem[i].value = operatorMobileDevText;
                 operator_mobdevid_elem[i].value = operatorMobileDevID;
               }
@@ -818,13 +818,14 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
               operatorEmploymentTypeText +
               '" readonly class="form-control operatorEmploymentTypeTable"/><input id="operatorEmploymentTypeID" class="operatorEmploymentTypeID" value="' +
               operatorEmploymentTypeID + '" type="hidden"/></td>'
-            inlineHtml += '<td><input value="' + operatorDDSText +
-              '" readonly class="form-control operatorDDSTable" /><input id="operatorDDSID" class="operatorDDSID" value="' +
-              operatorDDSID + '" type="hidden"/></td>'
             inlineHtml += '<td><input value="' +
               operatorPrimaryOperatorText +
               '" readonly class="form-control operatorPrimaryOperatorTable" /><input id="operatorPrimaryOperatorID" class="operatorPrimaryOperatorID" value="' +
               operatorPrimaryOperatorID + '" type="hidden"/></td>'
+            inlineHtml += '<td><input value="' + operatorDDSText +
+              '" readonly class="form-control operatorDDSTable" /><input id="operatorDDSID" class="operatorDDSID" value="' +
+              operatorDDSID + '" type="hidden"/></td>'
+
             inlineHtml += '<td><input value="' + operatorMobileDevText +
               '" readonly class="form-control operatorMobileDevTable" /><input id="operatorMobileDevID" class="operatorMobileDevID" value="' +
               operatorMobileDevID + '" type="hidden"/></td>'
@@ -851,7 +852,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       });
 
       //On click of Save Vehicle, either create a new row in the table or update the existing row with the values from the fields
-      $(document).on("click", "#saveVehicle", function(e) {
+      $(document).on("click", "#saveVehicle", function (e) {
 
         //Get values from the fields
         var errorMessage = '';
@@ -1042,13 +1043,13 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         }
       });
 
-      $(document).on("click", ".deleteAddressTable", function(e) {
+      $(document).on("click", ".deleteAddressTable", function (e) {
         //Get the Address Internal ID
         var id = $(this).closest('tr').find('.deleteAddressTable').attr(
           'data-id');
         if (confirm(
-            "Are you sure you want to delete this address?\n\nThis action cannot be undone."
-          )) {
+          "Are you sure you want to delete this address?\n\nThis action cannot be undone."
+        )) {
           if (id != 0 && id != '0') {
             deleteAddressArray[deleteAddressArray.length] = id
             deleteAddressArray.toString();
@@ -1062,13 +1063,13 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         }
       });
 
-      $(document).on("click", ".deleteOperatorTable", function(e) {
+      $(document).on("click", ".deleteOperatorTable", function (e) {
         //Get the Operator Internal ID
         var id = $(this).closest('tr').find('.deleteOperatorTable').attr(
           'data-id');
         if (confirm(
-            "Are you sure you want to delete this address?\n\nThis action cannot be undone."
-          )) {
+          "Are you sure you want to delete this address?\n\nThis action cannot be undone."
+        )) {
           if (id != 0 && id != '0') {
             deleteOperatorArray[deleteOperatorArray.length] = id
             console.log(deleteOperatorArray)
@@ -1083,13 +1084,13 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         }
       });
 
-      $(document).on("click", ".deleteFleetTable", function(e) {
+      $(document).on("click", ".deleteFleetTable", function (e) {
         //Get the Fleet Internal ID
         var id = $(this).closest('tr').find('.deleteFleetTable').attr(
           'data-id');
         if (confirm(
-            "Are you sure you want to delete this address?\n\nThis action cannot be undone."
-          )) {
+          "Are you sure you want to delete this address?\n\nThis action cannot be undone."
+        )) {
           if (id != 0 && id != '0') {
             deleteFleetArray[deleteFleetArray.length] = id
 
@@ -1108,12 +1109,12 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       /**
        * Close the Alert box on click
        */
-      $(document).on('click', '#alert .close', function(e) {
+      $(document).on('click', '#alert .close', function (e) {
         $(this).parent().hide();
       });
 
       //On click of the Update Details button, store the values in the hidden fields after validation
-      $(document).on("click", "#updateDetails", function(e) {
+      $(document).on("click", "#updateDetails", function (e) {
 
         console.log('inside update details')
 
@@ -1160,7 +1161,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
             addressSuburbArray[addressSuburbArray.length] = city_elem[i].value
             addressStateArray[addressStateArray.length] = state_elem[i].value
             addressPostcodeArray[addressPostcodeArray.length] = zip_elem[
-                i]
+              i]
               .value
           }
         }
@@ -1226,7 +1227,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
               operatorNameArray[operatorNameArray.length] =
                 edit_name_elem[
                   i]
-                .value
+                  .value
               operatorEmailArray[operatorEmailArray.length] =
                 operator_email_elem[i].value
               operatorMobileArray[operatorMobileArray.length] =
@@ -1247,11 +1248,11 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
             operatorNewIdsArray[operatorNewIdsArray.length] =
               edit_name_elem[
                 i]
-              .value
+                .value
             operatorNewNameArray[operatorNewNameArray.length] =
               edit_name_elem[
                 i]
-              .value
+                .value
             operatorNewEmailArray[operatorNewEmailArray.length] =
               operator_email_elem[i].value
             operatorNewMobileArray[operatorNewMobileArray.length] =
@@ -1259,7 +1260,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
             operatorNewRoleArray[operatorNewRoleArray.length] =
               operator_roleid_elem[i].value
             operatorNewEmploymentTypeArray[operatorNewEmploymentTypeArray
-                .length] =
+              .length] =
               operator_typeid_elem[i].value
             operatorNewDDSArray[operatorNewDDSArray.length] =
               operator_ddsid_elem[
@@ -1336,7 +1337,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
               vehicleRegoArray[vehicleRegoArray.length] =
                 vehicle_rego_elem[
                   i]
-                .value
+                  .value
               vehicleModelArray[vehicleModelArray.length] =
                 vehicle_model_elem[i].value
               vehicleMakeArray[vehicleMakeArray.length] =
@@ -1359,11 +1360,11 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
             vehicleNewIdsArray[vehicleNewIdsArray.length] =
               vehicle_rego_elem[
                 i]
-              .value
+                .value
             vehicleNewRegoArray[vehicleNewRegoArray.length] =
               vehicle_rego_elem[
                 i]
-              .value
+                .value
             vehicleNewModelArray[vehicleNewModelArray.length] =
               vehicle_model_elem[i].value
             vehicleNewMakeArray[vehicleNewMakeArray.length] =
@@ -1616,7 +1617,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         }
       });
 
-      $(document).on("click", "#listForSale", function(e) {
+      $(document).on("click", "#listForSale", function (e) {
 
         console.log('inside list for sale')
 
@@ -1663,7 +1664,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
             addressSuburbArray[addressSuburbArray.length] = city_elem[i].value
             addressStateArray[addressStateArray.length] = state_elem[i].value
             addressPostcodeArray[addressPostcodeArray.length] = zip_elem[
-                i]
+              i]
               .value
           }
         }
@@ -1729,7 +1730,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
               operatorNameArray[operatorNameArray.length] =
                 edit_name_elem[
                   i]
-                .value
+                  .value
               operatorEmailArray[operatorEmailArray.length] =
                 operator_email_elem[i].value
               operatorMobileArray[operatorMobileArray.length] =
@@ -1750,11 +1751,11 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
             operatorNewIdsArray[operatorNewIdsArray.length] =
               edit_name_elem[
                 i]
-              .value
+                .value
             operatorNewNameArray[operatorNewNameArray.length] =
               edit_name_elem[
                 i]
-              .value
+                .value
             operatorNewEmailArray[operatorNewEmailArray.length] =
               operator_email_elem[i].value
             operatorNewMobileArray[operatorNewMobileArray.length] =
@@ -1762,7 +1763,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
             operatorNewRoleArray[operatorNewRoleArray.length] =
               operator_roleid_elem[i].value
             operatorNewEmploymentTypeArray[operatorNewEmploymentTypeArray
-                .length] =
+              .length] =
               operator_typeid_elem[i].value
             operatorNewDDSArray[operatorNewDDSArray.length] =
               operator_ddsid_elem[
@@ -1839,7 +1840,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
               vehicleRegoArray[vehicleRegoArray.length] =
                 vehicle_rego_elem[
                   i]
-                .value
+                  .value
               vehicleModelArray[vehicleModelArray.length] =
                 vehicle_model_elem[i].value
               vehicleMakeArray[vehicleMakeArray.length] =
@@ -1862,11 +1863,11 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
             vehicleNewIdsArray[vehicleNewIdsArray.length] =
               vehicle_rego_elem[
                 i]
-              .value
+                .value
             vehicleNewRegoArray[vehicleNewRegoArray.length] =
               vehicle_rego_elem[
                 i]
-              .value
+                .value
             vehicleNewModelArray[vehicleNewModelArray.length] =
               vehicle_model_elem[i].value
             vehicleNewMakeArray[vehicleNewMakeArray.length] =
@@ -2379,7 +2380,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       $('#alert').show();
       document.body.scrollTop = 0; // For Safari
       document.documentElement.scrollTop = 0;
-      setTimeout(function() {
+      setTimeout(function () {
         $('#alert').hide();
       }, 100000);
     }
@@ -2644,7 +2645,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
 
       var resultSetServiceLeg = serviceLegSearch.run();
 
-      resultSetServiceLeg.each(function(searchResult) {
+      resultSetServiceLeg.each(function (searchResult) {
         stop_id = searchResult.getValue({
           name: 'internalid',
           join: null,
@@ -2953,7 +2954,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
                 old_customer_id_array[i] + '",';
               stop_freq_json += '"customer_notes": "' +
                 old_service_notes[
-                  i] + '",';
+                i] + '",';
               if (date_of_week >= old_closing_day[i] && date_of_week <
                 old_opening_day[i]) {
                 stop_freq_json += '"customer_text": "CLOSED - ' +
@@ -2966,16 +2967,16 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
 
 
               stop_freq_json += '"run_plan": "' + old_run_plan_array[
-                  i] +
+                i] +
                 '",';
               stop_freq_json += '"run_plan_text": "' +
                 old_run_plan_text_array[i] + '",';
               stop_freq_json += '"service_id": "' + service_id_array[
-                  i] +
+                i] +
                 '",';
               stop_freq_json += '"service_text": "' +
                 service_name_array[
-                  i] + '"';
+                i] + '"';
               stop_freq_json += '},'
             }
             stop_freq_json = stop_freq_json.substring(0,
@@ -3151,7 +3152,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
               }
               stop_freq_json = stop_freq_json.substring(0,
                 stop_freq_json
-                .length - 1);
+                  .length - 1);
               stop_freq_json += ']},'
 
 
@@ -3322,9 +3323,9 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         //var start_time = moment().day(day).hours(freq_time_current_array[0]).minutes(freq_time_current_array[1]).seconds(0).format();
         var start_time = old_freq_time_current;
         var end_time = moment().add({
-            seconds: min_array[1]
-          }).day(day).hours(freq_time_current_array[0]).minutes(min_array[
-            0])
+          seconds: min_array[1]
+        }).day(day).hours(freq_time_current_array[0]).minutes(min_array[
+          0])
           .format();
 
 
@@ -3348,7 +3349,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
           } else {
             stop_freq_json += '"customer_text": "' +
               old_customer_text_array[
-                i] + '",';
+              i] + '",';
           }
 
 
@@ -3519,7 +3520,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
           if (marker_quotient > 0) {
             var letter = String.fromCharCode("A".charCodeAt(0) +
               marker_quotient - 1) + String.fromCharCode("A".charCodeAt(0) +
-              marker_remainder)
+                marker_remainder)
           } else {
             var letter = String.fromCharCode("A".charCodeAt(0) +
               marker_remainder)
@@ -3583,7 +3584,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
     }
 
     function attachInstructionText(stepDisplay, marker, text, map) {
-      google.maps.event.addListener(marker, 'click', function() {
+      google.maps.event.addListener(marker, 'click', function () {
         // Open an info window when the marker is clicked on, containing the text
         // of the step.
         stepDisplay.setContent(text);
@@ -3634,7 +3635,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
 
         var delayFactor = 0;
         (function m_get_directions_route(kk) {
-          directionsService.route(request, function(result, status) {
+          directionsService.route(request, function (result, status) {
             if (status == window.google.maps.DirectionsStatus.OK) {
 
               var unsortedResult = {
@@ -3648,7 +3649,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
               if (directionsResultsReturned == waypoint_json.length) // we've received all the results. put to map
               {
                 // sort the returned values into their correct order
-                unsortedResults.sort(function(a, b) {
+                unsortedResults.sort(function (a, b) {
                   return parseFloat(a.order) - parseFloat(b.order);
                 });
                 var count = 0;
@@ -3672,11 +3673,11 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
                         combinedResults.routes[0].bounds =
                           combinedResults.routes[0].bounds.extend(
                             unsortedResults[key].result.routes[0].bounds
-                            .getNorthEast());
+                              .getNorthEast());
                         combinedResults.routes[0].bounds =
                           combinedResults.routes[0].bounds.extend(
                             unsortedResults[key].result.routes[0].bounds
-                            .getSouthWest());
+                              .getSouthWest());
                       }
                       count++;
                     }
@@ -3695,7 +3696,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
             } else if (status == window.google.maps.DirectionsStatus.OVER_QUERY_LIMIT) {
               console.log('OVER_QUERY_LIMIT');
               delayFactor++;
-              setTimeout(function() {
+              setTimeout(function () {
                 m_get_directions_route(kk);
               }, delayFactor * 1000);
             } else {
