@@ -19,9 +19,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var mpexLodgementPointsString = null;
         var mpstdLodgementPointsString = null;
         var sendleexpLodgementPointsString = null;
+        var shippitLodgementPointsString = null;
         var franchiseeStdSuburbs = "";
         var franchiseeExpressSuburbs = "";
-        var franchiseePartnershipSuburbs = "";
+        var franchiseeSendleSuburbs = "";
+        var franchiseeShippitSuburbs = "";
+        var franchiseeAPSuburbs = "";
         var prospectingMasterclass = null;
         var customerReviews = null;
 
@@ -127,12 +130,18 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                     'custentity_mp_std_lodgement_point');
                 sendleexpLodgementPointsString = searchResultZees.getValue(
                     'custentity_sendle_exp_lodgement_point');
+                shippitLodgementPointsString = searchResultZees.getValue(
+                    'custentity_shippit_lodgement_point');
                 franchiseeExpressSuburbs = searchResultZees.getValue(
                     'custentity_zee_territory');
                 franchiseeStdSuburbs = searchResultZees.getValue(
                     'custentity_network_matrix_main');
-                franchiseePartnershipSuburbs = searchResultZees.getValue(
+                franchiseeSendleSuburbs = searchResultZees.getValue(
                     'custentity_sendle_recovery_suburbs_main');
+                franchiseeShippitSuburbs = searchResultZees.getValue(
+                    'custentity_shippit_suburbs');
+                franchiseeAPSuburbs = searchResultZees.getValue(
+                    'custentity_ap_suburbs');
                 prospectingMasterclass = searchResultZees.getValue(
                     'custentity_zee_prospect_masterclass');
                 customerReviews = searchResultZees.getValue(
@@ -270,17 +279,17 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                 return true;
             });
 
-            var totalItems = 
+            var totalItems =
 
 
 
 
-            inlineHtml +=
+                inlineHtml +=
                 '<div class="form-group container pud_prospect_support " style="">';
             inlineHtml += '<div class="row">';
             inlineHtml += '<div class="col-xs-4">'
             inlineHtml += '<article class="card">';
-            inlineHtml += '<h2>PUD/B2C Prospecting Support</h2>';
+            inlineHtml += '<h2 style="text-align:center;">PUD/B2C Prospecting Support</h2>';
             inlineHtml += '<small style="text-align:center;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Id cursus metus aliquam eleifend mi in nulla posuere.</small>';
             inlineHtml += '<ul>';
             inlineHtml += '<li>';
@@ -309,15 +318,6 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             inlineHtml += '</li>';
 
             inlineHtml += '<li>';
-            if (customer_signed == 0 && prospecy_quote_sent == 0 && prospect_opportunity == 0 && prospect_in_contact == 0) {
-                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-            } else {
-                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-            }
-            inlineHtml += '<p>Qualified Leads</p>'
-            inlineHtml += '</li>';
-
-            inlineHtml += '<li>';
             if (isNullorEmpty(customerReviews)) {
                 inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
             } else {
@@ -332,12 +332,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
             inlineHtml += '<div class="col-xs-4">'
             inlineHtml += '<article class="card">';
-            inlineHtml += '<h2>Partnership Requirements</h2>';
+            inlineHtml += '<h2 style="text-align:center;">Partnership Requirements</h2>';
             inlineHtml += '<small style="text-align:center;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Id cursus metus aliquam eleifend mi in nulla posuere.</small>';
             inlineHtml += '<ul>';
 
             inlineHtml += '<li>';
-            if (isNullorEmpty(franchiseePartnershipSuburbs)) {
+            if (isNullorEmpty(franchiseeSendleSuburbs)) {
                 inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
             } else {
                 inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
@@ -347,27 +347,27 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
 
             inlineHtml += '<li>';
-            // if (isNullorEmpty(franchiseePartnershipSuburbs)) {
+            if (isNullorEmpty(franchiseeShippitSuburbs)) {
                 inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-            // } else {
-            //     inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-            // }
+            } else {
+                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
+            }
             inlineHtml += '<p>Shippit Suburb Mapping</p>'
             inlineHtml += '</li>';
 
 
             inlineHtml += '<li>';
-            // if (isNullorEmpty(franchiseePartnershipSuburbs)) {
+            if (isNullorEmpty(franchiseeAPSuburbs)) {
                 inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-            // } else {
-            //     inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-            // }
+            } else {
+                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
+            }
             inlineHtml += '<p>Australia Post Suburb Mapping</p>'
             inlineHtml += '</li>';
 
             inlineHtml += '<li>';
-            if ((isNullorEmpty(franchiseePartnershipSuburbs) && isNullorEmpty(sendleexpLodgementPointsString)) && (isNullorEmpty(franchiseeStdSuburbs) && isNullorEmpty(mpstdLodgementPointsString))) {
-            inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
+            if ((isNullorEmpty(franchiseeSendleSuburbs) && isNullorEmpty(sendleexpLodgementPointsString)) && (isNullorEmpty(franchiseeStdSuburbs) && isNullorEmpty(mpstdLodgementPointsString)) && (isNullorEmpty(franchiseeShippitSuburbs) && isNullorEmpty(shippitLodgementPointsString))) {
+                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
             } else {
                 inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
             }
@@ -380,9 +380,20 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
             inlineHtml += '<div class="col-xs-4">'
             inlineHtml += '<article class="card">';
-            inlineHtml += '<h2>Additional Requirements</h2>';
+            inlineHtml += '<h2 style="text-align:center;">Additional Requirements</h2>';
             inlineHtml += '<small style="text-align:center;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Id cursus metus aliquam eleifend mi in nulla posuere.</small>';
             inlineHtml += '<ul>';
+
+            inlineHtml += '<li>';
+            if (customer_signed == 0 && prospecy_quote_sent == 0 && prospect_opportunity == 0 && prospect_in_contact == 0) {
+                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
+            } else {
+                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
+            }
+            inlineHtml += '<p>Qualified Leads</p>'
+            inlineHtml += '</li>';
+
+            
             inlineHtml += '<li>';
             // if (isNullorEmpty(prospectingMasterclass)) {
             inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
