@@ -82,7 +82,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             return 32 - new Date(iYear, iMonth, 32).getDate();
         }
 
-      
+
         function afterSubmit() {
             $('.loading_section').addClass('hide');
             $('.instruction_div').removeClass('hide');
@@ -93,10 +93,115 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
 
         function pageInit() {
-            
+
 
             // portlet.resize();
             afterSubmit();
+
+            var val1 = currentRecord.get();
+            var totalItems = val1.getValue({
+                fieldId: 'custpage_total_items',
+            });
+            var completedItems = val1.getValue({
+                fieldId: 'custpage_completed_items',
+            });
+
+            console.log(totalItems);
+            console.log(completedItems);
+
+            const gaugeOptions = {
+                chart: {
+                    type: 'solidgauge',
+                    backgroundColor: '#CFE0CE',
+                    height: (6 / 16 * 100) + '%',   
+                    // zoomType: 'xy'
+                },
+
+                title: null,
+
+                pane: {
+                    center: ['50%', '85%'],
+                    size: '100%',
+                    startAngle: -90,
+                    endAngle: 90,
+                    background: {
+                        backgroundColor:
+                            Highcharts.defaultOptions.legend.backgroundColor || '#EEE',
+                        innerRadius: '60%',
+                        outerRadius: '100%',
+                        shape: 'arc'
+                    }
+                },
+
+                exporting: {
+                    enabled: false
+                },
+
+                tooltip: {
+                    enabled: false
+                },
+
+                // the value axis
+                yAxis: {
+                    stops: [
+                        [0, '#095c7b'], // green
+                        // [0.4, '#DDDF0D'], // yellow
+                        // [0.2, '#DF5353'] // red
+                    ],
+                    lineWidth: 0,
+                    tickWidth: 0,
+                    minorTickInterval: null,
+                    tickAmount: 1,
+                    title: {
+                        y: -70
+                    },
+                    labels: {
+                        y: 16
+                    }
+                },
+
+                plotOptions: {
+                    solidgauge: {
+                        dataLabels: {
+                            y: parseInt(completedItems),
+                            borderWidth: 0,
+                            useHTML: true
+                        }
+                    }
+                }
+            };
+
+            // The speed gauge
+            const chartSpeed = Highcharts.chart('container-progress', Highcharts.merge(gaugeOptions, {
+                yAxis: {
+                    min: 0,
+                    max: parseInt(totalItems),
+                    title: {
+                        text: ''
+                    }
+                },
+
+                credits: {
+                    enabled: false
+                },
+
+                series: [{
+                    name: 'Progress',
+                    data: [parseInt(completedItems)],
+                    dataLabels: {
+                        format:
+                            '<div style="text-align:center">' +
+                            '<span style="font-size:25px">{y}</span><br/>' +
+                            '<span style="font-size:12px;opacity:0.4">Completed Items</span>' +
+                            '</div>'
+                    },
+                    tooltip: {
+                        valueSuffix: ' '
+                    }
+                }]
+
+            }));
+
             portlet.resize();
         }
 

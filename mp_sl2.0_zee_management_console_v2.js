@@ -47,6 +47,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     var mpstdLodgementPointsString = null;
     var sendleexpLodgementPointsString = null;
 
+    var masterclass = null;
+    var customerReviews = null;
+
     var color_array = ['blue', 'red', 'green', 'orange', 'black'];
 
     function onRequest(context) {
@@ -159,6 +162,22 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         }).updateDisplayType({
           displayType: ui.FieldDisplayType.HIDDEN
         }).defaultValue = vaccinationStatus;
+
+        form.addField({
+          id: 'custpage_masterclass',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        }).defaultValue = masterclass;
+
+        form.addField({
+          id: 'custpage_reviews',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        }).defaultValue = customerReviews;
 
         form.addField({
           id: 'custpage_nextofkinname',
@@ -551,9 +570,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
         inlineHtml += spacing()
         if (role != 1000) {
-          inlineHtml += progressBar()
-          inlineHtml += line()
-          inlineHtml += spacing()
+          if (role != 1005 && role != 1003 && role != 1004) {
+            inlineHtml += progressBar()
+            inlineHtml += line()
+            inlineHtml += spacing()
+          }
+
           inlineHtml += selectFranchiseeSection(zee)
           inlineHtml += spacing()
         }
@@ -606,6 +628,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var franchiseePersonalEmail = context.request.parameters.custpage_personalemail;
         var FranchiseeDOB = context.request.parameters.custpage_dob;
         var franchiseeVaccinationStatus = context.request.parameters.custpage_vaccinationstatus;
+        var franchiseeMasterclass = context.request.parameters.custpage_masterclass;
+        var franchiseeCustomerReviews = context.request.parameters.custpage_reviews;
         var franchiseeNextOfKinName = context.request.parameters.custpage_nextofkinname;
         var franchiseeNextOfKinMobile = context.request.parameters.custpage_nextofkinmobile;
         var franchiseeNextOfKinRelationship = context.request.parameters.custpage_nextofkinrelationship;
@@ -775,6 +799,20 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           zeeRecord.setValue({
             fieldId: 'custentity_vacc_status',
             value: franchiseeVaccinationStatus
+          })
+        }
+
+        if (franchiseeCustomerReviews != 0) {
+          zeeRecord.setValue({
+            fieldId: 'custentity_zee_customer_reviews',
+            value: franchiseeCustomerReviews
+          })
+        }
+
+        if (franchiseeMasterclass != 0) {
+          zeeRecord.setValue({
+            fieldId: 'custentity_zee_prospect_masterclass',
+            value: franchiseeMasterclass
           })
         }
 
@@ -1429,6 +1467,11 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         '<div style="width: 95%; margin:auto; margin-bottom: 30px"><ul class="nav nav-tabs nav-justified main-tabs-sections " style="margin:0%;border-bottom-color: #fbea50 !important;border-bottom-width: 5px !important;border-bottom-style: solid;">';
       inlineHtml +=
         '<li role="presentation" class="active"><a data-toggle="tab" href="#zeeDetails"><b>MAIN DETAILS</b></a></li>';
+      if (role != 1000) {
+        inlineHtml +=
+          '<li role="presentation" class=""><a data-toggle="tab" href="#sales"><b>SALES & MARKETING</b></a></li>';
+      }
+
       inlineHtml +=
         '<li role="presentation" class=""><a data-toggle="tab" href="#operatorDetails"><b>OPERATION DETAILS</b></a></li>';
       inlineHtml +=
@@ -1447,6 +1490,11 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         '<div role="tabpanel" class="tab-pane active" id="zeeDetails">';
       inlineHtml += franchiseeMainDetails(zee)
       inlineHtml += franchiseeNextOfKin()
+      inlineHtml += '</div>';
+
+      inlineHtml +=
+        '<div role="tabpanel" class="tab-pane " id="sales">';
+      inlineHtml += salesAndMarketingDetails(zee)
       inlineHtml += '</div>';
 
       inlineHtml +=
@@ -1623,6 +1671,10 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         sendleexpLodgementPointsString = searchResultZees.getValue(
           'custentity_sendle_exp_lodgement_point');
 
+        masterclass = searchResultZees.getValue(
+          'custentity_zee_prospect_masterclass');
+        customerReviews = searchResultZees.getValue(
+          'custentity_zee_customer_reviews');
 
         return true;
       });
@@ -1787,6 +1839,58 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
       //ADDRESS TABLE
       inlineHtml += addressContactsSection(resultSetAddresses);
+
+      return inlineHtml
+
+    }
+
+    /*
+    * PURPOSE : FRANCHISE MAIN DETAILS TAB
+    *  PARAMS : ZEE ID
+    * RETURNS : INLINEHTML
+    *   NOTES :
+    */
+    function salesAndMarketingDetails(zee) {
+
+
+      var inlineHtml = '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+
+      inlineHtml +=
+        '<div class="col-xs-6 zee"><div class="input-group"><span class="input-group-addon" id="zee_text">PROSPECTING MASTERCLASS<span class="mandatory">*</span></span><select id="masterclass" class="form-control masterclass" data-old="' +
+        masterclass + '">';
+      if (masterclass == 1) {
+        inlineHtml +=
+          '<option value=0></option><option value=1 selected>YES</option><option value=2>NO</option>';
+      } else if (masterclass == 2) {
+        inlineHtml +=
+          '<option value=0></option><option value=1>YES</option><option value=2 selected>NO</option>';
+      } else {
+        inlineHtml +=
+          '<option value=0 selected></option><option value=1>YES</option><option value=2>NO</option>';
+      }
+      inlineHtml += '</select></div></div>';
+
+
+      inlineHtml +=
+        '<div class="col-xs-6 zee"><div class="input-group"><span class="input-group-addon" id="zee_text">CUSTOMER REVIEWS <span class="mandatory">*</span></span><select id="reviews" class="form-control reviews" data-old="' +
+        customerReviews + '">';
+      if (customerReviews == 1) {
+        inlineHtml +=
+          '<option value=0></option><option value=1 selected>YES</option><option value=2>NO</option>';
+      } else if (customerReviews == 2) {
+        inlineHtml +=
+          '<option value=0></option><option value=1>YES</option><option value=2 selected>NO</option>';
+      } else {
+        inlineHtml +=
+          '<option value=0 selected></option><option value=1>YES</option><option value=2>NO</option>';
+      }
+      inlineHtml += '</select></div></div>';
+
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+
 
       return inlineHtml
 

@@ -1141,6 +1141,9 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         var state_elem = document.getElementsByClassName("stateTable");
         var zip_elem = document.getElementsByClassName("zipTable");
 
+        var masterclass = $('#masterclass').val();
+        var reviews = $('#reviews').val();
+
         var addressIdsArray = []
         var address1Array = []
         var address2Array = []
@@ -1418,6 +1421,14 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
             value: vaccinationStatus
           });
           myRecord.setValue({
+            fieldId: 'custpage_masterclass',
+            value: masterclass
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_reviews',
+            value: reviews
+          });
+          myRecord.setValue({
             fieldId: 'custpage_nextofkinname',
             value: franchiseeNextOfKinName
           });
@@ -1633,6 +1644,9 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         var franchiseeNextOfKinMobile = $('#franchiseeNextOfKinMobile').val();
         var franchiseeNextOfKinRelationship = $(
           '#franchiseeNextOfKinRelationship').val();
+        
+        var masterclass = $('#masterclass').val();
+        var reviews = $('#reviews').val();
 
         //ADDRESS SECTION
         var edit_address_elem = document.getElementsByClassName(
@@ -1921,6 +1935,16 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
               fieldId: 'custpage_vaccinationstatus',
               value: vaccinationStatus
             });
+
+            myRecord.setValue({
+              fieldId: 'custpage_masterclass',
+              value: masterclass
+            });
+            myRecord.setValue({
+              fieldId: 'custpage_reviews',
+              value: reviews
+            });
+
             myRecord.setValue({
               fieldId: 'custpage_nextofkinname',
               value: franchiseeNextOfKinName
@@ -2154,6 +2178,16 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
             fieldId: 'custpage_vaccinationstatus',
             value: vaccinationStatus
           });
+
+          myRecord.setValue({
+            fieldId: 'custpage_masterclass',
+            value: masterclass
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_reviews',
+            value: reviews
+          });
+
           myRecord.setValue({
             fieldId: 'custpage_nextofkinname',
             value: franchiseeNextOfKinName
@@ -2404,6 +2438,9 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       var franchiseeNextOfKinMobile = $('#franchiseeNextOfKinMobile').val();
       var franchiseeNextOfKinRelationship = $(
         '#franchiseeNextOfKinRelationship').val();
+      
+      var masterclass = $('#masterclass').val();
+      var reviews = $('#reviews').val();
 
       var errorMessage = '';
 
@@ -2432,6 +2469,14 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       if (isNullorEmpty(vaccinationStatus)) {
         errorMessage += 'Please Select Vaccination Status</br>';
       }
+
+      if (isNullorEmpty(masterclass)) {
+        errorMessage += 'Please Select Prospecting Masterclass Status</br>';
+      }
+      if (isNullorEmpty(reviews)) {
+        errorMessage += 'Please Select Customer Reviews Status</br>';
+      }
+
       if (isNullorEmpty(franchiseeNextOfKinName)) {
         errorMessage += 'Please Enter Next of Kin Name</br>';
       }
