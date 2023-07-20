@@ -325,6 +325,14 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         }).updateDisplayType({
           displayType: ui.FieldDisplayType.HIDDEN
         });
+        form.addField({
+          id: 'custpage_operatorcompliantuniform',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+
 
         //New Operator Table Hidden Fields
         form.addField({
@@ -392,6 +400,14 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         });
         form.addField({
           id: 'custpage_new_operatormobiledev',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
+
+        form.addField({
+          id: 'custpage_new_operatorcompliantuniform',
           type: ui.FieldType.TEXT,
           label: 'Day'
         }).updateDisplayType({
@@ -666,6 +682,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var operatordds = context.request.parameters.custpage_operatordds;
         var operatorprimary = context.request.parameters.custpage_operatorprimary;
         var operatormobiledev = context.request.parameters.custpage_operatormobiledev;
+        var operatorcompliantuniform = context.request.parameters.custpage_operatorcompliantuniform;
 
         var operatoridsArrys = operatorids.split(',')
         var operatoridsdeleteArrys = operatorids_delete.split(',')
@@ -677,6 +694,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var operatorddsArrys = operatordds.split(',')
         var operatorprimaryArrys = operatorprimary.split(',')
         var operatormobiledevArrys = operatormobiledev.split(',')
+        var operatorcompliantuniformArrys = operatorcompliantuniform.split(',')
 
         //New operator
         var newoperatorids = context.request.parameters.custpage_new_operatorids;
@@ -689,6 +707,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var newoperatordds = context.request.parameters.custpage_new_operatordds;
         var newoperatorprimary = context.request.parameters.custpage_new_operatorprimary;
         var newoperatormobiledev = context.request.parameters.custpage_new_operatormobiledev;
+        var newoperatorcompliantuniform = context.request.parameters.custpage_new_operatorcompliantuniform;
 
         var newoperatoridsArrys = newoperatorids.split(',')
         var newoperatoridsdeleteArrys = newoperatorids_delete.split(',')
@@ -701,6 +720,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var newoperatorddsArrys = newoperatordds.split(',')
         var newoperatorprimaryArrys = newoperatorprimary.split(',')
         var newoperatormobiledevArrys = newoperatormobiledev.split(',')
+        var newoperatorcompliantuniformArrys = newoperatorcompliantuniform.split(',')
 
         var fleetids = context.request.parameters.custpage_fleetids;
         var fleetids_delete = context.request.parameters.custpage_fleetids_delete;
@@ -1010,6 +1030,10 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
               fieldId: 'custrecord_primary_operator',
               value: operatorprimaryArrys[y]
             })
+            operatorRecord.setValue({
+              fieldId: 'custrecord_compliant_uniform',
+              value: operatorcompliantuniformArrys[y]
+            })
             if (!isNullorEmpty(operatormobiledevArrys[y])) {
               operatorRecord.setValue({
                 fieldId: 'custrecord_operator_mobdev_platform',
@@ -1105,6 +1129,10 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             operatorRecord.setValue({
               fieldId: 'custrecord_primary_operator',
               value: newoperatorprimaryArrys[y]
+            })
+            operatorRecord.setValue({
+              fieldId: 'custrecord_compliant_uniform',
+              value: newoperatorcompliantuniformArrys[y]
             })
             if (!isNullorEmpty(operatormobiledevArrys[y])) {
               operatorRecord.setValue({
@@ -2813,21 +2841,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '<div class="row">';
       inlineHtml += '<input id="operatorInternalId" value="" type="hidden"/>'
       inlineHtml +=
-        '<div class="col-xs-3 operatorName_section"><div class="input-group"><span class="input-group-addon">Name <span class="mandatory">*</span></span><input id="operatorName" class="form-control operatorName" /></div></div>';
+        '<div class="col-xs-4 operatorName_section"><div class="input-group"><span class="input-group-addon">Name <span class="mandatory">*</span></span><input id="operatorName" class="form-control operatorName" /></div></div>';
       inlineHtml +=
-        '<div class="col-xs-3 operatorEmail_section"><div class="input-group"><span class="input-group-addon">EMAIL <span class="mandatory">*</span></span><input id="operatorEmail" class="form-control operatorEmail" /></div></div>';
+        '<div class="col-xs-4 operatorEmail_section"><div class="input-group"><span class="input-group-addon">EMAIL <span class="mandatory">*</span></span><input id="operatorEmail" class="form-control operatorEmail" /></div></div>';
       inlineHtml +=
-        '<div class="col-xs-3 operatorMobile_section"><div class="input-group"><span class="input-group-addon">MOBILE NO. <span class="mandatory">*</span></span><input id="operatorMobile" class="form-control operatorMobile" /></div></div>';
-      inlineHtml +=
-        '<div class="col-xs-3"><div class="input-group"><span class="input-group-addon">MOBILE DEV </span><select id="operatorMobileDev" class="form-control operatorMobileDev" >';
-      /*
-        iOS	1
-        Android	2
-         Other	5
-         */
-      inlineHtml +=
-        '<option value=0></option><option value=1>iOS</option><option value=2>Android</option><option value=5>Other</option>';
-      inlineHtml += '</select></div></div>';
+        '<div class="col-xs-4 operatorMobile_section"><div class="input-group"><span class="input-group-addon">MOBILE NO. <span class="mandatory">*</span></span><input id="operatorMobile" class="form-control operatorMobile" /></div></div>';
+
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
@@ -2841,7 +2860,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         Franchisee	           5
        */
       inlineHtml +=
-        '<div class="col-xs-3"><div class="input-group"><span class="input-group-addon">ROLE <span class="mandatory">*</span></span><select id="operatorRole" class="form-control operatorRole" >';
+        '<div class="col-xs-4"><div class="input-group"><span class="input-group-addon">ROLE <span class="mandatory">*</span></span><select id="operatorRole" class="form-control operatorRole" >';
       inlineHtml +=
         '<option value=0></option><option value=2>Driver</option><option value=3>Trolley/ Foot Courier</option><option value=5>Franchisee</option>';
       inlineHtml += '</select></div></div>';
@@ -2853,7 +2872,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
        */
 
       inlineHtml +=
-        '<div class="col-xs-3"><div class="input-group"><span class="input-group-addon">EMPLOYEMENT TYPE <span class="mandatory">*</span></span><select id="operatorEmploymentType" class="form-control operatorEmploymentType" >';
+        '<div class="col-xs-4"><div class="input-group"><span class="input-group-addon">EMPLOYEMENT TYPE <span class="mandatory">*</span></span><select id="operatorEmploymentType" class="form-control operatorEmploymentType" >';
       inlineHtml +=
         '<option value=0></option><option value=1>Employee</option><option value=2>Contractor</option><option value=4>Franchise Owner</option>';
       inlineHtml += '</select></div></div>';
@@ -2863,17 +2882,45 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         No	       2
        */
       inlineHtml +=
-        '<div class="col-xs-3"><div class="input-group"><span class="input-group-addon">PRIMARY OPERATOR <span class="mandatory">*</span></span><select id="operatorPrimaryOperator" class="form-control operatorPrimaryOperator" >';
+        '<div class="col-xs-4"><div class="input-group"><span class="input-group-addon">PRIMARY OPERATOR <span class="mandatory">*</span></span><select id="operatorPrimaryOperator" class="form-control operatorPrimaryOperator" >';
+      inlineHtml +=
+        '<option value=0></option><option value=1>Yes</option><option value=2>No</option>';
+      inlineHtml += '</select></div></div>';
+
+
+
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+
+      inlineHtml +=
+        '<div class="form-group container saveoperator_section hide">';
+      inlineHtml += '<div class="row">';
+
+      inlineHtml +=
+        '<div class="col-xs-4"><div class="input-group"><span class="input-group-addon">COMPLIANT UNIFORM<span class="mandatory">*</span></span><select id="operatorCompliantUniform" class="form-control operatorCompliantUniform" >';
       inlineHtml +=
         '<option value=0></option><option value=1>Yes</option><option value=2>No</option>';
       inlineHtml += '</select></div></div>';
 
       inlineHtml +=
-        '<div class="col-xs-3"><div class="input-group"><span class="input-group-addon">CONTINGENCY DRIVER <span class="mandatory">*</span></span><select id="operatorContingency" class="form-control operatorContingency" >';
+      '<div class="col-xs-4"><div class="input-group"><span class="input-group-addon">CONTINGENCY DRIVER <span class="mandatory">*</span></span><select id="operatorContingency" class="form-control operatorContingency" >';
+    inlineHtml +=
+      '<option value=0></option><option value=1>Yes</option><option value=2>No</option>';
+    inlineHtml += '</select></div></div>';
+
       inlineHtml +=
-        '<option value=0></option><option value=1>Yes</option><option value=2>No</option>';
+        '<div class="col-xs-4"><div class="input-group"><span class="input-group-addon">MOBILE DEV </span><select id="operatorMobileDev" class="form-control operatorMobileDev" >';
+      /*
+        iOS	1
+        Android	2
+         Other	5
+         */
+      inlineHtml +=
+        '<option value=0></option><option value=1>iOS</option><option value=2>Android</option><option value=5>Other</option>';
       inlineHtml += '</select></div></div>';
 
+     
 
       inlineHtml += '</div>';
       inlineHtml += '</div>';
@@ -2890,6 +2937,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
       inlineHtml += '</div>';
       inlineHtml += '</div>';
+
+
 
       inlineHtml +=
         '<div class="form-group container" style="width: 100% !important;">';
@@ -2910,6 +2959,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '<td>PRIMARY DRIVER</td>'
       inlineHtml += '<td>CONTINGENCY DRIVER</td>'
       inlineHtml += '<td>MOBILE DEVICE</td>'
+      inlineHtml += '<td>COMPLIANT UNIFORM</td>'
       inlineHtml += '</tr>';
       inlineHtml += '</thead>';
 
@@ -2944,6 +2994,10 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           'custrecord_primary_operator');
         var operatorPrimaryOperatorID = searchResultOperators.getValue(
           'custrecord_primary_operator');
+        var operatorCompliantUniform = searchResultOperators.getText(
+          'custrecord_compliant_uniform');
+        var operatorCompliantUniformID = searchResultOperators.getText(
+          'custrecord_compliant_uniform');
 
         log.debug({
           title: 'operatorEmploymentType',
@@ -3011,6 +3065,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         inlineHtml += '<td><input value="' + operatorMobileDev +
           '" readonly class="form-control operatorMobileDevTable" /><input id="" class="operatorMobileDevID" value="' +
           operatorMobileDevID + '" type="hidden"/></td>'
+        inlineHtml += '<td><input value="' + operatorCompliantUniform +
+          '" readonly class="form-control operatorCompliantUniformTable" /><input id="" class="operatorCompliantUniformID" value="' +
+          operatorCompliantUniformID + '" type="hidden"/></td>'
         inlineHtml += '</tr>';
 
 

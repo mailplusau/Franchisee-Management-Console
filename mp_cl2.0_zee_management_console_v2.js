@@ -506,16 +506,23 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         var operatorMobileDevID = $(this).closest('tr').find(
           '.operatorMobileDevID').val()
 
-        console.log(operatorRole)
-        console.log(operatorRoleID)
-        console.log(operatorEmploymentType)
-        console.log(operatorEmploymentTypeID)
-        console.log(operatorDDS)
-        console.log(operatorDDSID)
-        console.log(operatorPrimaryOperator)
-        console.log(operatorPrimaryOperatorID)
-        console.log(operatorMobileDev)
-        console.log(operatorMobileDevID)
+        var operatorCompliantUniform = $(this).closest('tr').find(
+          '.operatorCompliantUniformTable').val()
+        var operatorCompliantUniformID = $(this).closest('tr').find(
+          '.operatorCompliantUniformID').val()
+
+        console.log('operatorRole: ' + operatorRole)
+        console.log('operatorRoleID: ' + operatorRoleID)
+        console.log('operatorEmploymentType: ' + operatorEmploymentType)
+        console.log('operatorEmploymentTypeID: ' + operatorEmploymentTypeID)
+        console.log('operatorDDS: ' + operatorDDS)
+        console.log('operatorDDSID: ' + operatorDDSID)
+        console.log('operatorPrimaryOperator: ' + operatorPrimaryOperator)
+        console.log('operatorPrimaryOperatorID: ' + operatorPrimaryOperatorID)
+        console.log('operatorMobileDev: ' + operatorMobileDev)
+        console.log('operatorMobileDevID: ' + operatorMobileDevID)
+        console.log('operatorCompliantUniform: ' + operatorCompliantUniform)
+        console.log('operatorCompliantUniformID: ' + operatorCompliantUniformID)
 
         //Populate the fields from the values got from the row of the table
         $('.operatorName').val(operatorName);
@@ -525,12 +532,20 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         $('.operatorRoleID').val(operatorRoleID);
         $('.operatorEmploymentType').val(operatorEmploymentTypeID);
         $('.operatorEmploymentTypeID').val(operatorEmploymentTypeID);
-        $('.operatorPrimaryOperator').val(operatorDDSID);
-        $('.operatorPrimaryOperatorID').val(operatorDDSID);
-        $('.operatorContingency').val(operatorPrimaryOperatorID);
-        $('.operatorContingencyID').val(operatorPrimaryOperatorID);
+        if (operatorPrimaryOperator == 'Yes') {
+          $('.operatorPrimaryOperator').val(1);
+          $('.operatorPrimaryOperatorID').val(1);
+        } else {
+          $('.operatorPrimaryOperator').val(2);
+          $('.operatorPrimaryOperatorID').val(2);
+        }
+
+        $('.operatorContingency').val(operatorDDSID);
+        $('.operatorContingencyID').val(operatorDDSID);
         $('.operatorMobileDev').val(operatorMobileDevID);
         $('.operatorMobileDevID').val(operatorMobileDevID);
+        $('.operatorMobileDev').val(operatorMobileDevID);
+        $('.operatorCompliantUniformID').val(operatorCompliantUniformID);
 
         //Unhide the fields
         $('.row_operator_details').removeClass('hide');
@@ -676,6 +691,11 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         var operatorMobileDevText = $(
           '.operatorMobileDev option:selected').text();
 
+        var operatorCompliantUniformID = $('.operatorCompliantUniform option:selected')
+          .val();
+        var operatorCompliantUniformText = $(
+          '.operatorCompliantUniform option:selected').text();
+
         console.log(operatorName)
         console.log(operatorRoleID)
         console.log(operatorRoleText)
@@ -725,6 +745,11 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
             'Please Select if the operator is Primary Operator or not</br>';
         }
 
+        if (isNullorEmpty(operatorCompliantUniformID)) {
+          errorMessage +=
+            'Please Select if the operator is wearing uniform</br>';
+        }
+
 
         //Show the error message
         if (!isNullorEmpty(errorMessage)) {
@@ -764,6 +789,12 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
             var operator_mobdevid_elem = document.getElementsByClassName(
               "operatorMobileDevID");
 
+
+            var operator_compliant_uniform_elem = document.getElementsByClassName(
+              "operatorCompliantUniformTable");
+            var operator_compliant_uniform_id_elem = document.getElementsByClassName(
+              "operatorCompliantUniformID");
+
             console.log('edit_operator_elem.length: ' +
               edit_operator_elem.length)
 
@@ -795,6 +826,9 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
                 operator_ddsid_elem[i].value = operatorDDSID;
                 operator_mobdev_elem[i].value = operatorMobileDevText;
                 operator_mobdevid_elem[i].value = operatorMobileDevID;
+                operator_compliant_uniform_id_elem[i].value = operatorCompliantUniformID;
+                operator_compliant_uniform_elem[i].value = operatorCompliantUniformText;
+
               }
             }
           } else {
@@ -828,7 +862,10 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
 
             inlineHtml += '<td><input value="' + operatorMobileDevText +
               '" readonly class="form-control operatorMobileDevTable" /><input id="operatorMobileDevID" class="operatorMobileDevID" value="' +
-              operatorMobileDevID + '" type="hidden"/></td>'
+              operatorMobileDevID + '" type="hidden"/></td>';
+            inlineHtml += '<td><input value="' + operatorCompliantUniformText +
+              '" readonly class="form-control operatorCompliantUniformTable" /><input id="" class="operatorCompliantUniformID" value="' +
+              operatorCompliantUniformID + '" type="hidden"/></td>'
             inlineHtml += '</tr>';
 
             $('#operatorTable tr:last').after(inlineHtml);
@@ -1199,6 +1236,11 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         var operator_mobdevid_elem = document.getElementsByClassName(
           "operatorMobileDevID");
 
+        var operator_compliant_uniform_elem = document.getElementsByClassName(
+          "operatorCompliantUniformTable");
+        var operator_compliant_uniform_id_elem = document.getElementsByClassName(
+          "operatorCompliantUniformID");
+
         var operatorIdsArray = []
         var operatorNewIdsArray = []
         var operatorNameArray = []
@@ -1217,6 +1259,9 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         var operatorNewPrimaryArray = []
         var operatorMobileDevArray = []
         var operatorNewMobileDevArray = []
+
+        var operatorCompliantUniformArray = []
+        var operatorNewCompliantUniformArray = []
 
         for (var i = 0; i < edit_operator_elem.length; ++i) {
           var row_operator_id = edit_operator_elem[i].getAttribute(
@@ -1246,6 +1291,8 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
                 operator_primaryid_elem[i].value
               operatorMobileDevArray[operatorMobileDevArray.length] =
                 operator_mobdevid_elem[i].value
+              operatorCompliantUniformArray[operatorCompliantUniformArray.length] =
+                operator_compliant_uniform_id_elem[i].value
             }
           } else {
             operatorNewIdsArray[operatorNewIdsArray.length] =
@@ -1272,6 +1319,8 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
               operator_primaryid_elem[i].value
             operatorNewMobileDevArray[operatorNewMobileDevArray.length] =
               operator_mobdevid_elem[i].value
+            operatorNewCompliantUniformArray[operatorNewCompliantUniformArray.length] =
+              operator_compliant_uniform_id_elem[i].value
           }
 
         }
@@ -1502,6 +1551,10 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
             fieldId: 'custpage_operatormobiledev',
             value: operatorMobileDevArray.toString()
           });
+          myRecord.setValue({
+            fieldId: 'custpage_operatorcompliantuniform',
+            value: operatorCompliantUniformArray.toString()
+          });
 
           //New Operator Details
           myRecord.setValue({
@@ -1539,6 +1592,10 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
           myRecord.setValue({
             fieldId: 'custpage_new_operatormobiledev',
             value: operatorNewMobileDevArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_new_operatorcompliantuniform',
+            value: operatorNewCompliantUniformArray.toString()
           });
 
           myRecord.setValue({
@@ -1644,7 +1701,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         var franchiseeNextOfKinMobile = $('#franchiseeNextOfKinMobile').val();
         var franchiseeNextOfKinRelationship = $(
           '#franchiseeNextOfKinRelationship').val();
-        
+
         var masterclass = $('#masterclass').val();
         var reviews = $('#reviews').val();
 
@@ -2438,7 +2495,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       var franchiseeNextOfKinMobile = $('#franchiseeNextOfKinMobile').val();
       var franchiseeNextOfKinRelationship = $(
         '#franchiseeNextOfKinRelationship').val();
-      
+
       var masterclass = $('#masterclass').val();
       var reviews = $('#reviews').val();
 

@@ -294,11 +294,11 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             inlineHtml += '<small style="text-align:center;">This scorecard reflects the key elements driving your success in expanding your customer base and revenue streams. </small>';
             inlineHtml += '<ul>';
             inlineHtml += '<li>';
-            if (isNullorEmpty(prospectingMasterclass)) {
+            if (isNullorEmpty(prospectingMasterclass) || prospectingMasterclass == 2) {
                 inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
                 inlineHtml += '<p>Attended a Prospecting Masterclass</p>'
                 inlineHtml += '</li>';
-                inlineHtml += '<small>Our specialised Prospecting Masterclass equips you with the techniques and strategies to identify and engage with potential customers proactively. Through this training, we ensure our prospecting efforts are efficient and effective. </small><div style=" text-align: center;"><button class="btn" style="background-color: #095C7B;color: white;text-align:center;align-items: center">Express interest now</button></div>';
+                inlineHtml += '<small>Our specialised Prospecting Masterclass equips you with the techniques and strategies to identify and engage with potential customers proactively. Through this training, we ensure our prospecting efforts are efficient and effective. </small></br></br><div style=" text-align: center;"><button class="btn" style="background-color: #095C7B;color: white;text-align:center;align-items: center">Express interest now</button></div>';
             } else {
                 completedItems++;
                 inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
@@ -333,7 +333,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             // inlineHtml += '</li>';
             // inlineHtml += '<div style=" text-align: center;"><button class="btn" style="background-color: #095C7B;color: white;text-align:center;align-items: center">Open a new lodgement</button></div>';
             inlineHtml += '<li>';
-            if (isNullorEmpty(customerReviews)) {
+            if (isNullorEmpty(customerReviews) || customerReviews == 2) {
                 inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
                 inlineHtml += '<p>Customer Reviews</p>'
                 inlineHtml += '</li>';
