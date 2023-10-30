@@ -2904,10 +2904,10 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '</select></div></div>';
 
       inlineHtml +=
-      '<div class="col-xs-4"><div class="input-group"><span class="input-group-addon">CONTINGENCY DRIVER <span class="mandatory">*</span></span><select id="operatorContingency" class="form-control operatorContingency" >';
-    inlineHtml +=
-      '<option value=0></option><option value=1>Yes</option><option value=2>No</option>';
-    inlineHtml += '</select></div></div>';
+        '<div class="col-xs-4"><div class="input-group"><span class="input-group-addon">CONTINGENCY DRIVER <span class="mandatory">*</span></span><select id="operatorContingency" class="form-control operatorContingency" >';
+      inlineHtml +=
+        '<option value=0></option><option value=1>Yes</option><option value=2>No</option>';
+      inlineHtml += '</select></div></div>';
 
       inlineHtml +=
         '<div class="col-xs-4"><div class="input-group"><span class="input-group-addon">MOBILE DEV </span><select id="operatorMobileDev" class="form-control operatorMobileDev" >';
@@ -2920,7 +2920,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         '<option value=0></option><option value=1>iOS</option><option value=2>Android</option><option value=5>Other</option>';
       inlineHtml += '</select></div></div>';
 
-     
+
 
       inlineHtml += '</div>';
       inlineHtml += '</div>';

@@ -86,11 +86,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
         function afterSubmit() {
             $('.loading_section').addClass('hide');
-            $('.filter_buttons_section').removeClass('hide');
-            $('.scorecard_percentage').removeClass('hide');
-            // $('.instruction_div').removeClass('hide');
-            // $('.mp_roadmap').removeClass('hide');
-            // $('.pud_prospect_support').removeClass('hide');
+            $('.instruction_div').removeClass('hide');
+            $('.mp_roadmap').removeClass('hide');
+            $('.pud_prospect_support').removeClass('hide');
 
         }
 
@@ -144,6 +142,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         }
 
         function pageInit() {
+            $("#NS_MENU_ID0-item0").css("background-color", "#CFE0CE");
+            $("#NS_MENU_ID0-item0 a").css("background-color", "#CFE0CE");
+            $("#body").css("background-color", "#CFE0CE");
 
             setZeeStateAndSalesRepEmail();
 
@@ -164,9 +165,9 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             const gaugeOptions = {
                 chart: {
                     type: 'solidgauge',
-                    backgroundColor: '#CFE0CE',
+                    backgroundColor: '#7dc2d500',
                     height: (6 / 16 * 100) + '%',
-                    width: 500
+                    // width: 500
                     // zoomType: 'xy'
                 },
 
@@ -254,14 +255,6 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 }]
 
             }));
-
-            $("#fullReport").click(function () {
-
-                var url = baseURL + "/app/site/hosting/scriptlet.nl?script=1784&deploy=1"
-                window.open(url, '_blank')
-                // window.location.href = url;
-
-            });
 
             //On click of close icon in the modal
             $('.close').click(function () {
@@ -480,7 +473,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             });
 
 
-            portlet.resize();
+            // portlet.resize();
 
 
         }
