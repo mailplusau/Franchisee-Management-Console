@@ -72,7 +72,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
                 if (role != 1000) {
                     if (isNullorEmpty(context.request.parameters.zee)) {
-                        zee = 425904;
+                        zee = 794958;
                     }
                 } else {
 
@@ -82,7 +82,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                 var inlineHtml =
                     '<meta name="viewport" content="width=device-width, initial-scale=1.0"><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><script src="//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js"></script><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA92XGDo8rx11izPYT7z2L-YPMMJ6Ih1s0&callback=initMap&libraries=places"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/OverlappingMarkerSpiderfier/1.0.3/oms.min.js"></script></script><link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" /><script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script><link type="text/css" rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css"><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&amp;c=1048144&amp;h=9ee6accfd476c9cae718&amp;_xt=.css"><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&amp;c=1048144&amp;h=ef2cda20731d146b5e98&amp;_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&amp;c=1048144&amp;h=a0ef6ac4e28f91203dfe&amp;_xt=.css"><script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script><script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-resource.min.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&amp;c=1048144&amp;h=a0ef6ac4e28f91203dfe&amp;_xt=.css"><style>.mandatory{color:red;}.clearfix:after {clear: both;content: "";display: block;height: 0;}.wrapper {vertical-align: middle;}.nav {margin-top: 40px;}.pull-right {float: right;}a, a:active {color: #212121;text-decoration: none;}a:hover {color: #999;}.arrow-steps .step {font-size: 14px;text-align: center;color: #fff;cursor: default;margin: 0 3px;padding: 10px 10px 10px 30px;float: left;position: relative;background-color: #095c7b;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none; transition: background-color 0.2s ease;}.arrow-steps .step:after,.arrow-steps .step:before {content: " ";position: absolute;top: 0;right: -17px;width: 0;height: 40px;border-top: 19px solid transparent;border-bottom: 17px solid transparent;border-left: 17px solid #095c7b;	z-index: 2;transition: border-color 0.2s ease;}.arrow-steps .step:before {right: auto;left: 0;border-left: 17px solid #fff;	z-index: 0;}.arrow-steps .step:first-child:before {border: none;}.arrow-steps .step:first-child {border-top-left-radius: 4px;border-bottom-left-radius: 4px;}.arrow-steps .step span {position: relative;}.arrow-steps .step span:before {opacity: 0;content: "✔";position: absolute;top: -2px;left: -20px;color: #095c7b;}.arrow-steps .step.done span:before {opacity: 1;-webkit-transition: opacity 0.3s ease 0.5s;-moz-transition: opacity 0.3s ease 0.5s;-ms-transition: opacity 0.3s ease 0.5s;transition: opacity 0.3s ease 0.5s;}.arrow-steps .step.current {color: #103d39;font-weight: bold;background-color: #fbea51;}.arrow-steps .step.current:after {border-left: 17px solid #fbea51;	}.nav > li.active > a, .nav > li.active > a:focus, .nav > li.active > a:hover { background-color: #095c7b; color: #fff }.nav > li > a, .nav > li > a:focus, .nav > li > a:hover { margin-left: 5px; margin-right: 5px; border: 2px solid #095c7b; color: #095c7b; }</style>';
 
-                inlineHtml += '<div class="container instruction_div hide" style="background-color: lightblue;font-size: 14px;padding: 15px;border-radius: 10px;border: 1px solid;box-shadow: 0px 1px 26px -10px white;"><p><b><u>Instructions</u></b></br><ol><li>Select an operator and fill out the leave register form. </br></div></br>';
+                inlineHtml += '<div class="container instruction_div hide" style="background-color: lightblue;font-size: 14px;padding: 15px;border-radius: 10px;border: 1px solid;box-shadow: 0px 1px 26px -10px white;"><p><b><u>Instructions</u></b></br><ol><li><b>Deadline for Leave Entry</b>: Please enter your leave details before Friday, December 1. </li><li><b>Choosing the Operator</b>: Simply add which operator will be on leave (you can add multiple). Then, simply fill in the relevant drop-down fields that appear.</li><li><b>Relief Driver Details</b>: It\'s crucial to provide comprehensive details about your relief driver to ensure a smooth transition.</li><li><b>App Access</b>:We need to know if your driver need app access. If they do, our IT team will in touch. </li><li><b>Notes</b>: The more information you provide, the better. Use the notes section to communicate any additional details or specific instructions.</li><li><b>Click "Save"</b>: Once you click "save," the record will be stored and the relevant team will be instantly notified.</li></ol></br></div></br>';
 
                 var day = getDay();
                 if (day == 0 || day == 6) {
@@ -227,6 +227,14 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
                     var zeeProjectsArray = zeeProjects.toString();
 
+                    form.addField({
+                        id: 'custpage_zee_projects',
+                        type: ui.FieldType.TEXT,
+                        label: 'Day'
+                    }).updateDisplayType({
+                        displayType: ui.FieldDisplayType.HIDDEN
+                    }).defaultValue = zeeProjectsArray;
+
                     //NetSuite Search: APP - Operator Load
                     var searchOperators = search.load({
                         id: 'customsearch_app_operator_load',
@@ -250,7 +258,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
                     inlineHtml +=
                         '<div class="col-xs-12"><div class="input-group"><span class="input-group-addon">PARTNERSHIP PROGRAM ACTIVE?<span class="mandatory">*</span></span><select id="partnership" class="form-control partnership" readonly>';
-                    if ((zeeProjects.indexOf("2") > -1) || (zeeProjects.indexOf("4") > -1)) {
+                    if ((zeeProjects.indexOf("2") > -1) || (zeeProjects.indexOf("9") > -1)) {
                         inlineHtml +=
                             '<option value=1 selected>Yes</option><option value=2>No</option>';
                     } else {
@@ -301,8 +309,20 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                 var reliefdriveremail = context.request.parameters.custpage_operatorreliefdriveremail;
                 var leavenotes = context.request.parameters.custpage_operatorleavenotes;
                 var customernotified = context.request.parameters.custpage_customernotified;
-                var appAccessRequired = context.request.parameters.appAccessRequired;
-                var sharingApp = context.request.parameters.sharingApp;
+                var appAccessRequired = context.request.parameters.custpage_app_access_required;
+                var sharingApp = context.request.parameters.custpage_sharing_app;
+                var zeeProjects = context.request.parameters.custpage_zee_projects;
+
+                zeeProjectsArray = zeeProjects.split(',');
+
+                log.debug({
+                    title: 'operatorleavestartdate',
+                    details: operatorleavestartdate
+                });
+                log.debug({
+                    title: 'operatorleaveenddate',
+                    details: operatorleaveenddate
+                });
 
                 // var operatoridsArrys = operatorids.split(',')
                 // var operatoridsdeleteArrys = operatorids_delete.split(',')
@@ -317,6 +337,21 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                 // var reliefdriveremailArrays = reliefdriveremail.split(',')
                 // var leavenotesArrays = leavenotes.split(',')
                 // var customernotifiedArrays = customernotified.split(',')
+
+                var operatorleavestartdateArray = operatorleavestartdate.split('-')
+                var operatorleavestartdateString = operatorleavestartdateArray[2] + '/' + operatorleavestartdateArray[1] + '/' + operatorleavestartdateArray[0]
+                var emailLeaveStartDate = operatorleavestartdateString
+
+                var operatorleavestartdateString = operatorleavestartdateArray[1] + '/' + operatorleavestartdateArray[2] + '/' + operatorleavestartdateArray[0]
+                operatorleavestartdate = getDate(operatorleavestartdateString);
+                var operatorLeave1DayAgoStartDate = get1DayAgoDate(operatorleavestartdateString);
+
+                var operatorleaveenddateArray = operatorleaveenddate.split('-')
+                var operatorleaveenddateString = operatorleaveenddateArray[2] + '/' + operatorleaveenddateArray[1] + '/' + operatorleaveenddateArray[0]
+                var emailLeaveEndDate = operatorleaveenddateString
+                var operatorleaveenddateString = operatorleaveenddateArray[1] + '/' + operatorleaveenddateArray[2] + '/' + operatorleaveenddateArray[0]
+                operatorleaveenddate = getDate(operatorleaveenddateString)
+                var operatorLeave1DayAgoEndDate = get1DayAgoDate(operatorleaveenddateString);
 
                 log.debug({
                     title: 'operatorids',
@@ -367,6 +402,16 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                     details: sharingApp
                 });
 
+                log.debug({
+                    title: 'operatorLeave1DayAgoStartDate',
+                    details: operatorLeave1DayAgoStartDate
+                });
+
+                log.debug({
+                    title: 'operatorLeave1DayAgoEndDate',
+                    details: operatorLeave1DayAgoEndDate
+                });
+
                 var operatorCount = 0;
                 var emailOperatorDetails = '';
 
@@ -377,15 +422,6 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                         type: 'customrecord_operator'
                     });
 
-                    if (!isNullorEmpty(zee)) {
-                        searchOperators.filters.push(search.createFilter({
-                            name: 'internalid',
-                            join: 'CUSTRECORD_OPERATOR_FRANCHISEE2',
-                            operator: search.Operator.IS,
-                            values: zeeId
-                        }));
-                    }
-
                     searchOperators.filters.push(search.createFilter({
                         name: 'custrecord_operator_email',
                         join: null,
@@ -395,7 +431,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
                     var resultSetOperators = searchOperators.run();
 
-                    emailOperatorDetails += 'Below are the operators matched to email: ' + reliefdriveremail + '\n';
+                    emailOperatorDetails += '\n\nBelow are the operators matched to email: ' + reliefdriveremail + '\n';
                     resultSetOperators.each(function (searchResultOperators) {
 
                         operatorID = searchResultOperators.getValue('internalid');
@@ -404,6 +440,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                             'custrecord_operator_phone');
                         operatorEmail = searchResultOperators.getValue(
                             'custrecord_operator_email');
+                        linkedZee = searchResultOperators.getValue(
+                            'custrecord_operator_franchisee');
 
                         emailOperatorDetails += '\n Operator NS ID: ' + operatorID;
                         emailOperatorDetails += '\n Operator Name: ' + operatorName;
@@ -420,8 +458,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                     id: operatorids
                 });
 
-                var zeeName = operatorRecord.getValue({
-                    fieldId: 'companyname'
+                var zeeName = operatorRecord.getText({
+                    fieldId: 'custrecord_operator_franchisee'
                 })
 
                 operatorRecord.setValue({
@@ -458,13 +496,32 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                     value: reliefdriveremail
                 })
 
+                if (!isNullorEmpty(appAccessRequired)) {
+                    operatorRecord.setValue({
+                        fieldId: 'custrecord_relief_driver_app_access',
+                        value: appAccessRequired
+                    })
+                }
+
+                if (!isNullorEmpty(sharingApp)) {
+                    operatorRecord.setValue({
+                        fieldId: 'custrecord_relief_driver_sharing_login',
+                        value: sharingApp
+                    })
+                }
+
                 operatorRecord.save();
 
-                var emailSubject = zeeName + 'Franchisee Leave - Operator - ' + operatorname;
-                var emailBody = zeeName + ' Franchisee has updated the leave register for operator ' + operatorName;
-                emailBody += '\nLeave Start Date: ' + operatorleavestartdate;
-                emailBody += '\nLeave End Date: ' + operatorleaveenddate;
-                emailBody += '\nLeave End Date: ' + operatorleaveenddate;
+                var emailSubject = zeeName + ' Franchisee Leave Regsiter - ' + operatorname;
+                var emailBody = 'Please be informed of the upcoming holiday leave details for ' + zeeName + ' - ' + operatorname + '\n';
+                emailBody += '\nLeave Start Date: ' + emailLeaveStartDate;
+                emailBody += '\nLeave End Date: ' + emailLeaveEndDate + '\n';
+
+                var allStaffEmailBody = emailBody;
+
+                var taskTitleLeaveStartDate = 'Update Suburb Mapping from operator ' + operatorname + ' to Relief Driver ' + reliefdrivername
+                var taskTitleLeaveEndDate = 'Update Suburb Mapping from relief driver ' + reliefdrivername + ' to operator ' + operatorname
+
                 if (reliefdriverrequired == '1') {
                     emailBody += '\nRelief Driver Required?: Yes';
                 } else {
@@ -475,34 +532,137 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                 } else {
                     emailBody += '\nCustomer Notified?: No';
                 }
-                emailBody += '\nLeave Notes: ' + leavenotes;
-
-                if (operatorCount == 0 && !isNullorEmpty(reliefdriveremail)) {
-                    var emailNewReliefDriverDetails = '\nBelow are the details of the relief driver: ';
-                    emailNewReliefDriverDetails += '\n Operator Name: ' + reliefdrivername;
-                    emailNewReliefDriverDetails += '\n Operator Mobile: ' + reliefdrivermobile;
-                    emailNewReliefDriverDetails += '\n Operator Email: ' + reliefdriveremail;
-                    emailBody += emailNewReliefDriverDetails;
+                if (appAccessRequired == '1') {
+                    emailBody += '\nApp Access Required?: Yes';
                 } else {
+                    emailBody += '\nApp Access Required?: No';
+                    if (sharingApp == '1') {
+                        emailBody += '\nSharing App?: Yes';
+                    } else {
+                        emailBody += '\nSharing App?: No';
+                    }
+                }
+                emailBody += '\n\nLeave Notes: ' + leavenotes;
+
+                var emailNewReliefDriverDetails = '\n\nBelow are the details of the relief driver: ';
+                emailNewReliefDriverDetails += '\n Operator Name: ' + reliefdrivername;
+                emailNewReliefDriverDetails += '\n Operator Mobile: ' + reliefdrivermobile;
+                emailNewReliefDriverDetails += '\n Operator Email: ' + reliefdriveremail;
+                emailBody += emailNewReliefDriverDetails;
+
+                allStaffEmailBody += emailNewReliefDriverDetails;
+
+                if (operatorCount != 0 && !isNullorEmpty(reliefdriveremail)) {
                     emailBody += emailOperatorDetails
                 }
 
+                emailBody += '\n\n You now have this information in your inbox to help you provide customer service when needed and to ensure smooth operations during this period.\n\n';
+                emailBody += 'Thank you,\nIT Team  '
 
+                //Email to Popie & Fiona
                 email.send({
                     author: 112209,
-                    recipients: ['fiona.harrison@mailplus.com.au', '[popie.popie@mailplus.com.au]'],
+                    recipients: ['fiona.harrison@mailplus.com.au', 'popie.popie@mailplus.com.au'],
                     subject: emailSubject,
                     body: emailBody,
                     cc: ['ankith.ravindran@mailplus.com.au']
                 });
 
-                //UPDATE LEAVE OPREATOR DETAILS
-                // if (!isNullorEmpty(operatoridsArrys)) {
-                //     for (var y = 0; y < operatoridsArrys.length; y++) {
+                if (reliefdriverrequired == '1' && ((zeeProjectsArray.indexOf("2") > -1) || (zeeProjectsArray.indexOf("9") > -1))) {
+                    // if (reliefdriverrequired == '1') {
 
-                //     }
-                // }
+                    //Create Task to update suburb mapping from relief driver to main operator
+                    var task_record = record.create({
+                        type: 'task'
+                    });
+                    task_record.setValue({
+                        fieldId: 'startdate',
+                        value: operatorLeave1DayAgoStartDate
+                    });
+                    task_record.setValue({
+                        fieldId: 'duedate',
+                        value: operatorLeave1DayAgoStartDate
+                    });
 
+                    task_record.setValue({
+                        fieldId: 'sendemail',
+                        value: true
+                    });
+                    // task_record.setValue({
+                    //     fieldId: 'status',
+                    //     value: 3
+                    // });
+                    task_record.setValue({
+                        fieldId: 'title',
+                        value: taskTitleLeaveStartDate
+                    });
+                    task_record.setValue({
+                        fieldId: 'custevent_organiser',
+                        value: 1552795 //Fiona
+                    });
+                    task_record.setValue({
+                        fieldId: 'assigned',
+                        value: 1552795 //Fiona
+                    });
+                    task_record.setValue({
+                        fieldId: 'message',
+                        value: emailBody
+                    });
+
+                    task_record.save();
+
+
+
+                    //Create Task to update suburb mapping from relief driver to main operator
+                    var task_record = record.create({
+                        type: 'task'
+                    });
+                    task_record.setValue({
+                        fieldId: 'startdate',
+                        value: operatorLeave1DayAgoEndDate
+                    });
+                    task_record.setValue({
+                        fieldId: 'duedate',
+                        value: operatorLeave1DayAgoEndDate
+                    });
+
+                    task_record.setValue({
+                        fieldId: 'sendemail',
+                        value: true
+                    });
+                    // task_record.setValue({
+                    //     fieldId: 'status',
+                    //     value: 3
+                    // });
+                    task_record.setValue({
+                        fieldId: 'title',
+                        value: taskTitleLeaveEndDate
+                    });
+                    task_record.setValue({
+                        fieldId: 'custevent_organiser',
+                        value: 1552795 //Fiona
+                    });
+                    task_record.setValue({
+                        fieldId: 'assigned',
+                        value: 1552795 //Fiona
+                    });
+                    task_record.setValue({
+                        fieldId: 'message',
+                        value: emailBody
+                    });
+
+                    task_record.save();
+
+                }
+
+                //All Staff Email
+                email.send({
+                    author: 112209,
+                    recipients: ['ankith.ravindran@mailplus.com.au'],
+                    // recipients: ['AllStaff@mailplus.com.au'],
+                    subject: emailSubject,
+                    body: emailBody
+                });
 
                 redirect.toSuitelet({
                     scriptId: 'customscript_sl2_zee_leave_register',
@@ -778,7 +938,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             inlineHtml += '<div class="row">';
             inlineHtml +=
                 '<div class="col-xs-12"><div class="input-group"><span class="input-group-addon">RELIEF DRIVER REQUIRED?<span class="mandatory">*</span></span><select id="relief_required" class="form-control relief_required" >';
-            if ((zeeProjects.indexOf("2") > -1) || (zeeProjects.indexOf("4") > -1)) {
+            if ((zeeProjects.indexOf("2") > -1) || (zeeProjects.indexOf("9") > -1)) {
                 inlineHtml +=
                     '<option value=0></option><option value=1 selected>Yes</option><option value=2 >No</option>';
             } else {
@@ -947,7 +1107,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                     inlineHtml +=
                         '<td><a data-id="' +
                         operatorID +
-                        '" class="btn btn-md btn-warning editOperatorTable" data-changed="notchanged" style="border-radius: 30px;">EDIT</a></td>'
+                        '" class="btn btn-md btn-warning editOperatorTable" data-changed="notchanged" style="border-radius: 30px;">EDIT</a></br><a data-id="' +
+                        operatorID +
+                        '" class="btn btn-md btn-danger deleteOperatorTable" data-changed="notchanged" style="border-radius: 30px;">DELETE</a></td>'
                 }
 
                 inlineHtml += '<td><input value="' + operatorName +
@@ -1193,6 +1355,20 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
         function getDate(inputDate) {
             var date = new Date(inputDate);
+            format.format({
+                value: date,
+                type: format.Type.DATE,
+                timezone: format.Timezone.AUSTRALIA_SYDNEY
+            })
+
+            return date;
+        }
+
+        function get1DayAgoDate(inputDate) {
+            var date = new Date(inputDate);
+            log.debug('get1DayAgoDate > inputed date: ' + date);
+            date.setDate(date.getDate() - 1);
+            log.debug('get1DayAgoDate > updated date: ' + date);
             format.format({
                 value: date,
                 type: format.Type.DATE,

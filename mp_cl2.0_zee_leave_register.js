@@ -55,59 +55,6 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
 
         var tollUploadSet = [];
 
-        function initAutocomplete() {
-            // Create the autocomplete object, restricting the search to geographical location types.
-            // types is empty to get all places, not only address. Previously it was types: ['geocode']
-            var options = {
-                types: [],
-                componentRestrictions: {
-                    country: 'au'
-                }
-            }
-            autocomplete = new google.maps.places.Autocomplete((document.getElementById(
-                'address2')), options);
-
-            // When the user selects an address from the dropdown, populate the address fields in the form.
-            autocomplete.addListener('place_changed', fillInAddress);
-        }
-
-        function setupClickListener(id, types) {
-            // var radioButton = document.getElementById(id);
-            // radioButton.addEventListener('click', function() {
-            autocomplete.setTypes([]);
-            // });
-        }
-
-        //Fill the Street No. & Street Name after selecting an address from the dropdown
-        function fillInAddress() {
-
-            // Get the place details from the autocomplete object.
-            var place = autocomplete.getPlace();
-
-            // Get each component of the address from the place details and fill the corresponding field on the form.
-            var addressComponent = "";
-
-            for (var i = 0; i < place.address_components.length; i++) {
-
-                console.log(place.address_components[i])
-
-                if (place.address_components[i].types[0] == 'street_number' || place.address_components[
-                    i].types[0] == 'route') {
-                    addressComponent += place.address_components[i]['short_name'] + " ";
-                    $('#address2').val(addressComponent);
-                }
-                if (place.address_components[i].types[0] == 'postal_code') {
-                    $('#postcode').val(place.address_components[i]['short_name']);
-                }
-                if (place.address_components[i].types[0] ==
-                    'administrative_area_level_1') {
-                    $('#state').val(place.address_components[i]['short_name']);
-                }
-                if (place.address_components[i].types[0] == 'locality') {
-                    $('#city').val(place.address_components[i]['short_name']);
-                }
-            }
-        }
 
         //Fade out the Loading symbol
         function afterLoad() {
@@ -199,7 +146,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
                 var appAccessRequired = $(this).val();
                 if (appAccessRequired == 2) {
                     $('.relief_sharing_app_section').removeClass('hide');
-                } else if (reliefDriverRequired == 1 || reliefDriverRequired == 0) {
+                } else if (appAccessRequired == 1 || appAccessRequired == 0) {
                     $('.relief_sharing_app_section').addClass('hide');
                 }
             });
@@ -253,10 +200,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
                 //Get the values of the row from the table
                 var operatorName = $(this).closest('tr').find(
                     '.operatorNameTable').val()
-                var operatorEmail = $(this).closest('tr').find(
-                    '.operatorEmailTable').val()
-                var operatorMobile = $(this).closest('tr').find(
-                    '.operatorPhoneTable').val()
+                
                 var operatorLeaveStartDate = $(this).closest('tr').find(
                     '.operatorLeaveStartDateTable').val()
                 var operatorLeaveEndDate = $(this).closest('tr').find(
@@ -280,14 +224,34 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
                     '.operatorLeaveNotesTable').val()
 
                 console.log('operatorReliefDriverRequiredID: ' + operatorReliefDriverRequiredID);
+                console.log('operatorLeaveStartDate: ' + operatorLeaveStartDate);
+                console.log('operatorLeaveEndDate: ' + operatorLeaveEndDate);
+
+                var operatorLeaveStartDateArray = operatorLeaveStartDate.split('/');
+                if (operatorLeaveStartDateArray[1] < 10) {
+                    operatorLeaveStartDateArray[1] = '0' + operatorLeaveStartDateArray[1];
+                }
+                if (operatorLeaveStartDateArray[0] < 10) {
+                    operatorLeaveStartDateArray[0] = '0' + operatorLeaveStartDateArray[0];
+                }
+                var formattedoperatorLeaveStartDate = operatorLeaveStartDateArray[2] + '-' + operatorLeaveStartDateArray[1] + '-' + operatorLeaveStartDateArray[0]
+
+                var operatorLeaveEndDateArray = operatorLeaveEndDate.split('/');
+                if (operatorLeaveEndDateArray[1] < 10) {
+                    operatorLeaveEndDateArray[1] = '0' + operatorLeaveEndDateArray[1];
+                }
+                if (operatorLeaveEndDateArray[0] < 10) {
+                    operatorLeaveEndDateArray[0] = '0' + operatorLeaveEndDateArray[0];
+                }
+                var formattedoperatorLeaveEndDate = operatorLeaveEndDateArray[2] + '-' + operatorLeaveEndDateArray[1] + '-' + operatorLeaveEndDateArray[0]
 
                 //Populate the fields from the values got from the row of the table
                 $('.operatorName').val(operatorName);
                 $('.operatorEmail').val(operatorEmail);
                 $('.operatorMobile').val(operatorMobile);
 
-                $('.leaveStartDate').val(operatorLeaveStartDate);
-                $('.leaveEndDate').val(operatorLeaveEndDate);
+                $('.leaveStartDate').val(formattedoperatorLeaveStartDate);
+                $('.leaveEndDate').val(formattedoperatorLeaveEndDate);
 
                 if (!isNullorEmpty(operatorReliefDriverRequiredID)) {
                     $('.relief_driver_section').removeClass('hide');
@@ -404,11 +368,13 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
                     if (isNullorEmpty(appAccessRequired)) {
                         errorMessage +=
                             'Please Select App Access Required</br>';
+                    } else if (appAccessRequired != 1) {
+                        if (isNullorEmpty(sharingApp)) {
+                            errorMessage +=
+                                'Please Select Sharing App Access</br>';
+                        }
                     }
-                    if (isNullorEmpty(sharingApp)) {
-                        errorMessage +=
-                            'Please Select Sharing App Access</br>';
-                    }
+
                 }
 
                 //Show the error message
@@ -419,7 +385,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
 
                     // Set the value of custom fields
                     myRecord.setValue({
-                        fieldId: 'custpage_operatorleavestartdate',
+                        fieldId: 'custpage_operatorids',
                         value: operatorID
                     });
                     myRecord.setValue({
@@ -427,11 +393,11 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
                         value: operatorName
                     });
                     myRecord.setValue({
-                        fieldId: 'custpage_operatorleaveenddate',
+                        fieldId: 'custpage_operatorleavestartdate',
                         value: operatorLeaveStartDate
                     });
                     myRecord.setValue({
-                        fieldId: 'custpage_operatoremploymentype',
+                        fieldId: 'custpage_operatorleaveenddate',
                         value: operatorLeaveEndDate
                     });
                     myRecord.setValue({
@@ -607,6 +573,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
                     $('.row_relief_required').addClass('hide');
                     $('.relief_driver_section').addClass('hide');
                     $('.row_app_access_required_section').addClass('hide');
+                    $('.relief_sharing_app_section').addClass('hide');
                 }
             });
 
@@ -650,7 +617,6 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
                     $(this).closest("tr").remove();
                 }
             });
-
 
             /**
              * Close the Alert box on click
