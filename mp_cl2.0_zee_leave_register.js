@@ -135,8 +135,10 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
                 if (reliefDriverRequired == 1) {
                     $('.relief_driver_section').removeClass('hide');
                     $('.row_app_access_required_section').removeClass('hide');
+                    $('.operator_change_section').removeClass('hide');
                 } else if (reliefDriverRequired == 2 || reliefDriverRequired == 0) {
                     $('.relief_driver_section').addClass('hide');
+                    $('.operator_change_section').addClass('hide');
                     $('.row_app_access_required_section').addClass('hide');
                 }
             });
@@ -200,7 +202,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
                 //Get the values of the row from the table
                 var operatorName = $(this).closest('tr').find(
                     '.operatorNameTable').val()
-                
+
                 var operatorLeaveStartDate = $(this).closest('tr').find(
                     '.operatorLeaveStartDateTable').val()
                 var operatorLeaveEndDate = $(this).closest('tr').find(
@@ -255,6 +257,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
 
                 if (!isNullorEmpty(operatorReliefDriverRequiredID)) {
                     $('.relief_driver_section').removeClass('hide');
+                    $('.operator_change_section').removeClass('hide');
                     $('.row_app_access_required_section').removeClass('hide');
                     $('.relief_required').val(operatorReliefDriverRequiredID);
                 } else {
@@ -262,9 +265,11 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
                     if (partnershipProgram == 1) {
                         $('.relief_required').val(1);
                         $('.relief_driver_section').removeClass('hide');
+                        $('.operator_change_section').removeClass('hide');
                         $('.row_app_access_required_section').removeClass('hide');
                     } else if (partnershipProgram == 2 || partnershipProgram == 0) {
                         $('.relief_driver_section').addClass('hide');
+                        $('.operator_change_section').addClass('hide');
                         $('.row_app_access_required_section').addClass('hide');
                     }
                 }
@@ -434,123 +439,10 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
                         fieldId: 'custpage_sharing_app',
                         value: sharingApp
                     });
-
-                    //Update the existing row with the values from the fields
-                    // if (!isNullorEmpty(operatorID)) {
-                    //     var edit_operator_elem = document.getElementsByClassName(
-                    //         "editOperatorTable");
-                    //     var edit_name_elem = document.getElementsByClassName(
-                    //         "operatorNameTable");
-                    //     var operator_email_elem = document.getElementsByClassName(
-                    //         "operatorEmailTable");
-                    //     var operator_phone_elem = document.getElementsByClassName(
-                    //         "operatorPhoneTable");
-
-                    //     var operator_leave_start_date_elem = document.getElementsByClassName(
-                    //         "operatorLeaveStartDateTable");
-                    //     var operator_leave_end_date_elem = document.getElementsByClassName(
-                    //         "operatorLeaveEndDateTable");
-
-                    //     var operator_leave_end_date_elem = document.getElementsByClassName(
-                    //         "operatorLeaveEndDateTable");
-                    //     var operator_leave_end_date_elem = document.getElementsByClassName(
-                    //         "operatorLeaveEndDateTable");
-
-                    //     var operator_customer_notifed_elem = document.getElementsByClassName(
-                    //         "customerNotifiedTable");
-                    //     var operator_customernotifiedid_elem = document.getElementsByClassName(
-                    //         "customerNotifiedID");
-
-                    //     var operator_relief_driver_required_elem = document.getElementsByClassName(
-                    //         "operatorReliefDriverRequiredTable");
-                    //     var operator_reliefdriverrequiredid_elem = document.getElementsByClassName(
-                    //         "operatorReliefDriverRequiredID");
-
-                    //     var operator_relief_driver_name_elem = document.getElementsByClassName(
-                    //         "operatorReliefDriverNameTable");
-                    //     var operator_relief_driver_mobile_elem = document.getElementsByClassName(
-                    //         "operatorReliefDriverMobileTable");
-                    //     var operator_relief_driver_email_elem = document.getElementsByClassName(
-                    //         "operatorReliefDriverEmailTable");
-
-                    //     var operator_leave_notes_elem = document.getElementsByClassName(
-                    //         "operatorLeaveNotesTable");
-
-                    //     console.log('edit_operator_elem.length: ' +
-                    //         edit_operator_elem.length)
-
-                    //     for (var i = 0; i < edit_operator_elem.length; i++) {
-                    //         var row_operator_id = edit_operator_elem[i].getAttribute(
-                    //             'data-id');
-                    //         console.log('row_operator_id: ' + row_operator_id)
-
-                    //         if (operatorID == row_operator_id) {
-                    //             console.log('i: ' + i)
-                    //             console.log('operatorID: ' + operatorID)
-                    //             console.log('edit_name_elem[i]: ' + edit_name_elem[i])
-
-                    //             edit_name_elem[i].value = operatorName;
-                    //             edit_operator_elem[i].setAttribute(
-                    //                 'data-changed', 'changed');
-                    //             edit_operator_elem[i].innerHTML = 'EDIT';
-                    //             edit_operator_elem[i].classList.remove('btn-primary')
-                    //             edit_operator_elem[i].classList.add('btn-warning')
-                    //             operator_email_elem[i].value = operatorEmail;
-                    //             operator_phone_elem[i].value = operatorMobile;
-
-                    //             operator_leave_start_date_elem[i].value = operatorLeaveStartDate;
-                    //             operator_leave_end_date_elem[i].value = operatorLeaveEndDate;
-
-                    //             operator_reliefdriverrequiredid_elem[i].value = reliefDriverRequired;
-                    //             operator_relief_driver_required_elem[i].value = reliefDriverRequiredText;
-
-                    //             operator_customernotifiedid_elem[i].value = customerNotified;
-                    //             operator_customer_notifed_elem[i].value = customerNotifiedText;
-
-                    //             operator_relief_driver_name_elem[i].value = operatorReliefDriverName;
-                    //             operator_relief_driver_mobile_elem[i].value = operatorReliefDriverMobile;
-                    //             operator_relief_driver_email_elem[i].value = operatorReliefDriverEmail;
-
-                    //             operator_leave_notes_elem[i].value = operatorLeaveNotes;
-
-                    //         }
-                    //     }
-                    // } else {
-                    //     //Create a new row from the values entered in the fields
-                    //     var inlineHtml = '';
-                    //     inlineHtml += '<tr>'
-                    //     inlineHtml +=
-                    //         '<td><a data-id="' +
-                    //         operatorID +
-                    //         '" class="btn btn-md btn-primary editOperatorTable" data-changed="changed" style="border-radius: 30px;">EDIT</a> </td>'
-                    //     inlineHtml += '<td><input value="' + operatorName +
-                    //         '" readonly class="form-control operatorNameTable" /></td>'
-                    //     inlineHtml += '<td><input value="' + operatorEmail +
-                    //         '" readonly class="form-control operatorEmailTable" /></td>'
-                    //     inlineHtml += '<td><input value="' + operatorMobile +
-                    //         '" readonly class="form-control operatorPhoneTable" /></td>'
-                    //     inlineHtml += '<td><input value="' + operatorLeaveStartDate +
-                    //         '" readonly class="form-control operatorLeaveStartDateTable"/></td>'
-                    //     inlineHtml += '<td><input value="' + operatorLeaveEndDate +
-                    //         '" readonly class="form-control operatorLeaveEndDateTable" /></td>';
-                    //     inlineHtml += '<td><input value="' + customerNotified +
-                    //         '" readonly class="form-control customerNotifiedTable" /><input id="" class="customerNotifiedID" value="' +
-                    //         customerNotifiedID + '" type="hidden"/></td>'
-                    //     inlineHtml += '<td><input value="' + operatorReliefDriverRequired +
-                    //         '" readonly class="form-control operatorReliefDriverRequiredTable" /><input id="" class="operatorReliefDriverRequiredID" value="' +
-                    //         operatorReliefDriverRequiredID + '" type="hidden"/></td>'
-                    //     inlineHtml += '<td><input value="' + operatorReliefDriverName +
-                    //         '" readonly class="form-control operatorReliefDriverNameTable" /></td>'
-                    //     inlineHtml += '<td><input value="' + operatorReliefDriverMobile +
-                    //         '" readonly class="form-control operatorReliefDriverMobileTable" /></td>'
-                    //     inlineHtml += '<td><input value="' + operatorReliefDriverEmail +
-                    //         '" readonly class="form-control operatorReliefDriverEmailTable" /></td>'
-                    //     inlineHtml += '<td><textarea readonly class="form-control operatorLeaveNotesTable" >' + operatorLeaveNotes +
-                    //         '</textarea></td>'
-                    //     inlineHtml += '</tr>';
-
-                    //     $('#operatorTable tr:last').after(inlineHtml);
-                    // }
+                    myRecord.setValue({
+                        fieldId: 'custpage_operator_notified',
+                        value: sharingApp
+                    });
 
                     document.getElementById('submitter').click();
 
@@ -572,49 +464,30 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
                     $('.saveoperator_section').addClass('hide');
                     $('.row_relief_required').addClass('hide');
                     $('.relief_driver_section').addClass('hide');
+                    $('.operator_change_section').addClass('hide');
                     $('.row_app_access_required_section').addClass('hide');
                     $('.relief_sharing_app_section').addClass('hide');
                 }
             });
 
-            $(document).on("click", ".deleteAddressTable", function (e) {
-                //Get the Address Internal ID
-                var id = $(this).closest('tr').find('.deleteAddressTable').attr(
-                    'data-id');
-                if (confirm(
-                    "Are you sure you want to delete this address?\n\nThis action cannot be undone."
-                )) {
-                    if (id != 0 && id != '0') {
-                        deleteAddressArray[deleteAddressArray.length] = id
-                        deleteAddressArray.toString();
-
-                        myRecord.setValue({
-                            fieldId: 'custpage_addressids_delete',
-                            value: deleteAddressArray.toString()
-                        });
-                    }
-                    $(this).closest("tr").remove();
-                }
-            });
-
             $(document).on("click", ".deleteOperatorTable", function (e) {
-                //Get the Operator Internal ID
-                var id = $(this).closest('tr').find('.deleteOperatorTable').attr(
-                    'data-id');
+                var operatorID = $('#operatorInternalId').val();
                 if (confirm(
-                    "Are you sure you want to delete this address?\n\nThis action cannot be undone."
+                    "Are you sure you want to delete the leave registered?\n\nThis action cannot be undone."
                 )) {
-                    if (id != 0 && id != '0') {
-                        deleteOperatorArray[deleteOperatorArray.length] = id
-                        console.log(deleteOperatorArray)
-                        deleteOperatorArray.toString();
+                    var operatorId = $(this).closest('tr').find('.editOperatorTable')
+                        .attr(
+                            'data-id');
+                    myRecord.setValue({
+                        fieldId: 'custpage_operatorids',
+                        value: operatorId
+                    });
+                    myRecord.setValue({
+                        fieldId: 'custpage_delete_leave',
+                        value: 'true'
+                    });
 
-                        myRecord.setValue({
-                            fieldId: 'custpage_operatorids_delete',
-                            value: deleteOperatorArray.toString()
-                        });
-                    }
-                    $(this).closest("tr").remove();
+                    document.getElementById('submitter').click();
                 }
             });
 

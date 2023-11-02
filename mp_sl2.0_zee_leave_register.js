@@ -207,6 +207,22 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                     displayType: ui.FieldDisplayType.HIDDEN
                 });
 
+                form.addField({
+                    id: 'custpage_operator_notified',
+                    type: ui.FieldType.TEXT,
+                    label: 'Day'
+                }).updateDisplayType({
+                    displayType: ui.FieldDisplayType.HIDDEN
+                });
+
+                form.addField({
+                    id: 'custpage_delete_leave',
+                    type: ui.FieldType.TEXT,
+                    label: 'delete'
+                }).updateDisplayType({
+                    displayType: ui.FieldDisplayType.HIDDEN
+                }).defaultValue = false;
+
 
 
                 inlineHtml +=
@@ -297,7 +313,6 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                 var zeeId = parseInt(context.request.parameters.custpage_zee);
 
                 var operatorids = context.request.parameters.custpage_operatorids;
-                var operatorids_delete = context.request.parameters.custpage_operatorids_delete;
                 var operatorname = context.request.parameters.custpage_operatorname;
                 var operatoremail = context.request.parameters.custpage_operatoremail;
                 var operatormobile = context.request.parameters.custpage_operatormobile;
@@ -312,357 +327,404 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                 var appAccessRequired = context.request.parameters.custpage_app_access_required;
                 var sharingApp = context.request.parameters.custpage_sharing_app;
                 var zeeProjects = context.request.parameters.custpage_zee_projects;
+                var operatorChangeNotified = context.request.parameters.custpage_operator_notified;
+                var deleteLeave = context.request.parameters.custpage_delete_leave;
 
                 zeeProjectsArray = zeeProjects.split(',');
 
                 log.debug({
-                    title: 'operatorleavestartdate',
-                    details: operatorleavestartdate
+                    title: 'deleteLeave',
+                    details: deleteLeave
                 });
-                log.debug({
-                    title: 'operatorleaveenddate',
-                    details: operatorleaveenddate
-                });
-
-                // var operatoridsArrys = operatorids.split(',')
-                // var operatoridsdeleteArrys = operatorids_delete.split(',')
-                // var operatornameArrys = operatorname.split(',')
-                // var operatoremailArrys = operatoremail.split(',')
-                // var operatormobileArrys = operatormobile.split(',')
-                // var operatorleavestartdateArrays = operatorleavestartdate.split(',')
-                // var operatorleaveenddateArrays = operatorleaveenddate.split(',')
-                // var reliefdriverrequiredArrays = reliefdriverrequired.split(',')
-                // var reliefdrivernameArrays = reliefdrivername.split(',')
-                // var reliefdrivermobileArrays = reliefdrivermobile.split(',')
-                // var reliefdriveremailArrays = reliefdriveremail.split(',')
-                // var leavenotesArrays = leavenotes.split(',')
-                // var customernotifiedArrays = customernotified.split(',')
-
-                var operatorleavestartdateArray = operatorleavestartdate.split('-')
-                var operatorleavestartdateString = operatorleavestartdateArray[2] + '/' + operatorleavestartdateArray[1] + '/' + operatorleavestartdateArray[0]
-                var emailLeaveStartDate = operatorleavestartdateString
-
-                var operatorleavestartdateString = operatorleavestartdateArray[1] + '/' + operatorleavestartdateArray[2] + '/' + operatorleavestartdateArray[0]
-                operatorleavestartdate = getDate(operatorleavestartdateString);
-                var operatorLeave1DayAgoStartDate = get1DayAgoDate(operatorleavestartdateString);
-
-                var operatorleaveenddateArray = operatorleaveenddate.split('-')
-                var operatorleaveenddateString = operatorleaveenddateArray[2] + '/' + operatorleaveenddateArray[1] + '/' + operatorleaveenddateArray[0]
-                var emailLeaveEndDate = operatorleaveenddateString
-                var operatorleaveenddateString = operatorleaveenddateArray[1] + '/' + operatorleaveenddateArray[2] + '/' + operatorleaveenddateArray[0]
-                operatorleaveenddate = getDate(operatorleaveenddateString)
-                var operatorLeave1DayAgoEndDate = get1DayAgoDate(operatorleaveenddateString);
-
-                log.debug({
-                    title: 'operatorids',
-                    details: operatorids
-                });
-                log.debug({
-                    title: 'operatorname',
-                    details: operatorname
-                });
-                log.debug({
-                    title: 'operatorleavestartdate',
-                    details: operatorleavestartdate
-                });
-                log.debug({
-                    title: 'operatorleaveenddate',
-                    details: operatorleaveenddate
-                });
-                log.debug({
-                    title: 'reliefdriverrequired',
-                    details: reliefdriverrequired
-                });
-                log.debug({
-                    title: 'reliefdrivername',
-                    details: reliefdrivername
-                });
-                log.debug({
-                    title: 'reliefdrivermobile',
-                    details: reliefdrivermobile
-                });
-                log.debug({
-                    title: 'reliefdriveremail',
-                    details: reliefdriveremail
-                });
-                log.debug({
-                    title: 'leavenotes',
-                    details: leavenotes
-                });
-                log.debug({
-                    title: 'customernotified',
-                    details: customernotified
-                });
-                log.debug({
-                    title: 'appAccessRequired',
-                    details: appAccessRequired
-                });
-                log.debug({
-                    title: 'sharingApp',
-                    details: sharingApp
-                });
-
-                log.debug({
-                    title: 'operatorLeave1DayAgoStartDate',
-                    details: operatorLeave1DayAgoStartDate
-                });
-
-                log.debug({
-                    title: 'operatorLeave1DayAgoEndDate',
-                    details: operatorLeave1DayAgoEndDate
-                });
+                
 
                 var operatorCount = 0;
                 var emailOperatorDetails = '';
 
-                if (!isNullorEmpty(reliefdriveremail)) {
-                    //NetSuite Search: APP - Operator Load
-                    var searchOperators = search.load({
-                        id: 'customsearch_app_operator_load',
-                        type: 'customrecord_operator'
+                if (deleteLeave == 'false') {
+                    var operatorleavestartdateArray = operatorleavestartdate.split('-')
+                    var operatorleavestartdateString = operatorleavestartdateArray[2] + '/' + operatorleavestartdateArray[1] + '/' + operatorleavestartdateArray[0]
+                    var emailLeaveStartDate = operatorleavestartdateString
+
+                    var operatorleavestartdateString = operatorleavestartdateArray[1] + '/' + operatorleavestartdateArray[2] + '/' + operatorleavestartdateArray[0]
+                    operatorleavestartdate = getDate(operatorleavestartdateString);
+                    var operatorLeave1DayAgoStartDate = get1DayAgoDate(operatorleavestartdateString);
+
+                    var operatorleaveenddateArray = operatorleaveenddate.split('-')
+                    var operatorleaveenddateString = operatorleaveenddateArray[2] + '/' + operatorleaveenddateArray[1] + '/' + operatorleaveenddateArray[0]
+                    var emailLeaveEndDate = operatorleaveenddateString
+                    var operatorleaveenddateString = operatorleaveenddateArray[1] + '/' + operatorleaveenddateArray[2] + '/' + operatorleaveenddateArray[0]
+                    operatorleaveenddate = getDate(operatorleaveenddateString)
+                    var operatorLeave1DayAgoEndDate = get1DayAgoDate(operatorleaveenddateString);
+
+                    log.debug({
+                        title: 'operatorids',
+                        details: operatorids
+                    });
+                    log.debug({
+                        title: 'operatorname',
+                        details: operatorname
+                    });
+                    log.debug({
+                        title: 'operatorleavestartdate',
+                        details: operatorleavestartdate
+                    });
+                    log.debug({
+                        title: 'operatorleaveenddate',
+                        details: operatorleaveenddate
+                    });
+                    log.debug({
+                        title: 'reliefdriverrequired',
+                        details: reliefdriverrequired
+                    });
+                    log.debug({
+                        title: 'reliefdrivername',
+                        details: reliefdrivername
+                    });
+                    log.debug({
+                        title: 'reliefdrivermobile',
+                        details: reliefdrivermobile
+                    });
+                    log.debug({
+                        title: 'reliefdriveremail',
+                        details: reliefdriveremail
+                    });
+                    log.debug({
+                        title: 'leavenotes',
+                        details: leavenotes
+                    });
+                    log.debug({
+                        title: 'customernotified',
+                        details: customernotified
+                    });
+                    log.debug({
+                        title: 'appAccessRequired',
+                        details: appAccessRequired
+                    });
+                    log.debug({
+                        title: 'sharingApp',
+                        details: sharingApp
                     });
 
-                    searchOperators.filters.push(search.createFilter({
-                        name: 'custrecord_operator_email',
-                        join: null,
-                        operator: search.Operator.IS,
-                        values: reliefdriveremail
-                    }));
-
-                    var resultSetOperators = searchOperators.run();
-
-                    emailOperatorDetails += '\n\nBelow are the operators matched to email: ' + reliefdriveremail + '\n';
-                    resultSetOperators.each(function (searchResultOperators) {
-
-                        operatorID = searchResultOperators.getValue('internalid');
-                        operatorName = searchResultOperators.getValue('name');
-                        operatorPhone = searchResultOperators.getValue(
-                            'custrecord_operator_phone');
-                        operatorEmail = searchResultOperators.getValue(
-                            'custrecord_operator_email');
-                        linkedZee = searchResultOperators.getValue(
-                            'custrecord_operator_franchisee');
-
-                        emailOperatorDetails += '\n Operator NS ID: ' + operatorID;
-                        emailOperatorDetails += '\n Operator Name: ' + operatorName;
-                        emailOperatorDetails += '\n Operator Mobile: ' + operatorPhone;
-                        emailOperatorDetails += '\n Operator Email: ' + operatorEmail;
-
-                        operatorCount++;
-                        return true;
+                    log.debug({
+                        title: 'operatorLeave1DayAgoStartDate',
+                        details: operatorLeave1DayAgoStartDate
                     });
-                }
 
-                var operatorRecord = record.load({
-                    type: 'customrecord_operator',
-                    id: operatorids
-                });
+                    log.debug({
+                        title: 'operatorLeave1DayAgoEndDate',
+                        details: operatorLeave1DayAgoEndDate
+                    });
+                    if (!isNullorEmpty(reliefdriveremail)) {
+                        //NetSuite Search: APP - Operator Load
+                        var searchOperators = search.load({
+                            id: 'customsearch_app_operator_load',
+                            type: 'customrecord_operator'
+                        });
 
-                var zeeName = operatorRecord.getText({
-                    fieldId: 'custrecord_operator_franchisee'
-                })
+                        searchOperators.filters.push(search.createFilter({
+                            name: 'custrecord_operator_email',
+                            join: null,
+                            operator: search.Operator.IS,
+                            values: reliefdriveremail
+                        }));
 
-                operatorRecord.setValue({
-                    fieldId: 'custrecord_customer_notified',
-                    value: customernotified
-                })
-                operatorRecord.setValue({
-                    fieldId: 'custrecord_relief_driver_required',
-                    value: reliefdriverrequired
-                })
-                operatorRecord.setValue({
-                    fieldId: 'custrecord_leave_start_date',
-                    value: operatorleavestartdate
-                })
-                operatorRecord.setValue({
-                    fieldId: 'custrecord_leave_end_date',
-                    value: operatorleaveenddate
-                })
-                operatorRecord.setValue({
-                    fieldId: 'custrecord_leave_notes',
-                    value: leavenotes
-                })
+                        var resultSetOperators = searchOperators.run();
 
-                operatorRecord.setValue({
-                    fieldId: 'custrecord_relief_driver_name',
-                    value: reliefdrivername
-                })
-                operatorRecord.setValue({
-                    fieldId: 'custrecord_relief_driver_mobile',
-                    value: reliefdrivermobile
-                })
-                operatorRecord.setValue({
-                    fieldId: 'custrecord_relief_driver_email',
-                    value: reliefdriveremail
-                })
+                        emailOperatorDetails += '\n\nBelow are the operators matched to email: ' + reliefdriveremail + '\n';
+                        resultSetOperators.each(function (searchResultOperators) {
 
-                if (!isNullorEmpty(appAccessRequired)) {
+                            operatorID = searchResultOperators.getValue('internalid');
+                            operatorName = searchResultOperators.getValue('name');
+                            operatorPhone = searchResultOperators.getValue(
+                                'custrecord_operator_phone');
+                            operatorEmail = searchResultOperators.getValue(
+                                'custrecord_operator_email');
+                            linkedZee = searchResultOperators.getValue(
+                                'custrecord_operator_franchisee');
+
+                            emailOperatorDetails += '\n Operator NS ID: ' + operatorID;
+                            emailOperatorDetails += '\n Operator Name: ' + operatorName;
+                            emailOperatorDetails += '\n Operator Mobile: ' + operatorPhone;
+                            emailOperatorDetails += '\n Operator Email: ' + operatorEmail;
+
+                            operatorCount++;
+                            return true;
+                        });
+                    }
+
+                    var operatorRecord = record.load({
+                        type: 'customrecord_operator',
+                        id: operatorids
+                    });
+
+                    var zeeName = operatorRecord.getText({
+                        fieldId: 'custrecord_operator_franchisee'
+                    })
+
+                    operatorRecord.setValue({
+                        fieldId: 'custrecord_customer_notified',
+                        value: customernotified
+                    })
+                    operatorRecord.setValue({
+                        fieldId: 'custrecord_relief_driver_required',
+                        value: reliefdriverrequired
+                    })
+                    operatorRecord.setValue({
+                        fieldId: 'custrecord_leave_start_date',
+                        value: operatorleavestartdate
+                    })
+                    operatorRecord.setValue({
+                        fieldId: 'custrecord_leave_end_date',
+                        value: operatorleaveenddate
+                    })
+                    operatorRecord.setValue({
+                        fieldId: 'custrecord_leave_notes',
+                        value: leavenotes
+                    })
+
+                    operatorRecord.setValue({
+                        fieldId: 'custrecord_relief_driver_name',
+                        value: reliefdrivername
+                    })
+                    operatorRecord.setValue({
+                        fieldId: 'custrecord_relief_driver_mobile',
+                        value: reliefdrivermobile
+                    })
+                    operatorRecord.setValue({
+                        fieldId: 'custrecord_relief_driver_email',
+                        value: reliefdriveremail
+                    })
+
+                    if (!isNullorEmpty(appAccessRequired)) {
+                        operatorRecord.setValue({
+                            fieldId: 'custrecord_relief_driver_app_access',
+                            value: appAccessRequired
+                        })
+                    }
+
+                    if (!isNullorEmpty(sharingApp)) {
+                        operatorRecord.setValue({
+                            fieldId: 'custrecord_relief_driver_sharing_login',
+                            value: sharingApp
+                        })
+                    }
+
+                    operatorRecord.save();
+
+                    var emailSubject = zeeName + ' Franchisee Leave Regsiter - ' + operatorname;
+                    var emailBody = 'Please be informed of the upcoming holiday leave details for ' + zeeName + ' - ' + operatorname + '\n';
+                    emailBody += '\nLeave Start Date: ' + emailLeaveStartDate;
+                    emailBody += '\nLeave End Date: ' + emailLeaveEndDate + '\n';
+
+
+
+                    var taskTitleLeaveStartDate = 'Update Suburb Mapping from operator ' + operatorname + ' to Relief Driver ' + reliefdrivername
+                    var taskTitleLeaveEndDate = 'Update Suburb Mapping from relief driver ' + reliefdrivername + ' to operator ' + operatorname
+
+                    if (reliefdriverrequired == '1') {
+                        emailBody += '\nRelief Driver Confirmed?: Yes';
+                    } else {
+                        emailBody += '\nRelief Driver Confirmed?: No';
+                    }
+                    if (customernotified == '1') {
+                        emailBody += '\nCustomer Notified of Leave?: Yes';
+                    } else {
+                        emailBody += '\nCustomer Notified of Leave?: No';
+                    }
+
+                    if (operatorChangeNotified == '1') {
+                        emailBody += '\nCustomer Notified of Change of Operator?: Yes';
+                    } else {
+                        emailBody += '\nCustomer Notified of Change of Operator?: No';
+                    }
+                    if (appAccessRequired == '1') {
+                        emailBody += '\nApp Access Required?: Yes';
+                    } else {
+                        emailBody += '\nApp Access Required?: No';
+                        if (sharingApp == '1') {
+                            emailBody += '\nSharing App?: Yes';
+                        } else {
+                            emailBody += '\nSharing App?: No';
+                        }
+                    }
+                    emailBody += '\n\nLeave Notes: ' + leavenotes;
+
+                    var emailNewReliefDriverDetails = '\n\nBelow are the details of the relief driver: ';
+                    emailNewReliefDriverDetails += '\n Operator Name: ' + reliefdrivername;
+                    emailNewReliefDriverDetails += '\n Operator Mobile: ' + reliefdrivermobile;
+                    emailNewReliefDriverDetails += '\n Operator Email: ' + reliefdriveremail;
+                    emailBody += emailNewReliefDriverDetails;
+
+                    var allStaffEmailBody = emailBody;
+
+                    if (operatorCount != 0 && !isNullorEmpty(reliefdriveremail)) {
+
+                        emailBody += emailOperatorDetails
+                    }
+
+                    emailBody += '\n\n You now have this information in your inbox to help you provide customer service when needed and to ensure smooth operations during this period.\n\n';
+                    emailBody += 'Thank you,\nIT Team  '
+
+                    allStaffEmailBody += '\n\n You now have this information in your inbox to help you provide customer service when needed and to ensure smooth operations during this period.\n\n';
+                    allStaffEmailBody += 'Thank you,\nIT Team  '
+
+                    //Email to Popie & Fiona
+                    email.send({
+                        author: 112209,
+                        recipients: ['fiona.harrison@mailplus.com.au', 'popie.popie@mailplus.com.au'],
+                        subject: emailSubject,
+                        body: emailBody,
+                        cc: ['ankith.ravindran@mailplus.com.au']
+                    });
+
+                    if (reliefdriverrequired == '1' && ((zeeProjectsArray.indexOf("2") > -1) || (zeeProjectsArray.indexOf("9") > -1))) {
+                        // if (reliefdriverrequired == '1') {
+
+                        //Create Task to update suburb mapping from relief driver to main operator
+                        var task_record = record.create({
+                            type: 'task'
+                        });
+                        task_record.setValue({
+                            fieldId: 'startdate',
+                            value: operatorLeave1DayAgoStartDate
+                        });
+                        task_record.setValue({
+                            fieldId: 'duedate',
+                            value: operatorLeave1DayAgoStartDate
+                        });
+
+                        task_record.setValue({
+                            fieldId: 'sendemail',
+                            value: true
+                        });
+                        // task_record.setValue({
+                        //     fieldId: 'status',
+                        //     value: 3
+                        // });
+                        task_record.setValue({
+                            fieldId: 'title',
+                            value: taskTitleLeaveStartDate
+                        });
+                        task_record.setValue({
+                            fieldId: 'custevent_organiser',
+                            value: 1552795 //Fiona
+                        });
+                        task_record.setValue({
+                            fieldId: 'assigned',
+                            value: 1552795 //Fiona
+                        });
+                        task_record.setValue({
+                            fieldId: 'message',
+                            value: emailBody
+                        });
+
+                        task_record.save();
+
+
+
+                        //Create Task to update suburb mapping from relief driver to main operator
+                        var task_record = record.create({
+                            type: 'task'
+                        });
+                        task_record.setValue({
+                            fieldId: 'startdate',
+                            value: operatorLeave1DayAgoEndDate
+                        });
+                        task_record.setValue({
+                            fieldId: 'duedate',
+                            value: operatorLeave1DayAgoEndDate
+                        });
+
+                        task_record.setValue({
+                            fieldId: 'sendemail',
+                            value: true
+                        });
+                        // task_record.setValue({
+                        //     fieldId: 'status',
+                        //     value: 3
+                        // });
+                        task_record.setValue({
+                            fieldId: 'title',
+                            value: taskTitleLeaveEndDate
+                        });
+                        task_record.setValue({
+                            fieldId: 'custevent_organiser',
+                            value: 1552795 //Fiona
+                        });
+                        task_record.setValue({
+                            fieldId: 'assigned',
+                            value: 1552795 //Fiona
+                        });
+                        task_record.setValue({
+                            fieldId: 'message',
+                            value: emailBody
+                        });
+
+                        task_record.save();
+
+                    }
+
+                    //All Staff Email
+                    email.send({
+                        author: 112209,
+                        // recipients: ['ankith.ravindran@mailplus.com.au'],
+                        recipients: ['AllStaff@mailplus.com.au'],
+                        subject: emailSubject,
+                        body: allStaffEmailBody
+                    });
+                } else {
+                    var operatorRecord = record.load({
+                        type: 'customrecord_operator',
+                        id: operatorids
+                    });
+
+
+                    operatorRecord.setValue({
+                        fieldId: 'custrecord_customer_notified',
+                        value: null
+                    })
+                    operatorRecord.setValue({
+                        fieldId: 'custrecord_relief_driver_required',
+                        value: null
+                    })
+                    operatorRecord.setValue({
+                        fieldId: 'custrecord_leave_start_date',
+                        value: null
+                    })
+                    operatorRecord.setValue({
+                        fieldId: 'custrecord_leave_end_date',
+                        value: null
+                    })
+                    operatorRecord.setValue({
+                        fieldId: 'custrecord_leave_notes',
+                        value: null
+                    })
+
+                    operatorRecord.setValue({
+                        fieldId: 'custrecord_relief_driver_name',
+                        value: null
+                    })
+                    operatorRecord.setValue({
+                        fieldId: 'custrecord_relief_driver_mobile',
+                        value: null
+                    })
+                    operatorRecord.setValue({
+                        fieldId: 'custrecord_relief_driver_email',
+                        value: null
+                    })
                     operatorRecord.setValue({
                         fieldId: 'custrecord_relief_driver_app_access',
-                        value: appAccessRequired
+                        value: null
                     })
-                }
-
-                if (!isNullorEmpty(sharingApp)) {
                     operatorRecord.setValue({
                         fieldId: 'custrecord_relief_driver_sharing_login',
-                        value: sharingApp
+                        value: null
                     })
+
+                    operatorRecord.save();
                 }
 
-                operatorRecord.save();
-
-                var emailSubject = zeeName + ' Franchisee Leave Regsiter - ' + operatorname;
-                var emailBody = 'Please be informed of the upcoming holiday leave details for ' + zeeName + ' - ' + operatorname + '\n';
-                emailBody += '\nLeave Start Date: ' + emailLeaveStartDate;
-                emailBody += '\nLeave End Date: ' + emailLeaveEndDate + '\n';
-
-                var allStaffEmailBody = emailBody;
-
-                var taskTitleLeaveStartDate = 'Update Suburb Mapping from operator ' + operatorname + ' to Relief Driver ' + reliefdrivername
-                var taskTitleLeaveEndDate = 'Update Suburb Mapping from relief driver ' + reliefdrivername + ' to operator ' + operatorname
-
-                if (reliefdriverrequired == '1') {
-                    emailBody += '\nRelief Driver Required?: Yes';
-                } else {
-                    emailBody += '\nRelief Driver Required?: No';
-                }
-                if (customernotified == '1') {
-                    emailBody += '\nCustomer Notified?: Yes';
-                } else {
-                    emailBody += '\nCustomer Notified?: No';
-                }
-                if (appAccessRequired == '1') {
-                    emailBody += '\nApp Access Required?: Yes';
-                } else {
-                    emailBody += '\nApp Access Required?: No';
-                    if (sharingApp == '1') {
-                        emailBody += '\nSharing App?: Yes';
-                    } else {
-                        emailBody += '\nSharing App?: No';
-                    }
-                }
-                emailBody += '\n\nLeave Notes: ' + leavenotes;
-
-                var emailNewReliefDriverDetails = '\n\nBelow are the details of the relief driver: ';
-                emailNewReliefDriverDetails += '\n Operator Name: ' + reliefdrivername;
-                emailNewReliefDriverDetails += '\n Operator Mobile: ' + reliefdrivermobile;
-                emailNewReliefDriverDetails += '\n Operator Email: ' + reliefdriveremail;
-                emailBody += emailNewReliefDriverDetails;
-
-                allStaffEmailBody += emailNewReliefDriverDetails;
-
-                if (operatorCount != 0 && !isNullorEmpty(reliefdriveremail)) {
-                    emailBody += emailOperatorDetails
-                }
-
-                emailBody += '\n\n You now have this information in your inbox to help you provide customer service when needed and to ensure smooth operations during this period.\n\n';
-                emailBody += 'Thank you,\nIT Team  '
-
-                //Email to Popie & Fiona
-                email.send({
-                    author: 112209,
-                    recipients: ['fiona.harrison@mailplus.com.au', 'popie.popie@mailplus.com.au'],
-                    subject: emailSubject,
-                    body: emailBody,
-                    cc: ['ankith.ravindran@mailplus.com.au']
-                });
-
-                if (reliefdriverrequired == '1' && ((zeeProjectsArray.indexOf("2") > -1) || (zeeProjectsArray.indexOf("9") > -1))) {
-                    // if (reliefdriverrequired == '1') {
-
-                    //Create Task to update suburb mapping from relief driver to main operator
-                    var task_record = record.create({
-                        type: 'task'
-                    });
-                    task_record.setValue({
-                        fieldId: 'startdate',
-                        value: operatorLeave1DayAgoStartDate
-                    });
-                    task_record.setValue({
-                        fieldId: 'duedate',
-                        value: operatorLeave1DayAgoStartDate
-                    });
-
-                    task_record.setValue({
-                        fieldId: 'sendemail',
-                        value: true
-                    });
-                    // task_record.setValue({
-                    //     fieldId: 'status',
-                    //     value: 3
-                    // });
-                    task_record.setValue({
-                        fieldId: 'title',
-                        value: taskTitleLeaveStartDate
-                    });
-                    task_record.setValue({
-                        fieldId: 'custevent_organiser',
-                        value: 1552795 //Fiona
-                    });
-                    task_record.setValue({
-                        fieldId: 'assigned',
-                        value: 1552795 //Fiona
-                    });
-                    task_record.setValue({
-                        fieldId: 'message',
-                        value: emailBody
-                    });
-
-                    task_record.save();
-
-
-
-                    //Create Task to update suburb mapping from relief driver to main operator
-                    var task_record = record.create({
-                        type: 'task'
-                    });
-                    task_record.setValue({
-                        fieldId: 'startdate',
-                        value: operatorLeave1DayAgoEndDate
-                    });
-                    task_record.setValue({
-                        fieldId: 'duedate',
-                        value: operatorLeave1DayAgoEndDate
-                    });
-
-                    task_record.setValue({
-                        fieldId: 'sendemail',
-                        value: true
-                    });
-                    // task_record.setValue({
-                    //     fieldId: 'status',
-                    //     value: 3
-                    // });
-                    task_record.setValue({
-                        fieldId: 'title',
-                        value: taskTitleLeaveEndDate
-                    });
-                    task_record.setValue({
-                        fieldId: 'custevent_organiser',
-                        value: 1552795 //Fiona
-                    });
-                    task_record.setValue({
-                        fieldId: 'assigned',
-                        value: 1552795 //Fiona
-                    });
-                    task_record.setValue({
-                        fieldId: 'message',
-                        value: emailBody
-                    });
-
-                    task_record.save();
-
-                }
-
-                //All Staff Email
-                email.send({
-                    author: 112209,
-                    recipients: ['ankith.ravindran@mailplus.com.au'],
-                    // recipients: ['AllStaff@mailplus.com.au'],
-                    subject: emailSubject,
-                    body: emailBody
-                });
 
                 redirect.toSuitelet({
                     scriptId: 'customscript_sl2_zee_leave_register',
@@ -924,7 +986,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             inlineHtml +=
                 '<div class="col-xs-4 leaveEndDate_section"><div class="input-group"><span class="input-group-addon">LEAVE END DATE <span class="mandatory">*</span></span><input type="date" id="leaveEndDate" class="form-control leaveEndDate" /></div></div>';
             inlineHtml +=
-                '<div class="col-xs-4"><div class="input-group"><span class="input-group-addon">CUSTOMER NOTIFIED?<span class="mandatory">*</span></span><select id="customerNotified" class="form-control customerNotified" >';
+                '<div class="col-xs-4"><div class="input-group"><span class="input-group-addon">CUSTOMER NOTIFIED OF LEAVE?<span class="mandatory">*</span></span><select id="customerNotified" class="form-control customerNotified" >';
             inlineHtml +=
                 '<option value=0></option><option value=1>Yes</option><option value=2>No</option>';
             inlineHtml += '</select></div></div>';
@@ -937,7 +999,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                 '<div class="form-group container row_relief_required hide">';
             inlineHtml += '<div class="row">';
             inlineHtml +=
-                '<div class="col-xs-12"><div class="input-group"><span class="input-group-addon">RELIEF DRIVER REQUIRED?<span class="mandatory">*</span></span><select id="relief_required" class="form-control relief_required" >';
+                '<div class="col-xs-12"><div class="input-group"><span class="input-group-addon">RELIEF DRIVER CONFIRMED?<span class="mandatory">*</span></span><select id="relief_required" class="form-control relief_required" >';
             if ((zeeProjects.indexOf("2") > -1) || (zeeProjects.indexOf("9") > -1)) {
                 inlineHtml +=
                     '<option value=0></option><option value=1 selected>Yes</option><option value=2 >No</option>';
@@ -963,6 +1025,17 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             inlineHtml +=
                 '<div class="col-xs-4 reliefDriverEmail_section"><div class="input-group"><span class="input-group-addon">RELIEF DRIVER EMAIL <span class="mandatory">*</span></span><input type="email" id="reliefDriverEmail" type="email"  class="form-control reliefDriverEmail" /></div></div>';
 
+            inlineHtml += '</div>';
+            inlineHtml += '</div>';
+
+            inlineHtml +=
+                '<div class="form-group container operator_change_section hide">';
+            inlineHtml += '<div class="row">';
+            inlineHtml +=
+                '<div class="col-xs-12"><div class="input-group"><span class="input-group-addon">CUSTOMER NOTIFIED OF OPERATOR CHANGE?<span class="mandatory">*</span></span><select id="operatorChange" class="form-control operatorChange" >';
+            inlineHtml +=
+                '<option value=0></option><option value=1>Yes</option><option value=2>No</option>';
+            inlineHtml += '</select></div></div>';
             inlineHtml += '</div>';
             inlineHtml += '</div>';
 
@@ -1034,7 +1107,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             inlineHtml += '<td>LEAVE START DATE</td>'
             inlineHtml += '<td>LEAVE END DATE</td>'
             inlineHtml += '<td>CUSTOMER NOTIFIED?</td>'
-            inlineHtml += '<td>RELIEF DRIVER REQUIRED?</td>'
+            inlineHtml += '<td>RELIEF DRIVER CONFIRMED?</td>'
             inlineHtml += '<td>RELIEF DRIVER NAME</td>'
             inlineHtml += '<td>RELIEF DRIVER MOBILE</td>'
             inlineHtml += '<td>RELIEF DRIVER EMAIL</td>'
