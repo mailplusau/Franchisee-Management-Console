@@ -391,21 +391,52 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           '<div class="container" ><div id="alert" class="alert alert-danger fade in"></div></div>';
 
         inlineHtml += zeeSalesMainLead();
+        log.debug({
+          title: 'after zeeSalesMainLead'
+        });
         inlineHtml += operationsSection();
+        log.debug({
+          title: 'after operationsSection'
+        });
         inlineHtml += areasOfInterestSection();
+        log.debug({
+          title: 'after areasOfInterestSection'
+        });
         if (zeeleadid != 0 && !isNullorEmpty(zeeleadid)) {
           if (salesStage != 1 && salesStage != 4 && salesStage != 6) {
             inlineHtml += potentialZeesSection();
+            log.debug({
+              title: 'after potentialZeesSection'
+            });
             inlineHtml += presalesDetails();
+            log.debug({
+              title: 'after presalesDetails'
+            });
           }
         }
         inlineHtml += prefillNDASection();
+        log.debug({
+          title: 'after prefillNDASection'
+        });
         inlineHtml += financeSection();
+        log.debug({
+          title: 'after financeSection'
+        });
         inlineHtml += reminderCommentsSection();
+        log.debug({
+          title: 'after reminderCommentsSection'
+        });
         inlineHtml += salesWFDateDetails();
+        log.debug({
+          title: 'after salesWFDateDetailsv'
+        });
         inlineHtml += line();
         inlineHtml += mainButtons()
         inlineHtml += '</div>';
+
+        log.debug({
+          title: 'after all sections'
+        });
 
         form.addField({
           id: 'preview_table',
@@ -474,8 +505,30 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           details: param_interestedzees
         });
 
-        if (save_button_clicked == false) {
-          if (param_imsent == '1' && param_ndasent == '2') {
+        log.debug({
+          title: 'save_button_clicked',
+          details: save_button_clicked
+        });
+
+        log.debug({
+          title: 'file2',
+          details: file2
+        });
+
+        log.debug({
+          title: 'file',
+          details: file
+        });
+
+
+
+        if (save_button_clicked == false || save_button_clicked == 'false') {
+          if ((param_imsent == '1' || param_imsent == 1) && (param_ndasent == '2' || param_ndasent == 2)) {
+
+            log.debug({
+              title: 'inside IM',
+              details: 'inside IM'
+            });
             var params = {
               custscript_zeeleadid: param_zeeleadid,
               custscript_interestedzees: param_interestedzees
@@ -493,8 +546,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             });
 
             reschedule.submit();
-          } else if (param_imsent == '1' && param_ndasent == '1' &&
-            param_upload_nda_clicked == 'false' && isNullorEmpty(file)) {
+          } else if ((param_imsent == '1' || param_imsent == 1) && (param_ndasent == '1' || param_ndasent == 1) && param_upload_nda_clicked == 'false' && isNullorEmpty(file)) {
+
+            log.debug({
+              title: 'inside NDA',
+              details: 'inside NDA'
+            });
 
             var params = {
               custscript_zeeleadid_nda: param_zeeleadid
@@ -512,7 +569,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             });
 
             reschedule.submit();
-          } else if (param_eoi_to_be_sent == '1') {
+          } else if (param_eoi_to_be_sent == '1' || param_eoi_to_be_sent == 1) {
+
+            log.debug({
+              title: 'inside EOI',
+              details: 'inside EOI'
+            });
+
             var params = {
               custscript_new_zee_lead_id: param_zeeleadid
             };
@@ -1079,11 +1142,16 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       var formattedExpiryDate = '';
       var formattedUltimateExpiryDate = '';
 
+      log.debug({
+        title: 'commencementDate',
+        details: commencementDate
+      })
+
       if (!isNullorEmpty(commencementDate)) {
-        commencementDate = format.format({
-          value: commencementDate,
-          type: format.Type.DATE
-        });
+        // commencementDate = format.format({
+        //   value: commencementDate,
+        //   type: format.Type.DATE
+        // });
 
         var commencementDateArray = commencementDate.split('/');
         if (commencementDateArray[1] < 10) {
@@ -1097,11 +1165,16 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           '-' + commencementDateArray[0];
       }
 
+      log.debug({
+        title: 'expiryDate',
+        details: expiryDate
+      })
+
       if (!isNullorEmpty(expiryDate)) {
-        expiryDate = format.format({
-          value: expiryDate,
-          type: format.Type.DATE
-        });
+        // expiryDate = format.format({
+        //   value: expiryDate,
+        //   type: format.Type.DATE
+        // });
         var expiryDateArray = expiryDate.split('/');
         if (expiryDateArray[1] < 10) {
           expiryDateArray[1] = '0' + expiryDateArray[1];
@@ -1114,11 +1187,16 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           '-' + expiryDateArray[0];
       }
 
+      log.debug({
+        title: 'ultimateExpiryDate',
+        details: ultimateExpiryDate
+      })
+
       if (!isNullorEmpty(ultimateExpiryDate)) {
-        ultimateExpiryDate = format.format({
-          value: ultimateExpiryDate,
-          type: format.Type.DATE
-        });
+        // ultimateExpiryDate = format.format({
+        //   value: ultimateExpiryDate,
+        //   type: format.Type.DATE
+        // });
         var ultimateExpiryDateArray = ultimateExpiryDate.split('/');
         if (ultimateExpiryDateArray[1] < 10) {
           ultimateExpiryDateArray[1] = '0' + ultimateExpiryDateArray[1];

@@ -161,9 +161,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
       // Tabs headers
       inlineHtml +=
-        '<style>.nav > li.active > a, .nav > li.active > a:focus, .nav > li.active > a:hover { background-color: #379E8F; color: #fff }';
+        '<style>.nav > li.active > a, .nav > li.active > a:focus, .nav > li.active > a:hover { background-color: #095C7B; color: #fff }';
       inlineHtml +=
-        '.nav > li > a, .nav > li > a:focus, .nav > li > a:hover { margin-left: 5px; margin-right: 5px; border: 2px solid #379E8F; color: #379E8F; }';
+        '.nav > li > a, .nav > li > a:focus, .nav > li > a:hover { margin-left: 5px; margin-right: 5px; border: 2px solid #095C7B; color: #095C7B; }';
       inlineHtml += '</style>';
 
       inlineHtml +=
@@ -243,7 +243,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '<table id="' +
         name +
         '" class="table table-responsive table-striped customer tablesorter" style="width: 100%;">';
-      inlineHtml += '<thead style="color: white;background-color: #379E8F;">';
+      inlineHtml += '<thead style="color: white;background-color: #095C7B;">';
       inlineHtml += '<tr class="text-center">';
 
       inlineHtml += '</tr>';
@@ -266,7 +266,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     //     '<style>table#zee_leads_list_preview {color: #103D39 !important; font-size: 12px;text-align: center;border: none;}.dataTables_wrapper {font-size: 14px;}table#zee_leads_list_preview th{text-align: center;} .bolded{font-weight: bold;}</style>';
     //   inlineHtml +=
     //     '<table id="zee_leads_list_preview" class="table table-responsive table-striped customer tablesorter hide" style="width: 100%;">';
-    //   inlineHtml += '<thead style="color: white;background-color: #379E8F;">';
+    //   inlineHtml += '<thead style="color: white;background-color: #095C7B;">';
     //   inlineHtml += '<tr class="text-center">';
     //   inlineHtml += '</tr>';
     //   inlineHtml += '</thead>';

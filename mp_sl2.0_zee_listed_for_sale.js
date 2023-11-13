@@ -130,7 +130,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '<table id="' +
         name +
         '" class="table table-responsive table-striped customer tablesorter" style="width: 100%;">';
-      inlineHtml += '<thead style="color: white;background-color: #379E8F;">';
+      inlineHtml += '<thead style="color: white;background-color: #095C7B;">';
       inlineHtml += '<tr class="text-center">';
 
       inlineHtml += '</tr>';
