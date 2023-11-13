@@ -27,6 +27,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var franchiseeAPSuburbs = "";
         var prospectingMasterclass = null;
         var customerReviews = null;
+        var leadGenerationTraining = null;
+        var mpProjects = null;
 
 
         function render(params) {
@@ -42,8 +44,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             if (role == 1000) {
                 zee = runtime.getCurrentUser().id;
             } else {
-                // zee = 1645493; //Waterlo
-                zee = 1768344; //Wacol
+                zee = 1645493; //Waterloo
             }
 
             var date = new Date();
@@ -101,10 +102,10 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             // }
 
 
-            portlet.title = 'Your Performance Profile';
+            portlet.title = 'Your Growth Strategy Roadmap';
 
             var inlineHtml =
-                '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css"><script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&c=1048144&h=9ee6accfd476c9cae718&_xt=.css"/><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&c=1048144&h=ef2cda20731d146b5e98&_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&c=1048144&h=a0ef6ac4e28f91203dfe&_xt=.css"><script src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"><script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/highcharts-more.js"></script><script src="https://code.highcharts.com/modules/solid-gauge.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/export-data.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script><style>.wrapper{position:fixed;height:2em;width:2em;overflow:show;margin:auto;top:0;left:0;bottom:0;right:0;justify-content: center; align-items: center; display: -webkit-inline-box;} .ball{width: 22px; height: 22px; border-radius: 11px; margin: 0 10px; animation: 2s bounce ease infinite;} .blue{background-color: #0f3d39; }.red{background-color: #095C7B; animation-delay: .25s;}.yellow{background-color: #387081; animation-delay: .5s}.green{background-color: #d0e0cf; animation-delay: .75s}@keyframes bounce{50%{transform: translateY(25px);}}.button-shadow{box-shadow:2.8px 2.8px 2.2px rgba(0,0,0,.02),6.7px 6.7px 5.3px rgba(0,0,0,.028),12.5px 12.5px 10px rgba(0,0,0,.035),22.3px 22.3px 17.9px rgba(0,0,0,.042),41.8px 41.8px 33.4px rgba(0,0,0,.05),100px 100px 80px rgba(0,0,0,.07)}.card{font-size: 14px; display: grid;place-items:center;order:2;margin: 0 auto; border-radius: 6px;padding: 20px;background: #CFE0CE;}ul{list-style: none;padding: 0;margin: 0 0 30px;} ul li{display: flex;gap: 10px;align-items: center;padding: 6px 0;}ul li img{width: 16px;}</style>';
+                '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css"><script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&c=1048144&h=9ee6accfd476c9cae718&_xt=.css"/><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&c=1048144&h=ef2cda20731d146b5e98&_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&c=1048144&h=a0ef6ac4e28f91203dfe&_xt=.css"><script src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"><script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/highcharts-more.js"></script><script src="https://code.highcharts.com/modules/solid-gauge.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/export-data.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script><style>.wrapper{position:fixed;height:2em;width:2em;overflow:show;margin:auto;top:0;left:0;bottom:0;right:0;justify-content: center; align-items: center; display: -webkit-inline-box;} .ball{width: 22px; height: 22px; border-radius: 11px; margin: 0 10px; animation: 2s bounce ease infinite;} .blue{background-color: #0f3d39; }.red{background-color: #095C7B; animation-delay: .25s;}.yellow{background-color: #387081; animation-delay: .5s}.green{background-color: #d0e0cf; animation-delay: .75s}@keyframes bounce{50%{transform: translateY(25px);}}.button-shadow{box-shadow:2.8px 2.8px 2.2px rgba(0,0,0,.02),6.7px 6.7px 5.3px rgba(0,0,0,.028),12.5px 12.5px 10px rgba(0,0,0,.035),22.3px 22.3px 17.9px rgba(0,0,0,.042),41.8px 41.8px 33.4px rgba(0,0,0,.05),100px 100px 80px rgba(0,0,0,.07)}.card{font-size: 14px; display: grid;place-items:center;order:2;margin: 0 auto; border-radius: 6px;padding: 20px;background: #CFE0CE;}ul{list-style: none;padding: 0;margin: 0 0 30px;} ul li{display: flex;gap: 10px;align-items: center;padding: 6px 0;}ul li img{width: 16px;}.card-incomplete{font-size: 14px; display: grid;/*place-items:center*/;order:2;margin: 0 auto; border-radius: 50px;background: #e4caa7;}.card-complete{font-size: 14px; display: grid;/*place-items:center*/;order:2;margin: 0 auto; border-radius: 50px;background: #7dd5b8ba;}ul{list-style: none;padding: 0;margin: 0 0 30px;}</style>';
 
 
             inlineHtml += loadingSection();
@@ -150,9 +151,18 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                     'custentity_zee_prospect_masterclass');
                 customerReviews = searchResultZees.getValue(
                     'custentity_zee_customer_reviews');
+                leadGenerationTraining = searchResultZees.getValue(
+                    'custentity_lead_generation_training');
+                mpProjects = searchResultZees.getValue(
+                    'custentity_mp_projects');
 
                 return true;
             });
+
+            var mpProjectsArray = [];
+            if (!isNullorEmpty(mpProjects)) {
+                mpProjectsArray = mpProjects.split(',');
+            }
 
             // Website New Leads by Status - Monthly Reporting
             var leadsListBySalesRepWeeklySearch = search.load({
@@ -338,8 +348,10 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                 return true;
             });
 
-            var totalScoringItems = 12;
+            var totalScoringItems = 4;
             var completedItems = 0;
+
+            var startergyCompleted = false;
 
             inlineHtml +=
                 '<div class="form-group container filter_buttons_section hide">';
@@ -347,7 +359,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             inlineHtml +=
                 '<div class="col-xs-2"></div>'
             inlineHtml +=
-                '<div class="col-xs-8"><input type="button" value="FULL PROFILE" class="form-control btn btn-primary" id="fullReport" style="background-color: #095C7B;border-radius: 30px;" /></div>'
+                '<div class="col-xs-8"><input type="button" value="UPDATE YOUR STATUS" class="form-control btn btn-primary" id="fullReport" style="background-color: #095C7B;border-radius: 30px;" /></div>'
             inlineHtml +=
                 '<div class="col-xs-2"></div>'
 
@@ -355,225 +367,131 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             inlineHtml += '</div>';
 
 
-            inlineHtml +=
-                '<div class="form-group container pud_prospect_support hide" style="">';
-            inlineHtml += '<div class="row">';
-            inlineHtml += '<div class="col-xs-4">'
-            inlineHtml += '<article class="card">';
-            inlineHtml += '<h2 style="text-align:center;">Customer Growth</h2>';
-            inlineHtml += '<small style="text-align:center;">This scorecard reflects the key elements driving your success in expanding your customer base and revenue streams. </small>';
-            inlineHtml += '<ul>';
+            if (leadGenerationTraining == 1) {
 
-            inlineHtml += '<li>';
-            if (isNullorEmpty(customerReviews) || customerReviews == 2) {
-                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-                inlineHtml += '<p>Customer Reviews</p>'
-                inlineHtml += '</li>';
-                inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="customer_reviews" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Learn More</button></div>';
+                startergyCompleted = true;
             } else {
-                completedItems++;
-                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-                inlineHtml += '<p>Customer Reviews</p>'
-                inlineHtml += '</li>';
-                // inlineHtml += '<div style=" text-align: center;"><button class="btn" style="background-color: #095C7B;color: white;text-align:center;align-items: center">How do i collect reviews?</button></div>';
-            }
 
-            inlineHtml += '<li>';
-            if (customer_signed == 0 && prospecy_quote_sent == 0 && prospect_opportunity == 0 && prospect_in_contact == 0) {
-                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-                inlineHtml += '<p>Provide Qualified Leads </p>'
-                inlineHtml += '</li>';
-                inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="qualified_leads" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Enter Lead Now</button></div>';
-            } else {
-                completedItems++;
-                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-                inlineHtml += '<p>Provide Qualified Leads s</p>'
-                inlineHtml += '</li>';
-            }
-
-            inlineHtml += '<li>';
-            if (isNullorEmpty(prospectingMasterclass) || prospectingMasterclass == 2) {
-                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-                inlineHtml += '<p>Attended a Prospecting Masterclass</p>'
-                inlineHtml += '</li>';
-                inlineHtml += '<small>Our specialised Prospecting Masterclass equips you with the techniques and strategies to identify and engage with potential customers proactively. Through this training, we ensure our prospecting efforts are efficient and effective. </small></br></br><div style=" text-align: center;"><button class="btn btn-sm" id="prospecting_masterclass" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Enquire Now</button></div>';
-            } else {
-                completedItems++;
-                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-                inlineHtml += '<p>Attended a Prospecting Masterclass</p>'
-                inlineHtml += '</li>';
-                // inlineHtml += '<small>Our specialised Prospecting Masterclass equips you with the techniques and strategies to identify and engage with potential customers proactively. Through this training, we ensure our prospecting efforts are efficient and effective. </small><div style=" text-align: center;"><button class="btn" style="background-color: #095C7B;color: white;text-align:center;align-items: center">Express interest now</button></div>';
             }
 
 
-            // inlineHtml += '<p>Active MP Standard Lodgement</p>'
-            // inlineHtml += '</li>';
-            // inlineHtml += '<div style=" text-align: center;"><button class="btn" style="background-color: #095C7B;color: white;text-align:center;align-items: center">Open a new lodgement</button></div>';
+            if (customer_signed < 5 && prospecy_quote_sent < 5 && prospect_opportunity < 5 && prospect_in_contact < 5) {
 
-            // inlineHtml += '<p>Customer Reviews</p>'
-            // inlineHtml += '</li>';
-            // inlineHtml += '<div style=" text-align: center;"><button class="btn" style="background-color: #095C7B;color: white;text-align:center;align-items: center">How do i collect reviews?</button></div>';
-            inlineHtml += '</ul></article>';
-            inlineHtml += '</div>';
+            } else {
+
+                startergyCompleted = true;
+            }
 
 
-            inlineHtml += '<div class="col-xs-4">'
-            inlineHtml += '<article class="card">';
-            inlineHtml += '<h2 style="text-align:center;">Local Network Ready</h2>';
-            inlineHtml += '<small style="text-align:center;">Below are the minimum items required to be part of the MailPlus adhoc network for programs such as Australia Post, Shippit and Sendle.</small>';
-            inlineHtml += '<ul>';
 
-            inlineHtml += '<li>';
+            if (startergyCompleted == true) {
+                completedItems++;
+            }
+
+            startergyCompleted = false;
+
+            if (isNullorEmpty(mpstdLodgementPointsString)) {
+
+            } else {
+                startergyCompleted = true;
+
+            }
+
+            if (startergyCompleted == true) {
+                completedItems++;
+            }
+
+            startergyCompleted = false;
+
+
             var sendleSuburbMappingCompleted = false;
-            var shippitSuburbMappingCompleted = false;
-            var apSuburbMappingCompleted = false;
             if (isNullorEmpty(franchiseeSendleSuburbs)) {
                 sendleSuburbMappingCompleted = false;
-                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-                inlineHtml += '<p>Sendle AU Express Suburb Mapping</p>'
-                inlineHtml += '</li>';
-                inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="sendle_suburb_mapping" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Complete Now</button></div>';
+
             } else {
-                completedItems++;
+                startergyCompleted = true;
                 sendleSuburbMappingCompleted = true;
-                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-                inlineHtml += '<p>Sendle AU Express Suburb Mapping</p>'
-                inlineHtml += '</li>';
+
             }
 
-
-
-            inlineHtml += '<li>';
-            if (isNullorEmpty(franchiseeShippitSuburbs)) {
-                shippitSuburbMappingCompleted = false;
-                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-                inlineHtml += '<p>Shippit Suburb Mapping</p>'
-                inlineHtml += '</li>';
-                inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="shippit_suburb_mapping" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Complete Now</button></div>';
-            } else {
+            if (startergyCompleted == true) {
                 completedItems++;
-                shippitSuburbMappingCompleted = true;
-                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-                inlineHtml += '<p>Shippit Suburb Mapping</p>'
-                inlineHtml += '</li>';
             }
 
 
 
-            inlineHtml += '<li>';
-            if (isNullorEmpty(franchiseeAPSuburbs)) {
-                apSuburbMappingCompleted = false;
-                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
+            startergyCompleted = false;
+
+
+
+            var apSuburbMappingCompleted = false;
+
+            if (!isNullorEmpty(mpProjectsArray) && (mpProjectsArray.indexOf("5") > -1)) {
+                startergyCompleted = true;
+
             } else {
+
+            }
+
+
+
+
+            if (startergyCompleted == true) {
                 completedItems++;
-                apSuburbMappingCompleted = true;
-                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-            }
-            inlineHtml += '<p>Australia Post Suburb Mapping</p>'
-            inlineHtml += '</li>';
-            if (apSuburbMappingCompleted == false) {
-                inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="ap_suburb_mapping" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Complete Now</button></div>';
-            }
-            inlineHtml += '<li>';
-            if ((isNullorEmpty(franchiseeSendleSuburbs) && isNullorEmpty(sendleexpLodgementPointsString)) && (isNullorEmpty(franchiseeShippitSuburbs) && isNullorEmpty(shippitLodgementPointsString))) {
-                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-                inlineHtml += '<p>Trained on MailPlus App</p>'
-                inlineHtml += '</li>';
-                inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="app_training" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Complete Training </button></div>';
-            } else {
-                completedItems++;
-                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-                inlineHtml += '<p>Trained on MailPlus App</p>'
-                inlineHtml += '</li>';
-            }
-            // inlineHtml += '<p>Trained on MailPlus App</p>'
-            // inlineHtml += '</li>';
-
-            inlineHtml += '</ul></article>';
-            inlineHtml += '</div>';
-
-
-            inlineHtml += '<div class="col-xs-4">'
-            inlineHtml += '<article class="card">';
-            inlineHtml += '<h2 style="text-align:center;">Essentials for Success </h2>';
-            inlineHtml += '<small style="text-align:center;">This scorecard reflects the vital aspects that you need to adhere to maintain MailPlus business standards and uphold our reputation. </small>';
-            inlineHtml += '<ul>';
-
-            inlineHtml += '<li>';
-            if (isNullorEmpty(mpexLodgementPointsString)) {
-                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-            } else {
-                completedItems++;
-                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-            }
-            inlineHtml += '<p>Active MP Express Lodgement</p>'
-            inlineHtml += '</li>';
-            inlineHtml += '<li>';
-            if (isNullorEmpty(mpstdLodgementPointsString)) {
-                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-                inlineHtml += '<p>Active MP Standard Lodgement</p>'
-                inlineHtml += '</li>';
-                inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="lodgement_locations" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Activate Now</button></div>';
-            } else {
-                completedItems++;
-                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-                inlineHtml += '<p>Active Hub Lodgement</p>'
-                inlineHtml += '</li>';
-                // inlineHtml += '<div style=" text-align: center;"><button class="btn" style="background-color: #095C7B;color: white;text-align:center;align-items: center">Open a new lodgement</button></div>';
             }
 
 
 
-            inlineHtml += '<li>';
-            // if (isNullorEmpty(prospectingMasterclass)) {
-            inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-            // } else {
-            //     inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-            // }
-            inlineHtml += '<p>Compliant Uniform</p>'
-            inlineHtml += '</li>';
-            inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="uniform" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Order Uniform</button></div>';
-            inlineHtml += '<li>';
-            // if (isNullorEmpty(prospectingMasterclass)) {
-            inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-            // } else {
-            //     inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-            // }
-            inlineHtml += '<p>Approved Vehicle and signage</p>'
-            inlineHtml += '</li>';
-            inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="vehicle" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Learn More</button></div>';
-            inlineHtml += '<li>';
-            if (customerCount != digitisedCustomerCount) {
-                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-                inlineHtml += '<p>Digitised Run</p>'
-                inlineHtml += '</li>';
-                inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="digitise_run" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Learn More</button></div>';
-            } else {
-                completedItems++;
-                inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-                inlineHtml += '<p>Digitised Run</p>'
-                inlineHtml += '</li>';
-
-            }
-
-            inlineHtml += '</ul></article>';
-            inlineHtml += '</div>';
-
-
-
-
-            inlineHtml += '</div>';
-            inlineHtml += '</div>';
 
 
             inlineHtml +=
-                '<div class="form-group container scorecard_percentage hide" style="">';
+                '<div class="form-group  scorecard_percentage hide" style="">';
             inlineHtml += '<div class="row">';
             inlineHtml += '<div class="col-xs-12">'
             inlineHtml += '<article class="card">';
-            inlineHtml += '<h2 style="text-align:center;">See Your Progress </h2>';
-            inlineHtml += '<small style="text-align:center;font-size: 12px;">A franchise profile score of 12 is essential to maintain your business\'s value relative to the franchise network and unlock further growth and strategy support from the sales and marketing team. Look out for the \'green\' button appearing  below the score, indicating you have achieved this milestone. Let\'s work together to propel your business towards success! </small>';
-            inlineHtml += '<div id="container-progress"></div>';
+            // inlineHtml += '<h2 style="text-align:center;">Check Your Strategy Roadmap</h2>';
+            inlineHtml += '<p style="text-align:center;font-size: 14px;marging: 0px !important;">Below is a traffic light view on the status of each of your key growth initiatives. </br>Click Update Your Status to view the details of each initiative and update your status or selections.</p></br></br>';
+            inlineHtml +=
+                '<div class="form-group " >';
+            inlineHtml += '<div class="container row" style="padding: 0px !important;">';
+            inlineHtml += '<div class="col-xs-3" style="">'
+            if (customer_signed < 5 && prospecy_quote_sent < 5 && prospect_opportunity < 5 && prospect_in_contact < 5) {
+                inlineHtml += '<article class="card-incomplete">';
+            } else {
+                inlineHtml += '<article class="card-complete">';
+            }
+            inlineHtml += '<h4 style="text-align:center;">B2B</h4>';
+            inlineHtml += '</article>';
+            inlineHtml += '</div>';
+            inlineHtml += '<div class="col-xs-3" style="">'
+            if (isNullorEmpty(mpstdLodgementPointsString)) {
+                inlineHtml += '<article class="card-incomplete">';
+            } else {
+                inlineHtml += '<article class="card-complete">';
+            }
+            inlineHtml += '<h4 style="text-align:center;">B2C</h4>';
+            inlineHtml += '</article>';
+            inlineHtml += '</div>';
+            inlineHtml += '<div class="col-xs-3" style="">'
+            if (isNullorEmpty(franchiseeSendleSuburbs)) {
+                inlineHtml += '<article class="card-incomplete">';
+            } else {
+                inlineHtml += '<article class="card-complete">';
+            }
+            inlineHtml += '<h4 style="text-align:center;">1st MILE</h4>';
+            inlineHtml += '</article>';
+            inlineHtml += '</div>';
+            inlineHtml += '<div class="col-xs-3" style="">'
+            if (!isNullorEmpty(mpProjectsArray) && (mpProjectsArray.indexOf("5") > -1)) {
+                inlineHtml += '<article class="card-complete">';
+            } else {
+                inlineHtml += '<article class="card-incomplete">';
+            }
+            inlineHtml += '<h4 style="text-align:center;">LPO</h4>';
+            inlineHtml += '</article>';
+            inlineHtml += '</div>';
+            inlineHtml += '</div>';
+            inlineHtml += '</div>';
             inlineHtml += '</article>';
             inlineHtml += '</div>';
             inlineHtml += '</div>';

@@ -62,7 +62,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
         if (role == 1000) {
             zee = runtime.getCurrentUser().id;
         } else {
-            zee = 1768344;
+            zee = 1645493;
         }
 
         function isWeekday(year, month, day) {
@@ -89,6 +89,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             $('.instruction_div').removeClass('hide');
             $('.mp_roadmap').removeClass('hide');
             $('.pud_prospect_support').removeClass('hide');
+            $('.essential_success').removeClass('hide');
 
         }
 
@@ -162,100 +163,6 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             console.log(totalItems);
             console.log(completedItems);
 
-            const gaugeOptions = {
-                chart: {
-                    type: 'solidgauge',
-                    backgroundColor: '#7dc2d500',
-                    height: (6 / 16 * 100) + '%',
-                    // width: 500
-                    // zoomType: 'xy'
-                },
-
-                title: null,
-
-                pane: {
-                    center: ['50%', '85%'],
-                    size: '100%',
-                    startAngle: -90,
-                    endAngle: 90,
-                    background: {
-                        backgroundColor:
-                            Highcharts.defaultOptions.legend.backgroundColor || '#EEE',
-                        innerRadius: '60%',
-                        outerRadius: '100%',
-                        shape: 'arc'
-                    }
-                },
-
-                exporting: {
-                    enabled: false
-                },
-
-                tooltip: {
-                    enabled: false
-                },
-
-                // the value axis
-                yAxis: {
-                    stops: [
-                        [0, '#095c7b'], // green
-                        // [0.4, '#DDDF0D'], // yellow
-                        // [0.2, '#DF5353'] // red
-                    ],
-                    lineWidth: 0,
-                    tickWidth: 0,
-                    minorTickInterval: null,
-                    tickAmount: 1,
-                    title: {
-                        y: -70
-                    },
-                    labels: {
-                        y: 16
-                    }
-                },
-
-                plotOptions: {
-                    solidgauge: {
-                        dataLabels: {
-                            y: parseInt(completedItems),
-                            borderWidth: 0,
-                            useHTML: true
-                        }
-                    }
-                }
-            };
-
-            // The speed gauge
-            const chartSpeed = Highcharts.chart('container-progress', Highcharts.merge(gaugeOptions, {
-                yAxis: {
-                    min: 0,
-                    max: parseInt(totalItems),
-                    title: {
-                        text: ''
-                    }
-                },
-
-                credits: {
-                    enabled: false
-                },
-
-                series: [{
-                    name: 'Progress',
-                    data: [parseInt(completedItems)],
-                    dataLabels: {
-                        format:
-                            '<div style="text-align:center">' +
-                            '<span style="font-size:25px">{y}</span><br/>' +
-                            '<span style="font-size:12px;opacity:0.4">Completed Items</span>' +
-                            '</div>'
-                    },
-                    tooltip: {
-                        valueSuffix: ' '
-                    }
-                }]
-
-            }));
-
             //On click of close icon in the modal
             $('.close').click(function () {
                 $("#myModal").hide();
@@ -266,7 +173,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
                 $("#myModal").show();
 
-                $("#myModal .modal-body").text(sales_rep_name + 'has received a notification that you want to improve your scorecard. They will reach out to you with the next steps directly.');
+                $("#myModal .modal-body").text(sales_rep_name + ' has received a notification that you want to improve your scorecard. They will reach out to you with the next steps directly.');
 
                 var emailBody =
                     'Hi Team, \n \nBelow franchisee is enquiring about the Prospecting Masterclass.\n Franchisee Name: ' +
@@ -295,7 +202,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     author: 112209,
                     body: emailBody,
                     recipients: 'fiona.harrison@mailplus.com.au',
-                    subject: 'Prospecting Masterclass Enquiry - ' + userName,
+                    subject: 'Activating Hub Lodgement - ' + userName,
                     cc: ['popie.popie@mailplus.com.au', 'ankith.ravindran@mailplus.com.au'],
                     relatedRecords: { entityId: userId },
                 });
@@ -396,20 +303,20 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                 });
             });
 
-            $("#qualified_leads").click(function () {
+            $("#lpo_project_register").click(function () {
                 $("#myModal").show();
 
-                $("#myModal .modal-body").text(sales_rep_name + 'has received a notification that you want to improve your scorecard. They will reach out to you with the next steps directly.');
+                $("#myModal .modal-body").text(sales_rep_name + ' has received a notification that you want to improve your scorecard. They will reach out to you with the next steps directly.');
 
                 var emailBody =
-                    'Hi Team, \n \nBelow franchisee is enquiring about entering qualified leads in NetSuite.\n Franchisee Name: ' +
+                    'Hi Team, \n \nBelow franchisee is enquiring about LPO Project.\n Franchisee Name: ' +
                     userName
 
                 email.send({
                     author: 112209,
                     body: emailBody,
                     recipients: sales_rep_email,
-                    subject: 'Qualified Leads Enquiry - ' + userName,
+                    subject: 'LPO Project Enquiry - ' + userName,
                     cc: ['luke.forbes@mailplus.com.au'],
                     relatedRecords: { entityId: userId },
                 });

@@ -225,35 +225,35 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             };
 
             // The speed gauge
-            const chartSpeed = Highcharts.chart('container-progress', Highcharts.merge(gaugeOptions, {
-                yAxis: {
-                    min: 0,
-                    max: parseInt(totalItems),
-                    title: {
-                        text: ''
-                    }
-                },
+            // const chartSpeed = Highcharts.chart('container-progress', Highcharts.merge(gaugeOptions, {
+            //     yAxis: {
+            //         min: 0,
+            //         max: parseInt(totalItems),
+            //         title: {
+            //             text: ''
+            //         }
+            //     },
 
-                credits: {
-                    enabled: false
-                },
+            //     credits: {
+            //         enabled: false
+            //     },
 
-                series: [{
-                    name: 'Progress',
-                    data: [parseInt(completedItems)],
-                    dataLabels: {
-                        format:
-                            '<div style="text-align:center">' +
-                            '<span style="font-size:25px">{y}</span><br/>' +
-                            '<span style="font-size:12px;opacity:0.4">Completed Items</span>' +
-                            '</div>'
-                    },
-                    tooltip: {
-                        valueSuffix: ' '
-                    }
-                }]
+            //     series: [{
+            //         name: 'Progress',
+            //         data: [parseInt(completedItems)],
+            //         dataLabels: {
+            //             format:
+            //                 '<div style="text-align:center">' +
+            //                 '<span style="font-size:25px">{y}</span><br/>' +
+            //                 '<span style="font-size:12px;opacity:0.4">Completed Items</span>' +
+            //                 '</div>'
+            //         },
+            //         tooltip: {
+            //             valueSuffix: ' '
+            //         }
+            //     }]
 
-            }));
+            // }));
 
             $("#fullReport").click(function () {
 

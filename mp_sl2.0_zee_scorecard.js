@@ -27,6 +27,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var franchiseeAPSuburbs = "";
         var prospectingMasterclass = null;
         var customerReviews = null;
+        var leadGenerationTraining = null;
+        var mpProjects = null;
 
 
         function onRequest(context) {
@@ -40,9 +42,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             if (role == 1000) {
                 zee = runtime.getCurrentUser().id;
             } else if (role == 3) { //Administrator
-                zee = 6; //test
+                zee = 1645493; //test
             } else if (role == 1032) { // System Support
-                zee = 425904; //test-AR
+                zee = 1645493; //test-AR
             }
 
             var date = new Date();
@@ -71,19 +73,18 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
             if (context.request.method === 'GET') {
                 var form = ui.createForm({
-                    title: 'Your Performance Profile'
+                    title: 'Your Growth Roadmap'
                 });
 
                 var inlineHtml =
-                    '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css"><script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&c=1048144&h=9ee6accfd476c9cae718&_xt=.css"/><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&c=1048144&h=ef2cda20731d146b5e98&_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&c=1048144&h=a0ef6ac4e28f91203dfe&_xt=.css"><script src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"><script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/highcharts-more.js"></script><script src="https://code.highcharts.com/modules/solid-gauge.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/export-data.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script><style>.wrapper{position:fixed;height:2em;width:2em;overflow:show;margin:auto;top:0;left:0;bottom:0;right:0;justify-content: center; align-items: center; display: -webkit-inline-box;} .ball{width: 22px; height: 22px; border-radius: 11px; margin: 0 10px; animation: 2s bounce ease infinite;} .blue{background-color: #0f3d39; }.red{background-color: #095C7B; animation-delay: .25s;}.yellow{background-color: #387081; animation-delay: .5s}.green{background-color: #d0e0cf; animation-delay: .75s}@keyframes bounce{50%{transform: translateY(25px);}}.button-shadow{box-shadow:2.8px 2.8px 2.2px rgba(0,0,0,.02),6.7px 6.7px 5.3px rgba(0,0,0,.028),12.5px 12.5px 10px rgba(0,0,0,.035),22.3px 22.3px 17.9px rgba(0,0,0,.042),41.8px 41.8px 33.4px rgba(0,0,0,.05),100px 100px 80px rgba(0,0,0,.07)}.card{font-size: 14px; display: grid;place-items:center;order:2;margin: 0 auto; border-radius: 6px;padding: 20px;background: #7dc2d5ba;}ul{list-style: none;padding: 0;margin: 0 0 30px;} ul li{display: flex;gap: 10px;align-items: center;padding: 6px 0;}ul li img{width: 16px;}</style>';
+                    '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css"><script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script><link rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2060796&c=1048144&h=9ee6accfd476c9cae718&_xt=.css"/><script src="https://system.na2.netsuite.com/core/media/media.nl?id=2060797&c=1048144&h=ef2cda20731d146b5e98&_xt=.js"></script><link type="text/css" rel="stylesheet" href="https://system.na2.netsuite.com/core/media/media.nl?id=2090583&c=1048144&h=a0ef6ac4e28f91203dfe&_xt=.css"><script src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"><script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script><script src="https://code.highcharts.com/highcharts.js"></script><script src="https://code.highcharts.com/highcharts-more.js"></script><script src="https://code.highcharts.com/modules/solid-gauge.js"></script><script src="https://code.highcharts.com/modules/exporting.js"></script><script src="https://code.highcharts.com/modules/export-data.js"></script><script src="https://code.highcharts.com/modules/accessibility.js"></script><style>.wrapper{position:fixed;height:2em;width:2em;overflow:show;margin:auto;top:0;left:0;bottom:0;right:0;justify-content: center; align-items: center; display: -webkit-inline-box;} .ball{width: 22px; height: 22px; border-radius: 11px; margin: 0 10px; animation: 2s bounce ease infinite;} .blue{background-color: #0f3d39; }.red{background-color: #095C7B; animation-delay: .25s;}.yellow{background-color: #387081; animation-delay: .5s}.green{background-color: #d0e0cf; animation-delay: .75s}@keyframes bounce{50%{transform: translateY(25px);}}.button-shadow{box-shadow:2.8px 2.8px 2.2px rgba(0,0,0,.02),6.7px 6.7px 5.3px rgba(0,0,0,.028),12.5px 12.5px 10px rgba(0,0,0,.035),22.3px 22.3px 17.9px rgba(0,0,0,.042),41.8px 41.8px 33.4px rgba(0,0,0,.05),100px 100px 80px rgba(0,0,0,.07)}.card{font-size: 14px; display: grid;/*place-items:center*/;order:2;margin: 0 auto; border-radius: 50px;padding: 20px;background: #7dc2d5ba;}.card-incomplete{font-size: 14px; display: grid;/*place-items:center*/;order:2;margin: 0 auto; border-radius: 50px;padding: 20px;background: #e4caa7;}.card-complete{font-size: 14px; display: grid;/*place-items:center*/;order:2;margin: 0 auto; border-radius: 50px;padding: 20px;background: #7dd5b8ba;}ul{list-style: none;padding: 0;margin: 0 0 30px;} ul li{display: flex;gap: 10px;align-items: center;padding: 6px 0;}ul li img{width: 16px;}</style>';
 
 
                 inlineHtml += loadingSection();
                 inlineHtml += popUpModal();
 
-                inlineHtml += '<div class="container instruction_div hide" style="background-color: #F0AECB;font-size: 14px;padding: 15px;border-radius: 10px;border: 1px solid;box-shadow: 0px 1px 26px -10px white;"><p style="text-align: center;"><b><u>Welcome to your Performance Profile</u></b> </br></br>This dashboard provides an overview and status of the minimum requirements needed to grow your business. By completing your profile, you will unlock new opportunities to collaborate with our Sales and Marketing teams, thereby increasing the value of the business. Once you meet all the requirements (indicated by the green ticks below), you will be eligible to book resources for a joint growth and strategy program. </p></div></br>';
+                inlineHtml += '<div class="container instruction_div hide" style="background-color: #F0AECB;font-size: 14px;padding: 15px;border-radius: 50px;/*border: 1px solid*/;box-shadow: 0px 1px 26px -10px white;"><p style=""><b><u>Welcome to Your Strategy Roadmap </u></b> </br></br>MailPlus continues to invest and pursue multiple growth strategies that take advantage of our unique 1st mile local network and premium customer service for small business. We are currently working on four related strategies, these are:</br></br><div style="padding-left: 50px;"><b>B2B - Small to Medium Businesses:</b> Delivering tailored mail and parcel solutions for business needs, especially for PO Box holders. </div></br><div style="padding-left: 50px;"><b>B2C - eCommerce Merchants:</b> Providing an exceptional pickup service experience for low-volume e-commerce merchants using the MailPlus booking portal. </div></br><div style="padding-left: 50px;"><b>1st Mile – Carriers & Platforms:</b> Providing an exceptional pickup service experience and consolidated lodgement for low-volume jobs from platforms and carriers (like Sendle, Dash-back, Secure Cash, etc.) </div></br><div style="padding-left: 50px;"><b>LPO - Local Business Partner Program support for LPOs:</b> Providing contracted and adhoc Pickup & Delivery services to support Licensed Post Offices in meeting pickup and delivery demands. </div></br></br>There are specific initiatives that connect your MailPlus franchise business into each of these growth strategies. Aiming for a green tick in each strategy is essential. If one\'s missing, simply click the related action button to progress. Please review this page quarterly to ensure your business is up to date and ready for success. </br></br><div style="padding-left: 50px;"><small><b><u>Initiative Readiness Legend:</u></b></br><div style="padding-left: 50px;"><svg height="25" width="25" style="vertical-align: middle;"><circle cx="12.5" cy="12.5" r="10" stroke="" stroke-width="3" fill="#e4caa7" /></svg> - In Progress</div><div style="padding-left: 50px;"><svg height="25" width="25" style="vertical-align: middle;"><circle cx="12.5" cy="12.5" r="10" stroke="" stroke-width="3" fill="#7dd5b8ba" /></svg> - Completed</div></small></div></p></div></br>';
 
-                inlineHtml += '<div class="container mp_roadmap hide" style="font-size: 14px;padding: 15px;box-shadow: 0px 1px 26px -10px white;text-align: center;border-radius: 10px"><iframe id="viewer" height="650" width="100%" src="https://1048144.app.netsuite.com/core/media/media.nl?id=6634474&c=1048144&h=ObkuXnE_XrlZHBqqfw9QKKpp72nCi4QwoktqnhV4rQZp_36k&_xt=.pdf#toolbar=0&navpanes=0&scrollbar=0"></iframe></div></br>'
 
                 //NetSuite Search: Zee Management Console - Franchisees
                 var searchZees = search.load({
@@ -121,9 +122,18 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                         'custentity_zee_prospect_masterclass');
                     customerReviews = searchResultZees.getValue(
                         'custentity_zee_customer_reviews');
+                    leadGenerationTraining = searchResultZees.getValue(
+                        'custentity_lead_generation_training');
+                    mpProjects = searchResultZees.getValue(
+                        'custentity_mp_projects');
 
                     return true;
                 });
+
+                var mpProjectsArray = [];
+                if (!isNullorEmpty(mpProjects)) {
+                    mpProjectsArray = mpProjects.split(',');
+                }
 
                 // Website New Leads by Status - Monthly Reporting
                 var leadsListBySalesRepWeeklySearch = search.load({
@@ -309,211 +319,221 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                     return true;
                 });
 
-                var totalScoringItems = 12;
+                var totalScoringItems = 4;
                 var completedItems = 0;
 
-
-
+                var startergyCompleted = false;
 
                 inlineHtml +=
                     '<div class="form-group container pud_prospect_support hide" style="">';
                 inlineHtml += '<div class="row">';
                 inlineHtml += '<div class="col-xs-6">'
-                inlineHtml += '<article class="card">';
-                inlineHtml += '<h2 style="text-align:center;">Customer Growth</h2>';
-                inlineHtml += '<small style="text-align:center;">This scorecard reflects the key elements driving your success in expanding your customer base and revenue streams. </small>';
+                if (customer_signed < 5 && prospecy_quote_sent < 5 && prospect_opportunity < 5 && prospect_in_contact < 5) {
+                    inlineHtml += '<article class="card-incomplete">';
+                } else {
+                    inlineHtml += '<article class="card-complete">';
+                }
+                inlineHtml += '<img height="200" src="https://1048144.app.netsuite.com/core/media/media.nl?id=6689770&c=1048144&h=95uHiobDnO16P_0lXo1VAV8ni0toSir2BYe3tHrePzLcXXiH" alt="B2B - Small to Medium Businesses" style="align-items: center;display: block;margin-left: auto;margin-right: auto;border-radius: 50%;"><h2 style="text-align:center;border-radius: 30%;">B2B - Small to Medium Businesses</h2>';
+                inlineHtml += '<small style="text-align:center;">Your business-as-usual mail and parcel service. Your key contribution for this strategy is to provide quality leads and work with your Sale Rep to signup new customers.</small>';
+                inlineHtml += '';
                 inlineHtml += '<ul>';
 
                 inlineHtml += '<li>';
-                if (isNullorEmpty(customerReviews) || customerReviews == 2) {
-                    inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-                    inlineHtml += '<p>Customer Reviews</p>'
-                    inlineHtml += '</li>';
-                    inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="customer_reviews" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Learn More</button></div>';
-                } else {
-                    completedItems++;
+                if (leadGenerationTraining == 1) {
                     inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-                    inlineHtml += '<p>Customer Reviews</p>'
-                    inlineHtml += '</li>';
-                    // inlineHtml += '<div style=" text-align: center;"><button class="btn" style="background-color: #095C7B;color: white;text-align:center;align-items: center">How do i collect reviews?</button></div>';
+                    inlineHtml += '<p>Complete the new lead generation learning module.</p>'
+                    startergyCompleted = true;
+                } else {
+                    inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
+                    inlineHtml += '<p>Complete the new lead generation learning module.</p>'
+                    inlineHtml += '<div style=" text-align: right;"><button class="btn btn-sm" id="complete_module" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Complete Module</button></div>';
                 }
+
+                inlineHtml += '</li>';
 
                 inlineHtml += '<li>';
-                if (customer_signed == 0 && prospecy_quote_sent == 0 && prospect_opportunity == 0 && prospect_in_contact == 0) {
+                if (customer_signed < 5 && prospecy_quote_sent < 5 && prospect_opportunity < 5 && prospect_in_contact < 5) {
                     inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-                    inlineHtml += '<p>Provide Qualified Leads </p>'
-                    inlineHtml += '</li>';
-                    inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="qualified_leads" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Enter Lead Now</button></div>';
+                    inlineHtml += '<p>Maintain a minimum of 5 Qualified Leads in your Prospect List via the Franchisee Lead Form.</p>'
+                    inlineHtml += '<div style=" text-align: right;"><a class="btn btn-sm" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px" target="_blank" href="https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1706&deploy=1&compid=1048144&script=1706&deploy=1&compid=1048144&script=1706&deploy=1&whence=https://1048144.app.netsuite.com/app/site/hosting/scriptlet.nl?script=1706&deploy=1&compid=1048144&script=1706&deploy=1&compid=1048144&script=1706&deploy=1&whence=">Enter Leads Now</a></div>';
                 } else {
-                    completedItems++;
                     inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-                    inlineHtml += '<p>Provide Qualified Leads s</p>'
-                    inlineHtml += '</li>';
+                    inlineHtml += '<p>Maintain a minimum of 5 Qualified Leads in your Prospect List via the Franchisee Lead Form.</p>'
+                    startergyCompleted = true;
                 }
 
-                inlineHtml += '<li>';
-                if (isNullorEmpty(prospectingMasterclass) || prospectingMasterclass == 2) {
-                    inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-                    inlineHtml += '<p>Attended a Prospecting Masterclass</p>'
-                    inlineHtml += '</li>';
-                    inlineHtml += '<small>Our specialised Prospecting Masterclass equips you with the techniques and strategies to identify and engage with potential customers proactively. Through this training, we ensure our prospecting efforts are efficient and effective. </small></br></br><div style=" text-align: center;"><button class="btn btn-sm" id="prospecting_masterclass" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Enquire Now</button></div>';
-                } else {
-                    completedItems++;
-                    inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-                    inlineHtml += '<p>Attended a Prospecting Masterclass</p>'
-                    inlineHtml += '</li>';
-                    // inlineHtml += '<small>Our specialised Prospecting Masterclass equips you with the techniques and strategies to identify and engage with potential customers proactively. Through this training, we ensure our prospecting efforts are efficient and effective. </small><div style=" text-align: center;"><button class="btn" style="background-color: #095C7B;color: white;text-align:center;align-items: center">Express interest now</button></div>';
-                }
+                inlineHtml += '</li>';
 
-
-                // inlineHtml += '<p>Active MP Standard Lodgement</p>'
-                // inlineHtml += '</li>';
-                // inlineHtml += '<div style=" text-align: center;"><button class="btn" style="background-color: #095C7B;color: white;text-align:center;align-items: center">Open a new lodgement</button></div>';
-
-                // inlineHtml += '<p>Customer Reviews</p>'
-                // inlineHtml += '</li>';
-                // inlineHtml += '<div style=" text-align: center;"><button class="btn" style="background-color: #095C7B;color: white;text-align:center;align-items: center">How do i collect reviews?</button></div>';
-                inlineHtml += '</ul></article>';
+                inlineHtml += '</ul><p style=" text-align: center;"><b>Need further assistance generating leads?</b> </br>Click the button to have a 1:1 training session. </br></br><div style=" text-align: center;"><button class="btn btn-sm" id="prospecting_masterclass" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Book Now</button></div></p></article>';
                 inlineHtml += '</div>';
 
+                if (startergyCompleted == true) {
+                    completedItems++;
+                }
+
+                startergyCompleted = false;
 
                 inlineHtml += '<div class="col-xs-6">'
-                inlineHtml += '<article class="card">';
-                inlineHtml += '<h2 style="text-align:center;">Local Network Ready</h2>';
-                inlineHtml += '<small style="text-align:center;">Below are the minimum items required to be part of the MailPlus adhoc network for programs such as Australia Post, Shippit and Sendle.</small>';
+                if (isNullorEmpty(mpstdLodgementPointsString)) {
+                    inlineHtml += '<article class="card-incomplete">';
+                } else {
+                    inlineHtml += '<article class="card-complete">';
+                }
+
+                inlineHtml += '<img height="200" src="https://1048144.app.netsuite.com/core/media/media.nl?id=6689771&c=1048144&h=Q65ItxxSSa1UCN6tBZIlefG2aClYo503VbvuK52qeYTpZDHH" alt="B2C - eCommerce Merchants" style="align-items: center;display: block;margin-left: auto;margin-right: auto;border-radius: 50%;"><h2 style="text-align:center;border-radius: 30%;">B2C - eCommerce Merchants</h2>';
+                inlineHtml += '<small style="text-align:center;">Offering the broadest range of shipping products is essential for this market. Your contribution to this initiative is to select consolidated hub options that give your customers access to all product types. Click Activate Now to provide your customers with more options – otherwise a green tick will display if all product options are available to your customers. </small>';
                 inlineHtml += '<ul>';
 
                 inlineHtml += '<li>';
                 var sendleSuburbMappingCompleted = false;
                 var shippitSuburbMappingCompleted = false;
                 var apSuburbMappingCompleted = false;
-                if (isNullorEmpty(franchiseeSendleSuburbs)) {
-                    sendleSuburbMappingCompleted = false;
-                    inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-                    inlineHtml += '<p>Sendle AU Express Suburb Mapping</p>'
-                    inlineHtml += '</li>';
-                    inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="sendle_suburb_mapping" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Complete Now</button></div>';
-                } else {
-                    completedItems++;
-                    sendleSuburbMappingCompleted = true;
-                    inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-                    inlineHtml += '<p>Sendle AU Express Suburb Mapping</p>'
-                    inlineHtml += '</li>';
-                }
-
-
-
-                inlineHtml += '<li>';
-                if (isNullorEmpty(franchiseeShippitSuburbs)) {
-                    shippitSuburbMappingCompleted = false;
-                    inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-                    inlineHtml += '<p>Shippit Suburb Mapping</p>'
-                    inlineHtml += '</li>';
-                    inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="shippit_suburb_mapping" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Complete Now</button></div>';
-                } else {
-                    completedItems++;
-                    shippitSuburbMappingCompleted = true;
-                    inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-                    inlineHtml += '<p>Shippit Suburb Mapping</p>'
-                    inlineHtml += '</li>';
-                }
-
-
-
-                inlineHtml += '<li>';
-                if (isNullorEmpty(franchiseeAPSuburbs)) {
-                    apSuburbMappingCompleted = false;
-                    inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-                } else {
-                    completedItems++;
-                    apSuburbMappingCompleted = true;
-                    inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-                }
-                inlineHtml += '<p>Australia Post Suburb Mapping</p>'
-                inlineHtml += '</li>';
-                if (apSuburbMappingCompleted == false) {
-                    inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="ap_suburb_mapping" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Complete Now</button></div>';
-                }
-
-                inlineHtml += '<li>';
-                if (isNullorEmpty(mpexLodgementPointsString)) {
-                    inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-                } else {
-                    completedItems++;
-                    inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-                }
-                inlineHtml += '<p>Active MP Express Lodgement</p>'
-                inlineHtml += '</li>';
                 inlineHtml += '<li>';
                 if (isNullorEmpty(mpstdLodgementPointsString)) {
                     inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-                    inlineHtml += '<p>Active MP Standard Lodgement</p>'
+                    inlineHtml += '<p>Open consolidated hub</p>'
                     inlineHtml += '</li>';
-                    inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="lodgement_locations" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Activate Now</button></div>';
+
                 } else {
-                    completedItems++;
+                    startergyCompleted = true;
                     inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
                     inlineHtml += '<p>Active Hub Lodgement</p>'
                     inlineHtml += '</li>';
-                    // inlineHtml += '<div style=" text-align: center;"><button class="btn" style="background-color: #095C7B;color: white;text-align:center;align-items: center">Open a new lodgement</button></div>';
-                }
 
-                inlineHtml += '<li>';
-                if ((isNullorEmpty(franchiseeSendleSuburbs) && isNullorEmpty(sendleexpLodgementPointsString)) && (isNullorEmpty(franchiseeShippitSuburbs) && isNullorEmpty(shippitLodgementPointsString))) {
-                    inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-                    inlineHtml += '<p>Trained on MailPlus App</p>'
-                    inlineHtml += '</li>';
-                    inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="app_training" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Complete Training </button></div>';
-                } else {
-                    completedItems++;
-                    inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-                    inlineHtml += '<p>Trained on MailPlus App</p>'
-                    inlineHtml += '</li>';
                 }
-                // inlineHtml += '<p>Trained on MailPlus App</p>'
-                // inlineHtml += '</li>';
-
-                inlineHtml += '</ul></article>';
+                inlineHtml += '</ul>';
+                if (isNullorEmpty(mpstdLodgementPointsString)) {
+                    inlineHtml += '<p style=" text-align: center;"><b>Want to offer more to your customers?</b> </br>Click the button below to activate more product options.</br></br><div style=" text-align: center;"><button class="btn btn-sm" id="lodgement_locations" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Activate Now</button></p>';
+                }
+                inlineHtml += '</article>';
                 inlineHtml += '</div>';
                 inlineHtml += '</div>';
                 inlineHtml += '</div></br></br>';
 
+                if (startergyCompleted == true) {
+                    completedItems++;
+                }
 
+                startergyCompleted = false;
 
                 inlineHtml +=
-                    '<div class="form-group container scorecard_percentage " style="">';
+                    '<div class="form-group container pud_prospect_support hide" style="">';
                 inlineHtml += '<div class="row">';
-                inlineHtml += '<div class="col-xs-12">'
-                inlineHtml += '<article class="card">';
-                inlineHtml += '<h2 style="text-align:center;">Essentials for Success </h2>';
-                inlineHtml += '<small style="text-align:center;">This scorecard reflects the vital aspects that you need to adhere to maintain MailPlus business standards and uphold our reputation. </small>';
+                inlineHtml += '<div class="col-xs-6">'
+                if (isNullorEmpty(franchiseeSendleSuburbs)) {
+                    inlineHtml += '<article class="card-incomplete">';
+                } else {
+                    inlineHtml += '<article class="card-complete">';
+                }
+
+                inlineHtml += '<img height="200" src="https://1048144.app.netsuite.com/core/media/media.nl?id=6689772&c=1048144&h=PxIs1U0fDgf56NcAeCmvA5o2lbQGnAVcU9QjP0wOljc9z3zF" alt="1st Mile– Carriers & Platforms" style="align-items: center;display: block;margin-left: auto;margin-right: auto;border-radius: 50%;"><h2 style="text-align:center;border-radius: 30%;">1st Mile– Carriers & Platforms</h2>';
+                inlineHtml += '<small style="text-align:center;">Have you completed suburb mapping for each available and future carrier (TGE, Sendle, Shippit and StarTrack.)</small>';
+                inlineHtml += '';
+                inlineHtml += '<ul>';
+                inlineHtml += '<li>';
+                var sendleSuburbMappingCompleted = false;
+                if (isNullorEmpty(franchiseeSendleSuburbs)) {
+                    sendleSuburbMappingCompleted = false;
+                    inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
+                    inlineHtml += '<p>Suburb Mapping</p>'
+                    inlineHtml += '</li>';
+
+                } else {
+                    startergyCompleted = true;
+                    sendleSuburbMappingCompleted = true;
+                    inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
+                    inlineHtml += '<p>Suburb Mapping</p>'
+                    inlineHtml += '</li>';
+                }
+
+                if (startergyCompleted == true) {
+                    completedItems++;
+                }
+
+                inlineHtml += '</ul>';
+                if (isNullorEmpty(franchiseeSendleSuburbs)) {
+                    inlineHtml += '<p style=" text-align: center;"><b>Need help mapping your suburbs?</b> </br>Click the button below and our team will assist you.</br></br><div style=" text-align: center;"><button class="btn btn-sm" id="sendle_suburb_mapping" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Map my Suburbs</button></div></p>';
+                }
+                inlineHtml += '</article>';
+                inlineHtml += '</div>';
+
+                startergyCompleted = false;
+
+                inlineHtml += '<div class="col-xs-6">'
+                if (!isNullorEmpty(mpProjectsArray) && (mpProjectsArray.indexOf("5") > -1)) {
+                    inlineHtml += '<article class="card-complete">';
+                } else {
+                    inlineHtml += '<article class="card-incomplete">';
+                }
+
+                // } 
+                inlineHtml += '<img height="200" src="https://1048144.app.netsuite.com/core/media/media.nl?id=6689773&c=1048144&h=a75slIkBu1uI3zMMVjRvUcRAO_LEXmLfm2InTiAawsa0NsGL" alt="LPO - Local Business Partner " style="align-items: center;display: block;margin-left: auto;margin-right: auto;border-radius: 50%;"><h2 style="text-align:center;border-radius: 30%;">LPO - Local Business Partner </h2>';
+                inlineHtml += '<small style="text-align:center;">Currently in Pilot Phase, our new partnership with Licensed Post Offices will help you secure more mail and parcel work as we work independently with each LPO to support their Local Business Partner program. </small>';
                 inlineHtml += '<ul>';
 
+                var apSuburbMappingCompleted = false;
+                inlineHtml += '<li>';
+                if (!isNullorEmpty(mpProjectsArray) && (mpProjectsArray.indexOf("5") > -1)) {
+                    startergyCompleted = true;
+                    inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
+                    inlineHtml += '<p>Your territory is linked to a Licensed Post Office active in the Australia Post Local Business Partner program.</p>';
+                    inlineHtml += '</li>';
+                } else {
+                    inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
+
+                    inlineHtml += '<p>You will be notified once your territory is ready to be linked to a Licensed Post Office active in the Australia Post Local Business Partner program. If you are keen to fast track this into your territory, register your interest by clicking the button below.</p>';
+                    inlineHtml += '</li>';
+
+                }
+
+
+                inlineHtml += '</ul>';
+                if (isNullorEmpty(mpProjectsArray) || (mpProjectsArray.indexOf("5") == -1)) {
+                    inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="lpo_project_register" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Register Your Interest</button></div>';
+                }
+                inlineHtml += '</article>';
+                inlineHtml += '</div>';
+                inlineHtml += '</div>';
+                inlineHtml += '</div></br></br>';
+
+                if (startergyCompleted == true) {
+                    completedItems++;
+                }
+
+                inlineHtml +=
+                    '<div class="form-group container essential_success hide" style="">';
+                inlineHtml += '<div class="row">';
+                inlineHtml += '<div class="col-xs-3"></div>'
+                inlineHtml += '<div class="col-xs-6">'
+                inlineHtml += '<article class="card">';
+                inlineHtml += '<h2 style="text-align:center;">Essentials for Success </h2>';
+                inlineHtml += '<small style="text-align:center;">There are a few things that are essential to succeed in the competitive and growing parcels market. Your MailPlus franchise needs the basics as outlined below: </small>';
+                inlineHtml += '<ul>';
 
                 inlineHtml += '<li>';
-                // if (isNullorEmpty(prospectingMasterclass)) {
+
                 inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-                // } else {
-                //     inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-                // }
-                inlineHtml += '<p>Compliant Uniform</p>'
+
+                inlineHtml += '<p>Approved Vehicle and signage <div style=" text-align: right;"><button class="btn btn-sm" id="vehicle" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Learn More</button></div></p>'
+                inlineHtml += '';
                 inlineHtml += '</li>';
-                inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="uniform" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Order Uniform</button></div>';
+
                 inlineHtml += '<li>';
-                // if (isNullorEmpty(prospectingMasterclass)) {
+                
                 inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-                // } else {
-                //     inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-                // }
-                inlineHtml += '<p>Approved Vehicle and signage</p>'
+                
+                inlineHtml += '<p>Compliant Uniform</p>'
+                inlineHtml += '<div style=" text-align: right;"><button class="btn btn-sm" id="uniform" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Order Uniform</button></div>';
                 inlineHtml += '</li>';
-                inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="vehicle" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Learn More</button></div>';
+
+
                 inlineHtml += '<li>';
                 if (customerCount != digitisedCustomerCount) {
                     inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
                     inlineHtml += '<p>Digitised Run</p>'
+                    inlineHtml += '<div style=" text-align: right;"><button class="btn btn-sm" id="digitise_run" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Learn More</button></div>';
                     inlineHtml += '</li>';
-                    inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="digitise_run" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Learn More</button></div>';
+
                 } else {
                     completedItems++;
                     inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
@@ -522,25 +542,15 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
                 }
 
+                inlineHtml += '<p style="text-align: center;"><b>Access to MailPlus App</b></p></br><div class="row"><div class="col-xs-6"><a href="https://play.google.com/store/apps/details?id=com.mailplus.operatorandroid"><img height="50" width="150" src="https://1048144.app.netsuite.com/core/media/media.nl?id=6689895&c=1048144&h=t5jDCyAuWyjddvq98aYU2dBMTEyPkmumdNA64aV1uRy-VM3w" alt="B2B - Small to Medium Businesses" style="align-items: center;display: block;margin-left: auto;margin-right: auto;"></a></div><div class="col-xs-6"><a href="https://apps.apple.com/au/app/mp-operator/id1465447160"><img height="50" width="150" src="https://1048144.app.netsuite.com/core/media/media.nl?id=6689896&c=1048144&h=Uco-i_T9PPbd741yRgm078ALw3k5dE8h-ydQj5kwMsFwWBRc" alt="B2B - Small to Medium Businesses" style="align-items: center;display: block;margin-left: auto;margin-right: auto;"></a></div></div>';
+
                 inlineHtml += '</ul></article>';
 
                 inlineHtml += '</div>';
+                inlineHtml += '<div class="col-xs-3"></div>'
                 inlineHtml += '</div>';
                 inlineHtml += '</div></br></br>';
 
-
-                inlineHtml +=
-                    '<div class="form-group container scorecard_percentage " style="">';
-                inlineHtml += '<div class="row">';
-                inlineHtml += '<div class="col-xs-12">'
-                inlineHtml += '<article class="card">';
-                inlineHtml += '<h2 style="text-align:center;">See Your Progress </h2>';
-                inlineHtml += '<small style="text-align:center;font-size: 12px;">A franchise profile score of 12 is essential to maintain your business\'s value relative to the franchise network and unlock further growth and strategy support from the sales and marketing team. Look out for the \'green\' button appearing  below the score, indicating you have achieved this milestone. Let\'s work together to propel your business towards success! </small>';
-                inlineHtml += '<div id="container-progress"></div>';
-                inlineHtml += '</article>';
-                inlineHtml += '</div>';
-                inlineHtml += '</div>';
-                inlineHtml += '</div>';
 
                 form.addField({
                     id: 'custpage_total_items',
