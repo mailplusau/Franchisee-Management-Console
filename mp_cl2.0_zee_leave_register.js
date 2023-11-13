@@ -351,25 +351,26 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
                         'Please Select Relief Driver Required</br>';
                 }
 
-                //Throw error if the Relief Driver Name is blank
-                if (isNullorEmpty(operatorReliefDriverName)) {
-                    errorMessage +=
-                        'Please Enter the Relief Driver Name</br>';
-                }
-
-                //Throw error if the Relief Driver Mobile is blank
-                if (isNullorEmpty(operatorReliefDriverMobile)) {
-                    errorMessage +=
-                        'Please Enter the Relief Driver Mobile</br>';
-                }
-
-                //Throw error if the Relief Driver Email is blank
-                if (isNullorEmpty(operatorReliefDriverEmail)) {
-                    errorMessage +=
-                        'Please Enter the Relief Driver Email</br>';
-                }
-
                 if (reliefDriverRequired == 1) {
+
+                    //Throw error if the Relief Driver Name is blank
+                    if (isNullorEmpty(operatorReliefDriverName)) {
+                        errorMessage +=
+                            'Please Enter the Relief Driver Name</br>';
+                    }
+
+                    //Throw error if the Relief Driver Mobile is blank
+                    if (isNullorEmpty(operatorReliefDriverMobile)) {
+                        errorMessage +=
+                            'Please Enter the Relief Driver Mobile</br>';
+                    }
+
+                    //Throw error if the Relief Driver Email is blank
+                    if (isNullorEmpty(operatorReliefDriverEmail)) {
+                        errorMessage +=
+                            'Please Enter the Relief Driver Email</br>';
+                    }
+
                     if (isNullorEmpty(appAccessRequired)) {
                         errorMessage +=
                             'Please Select App Access Required</br>';
