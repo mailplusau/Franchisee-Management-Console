@@ -341,12 +341,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                 inlineHtml += '<li>';
                 if (leadGenerationTraining == 1) {
                     inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513331&c=1048144&h=xGyROg8CoHweMuavTFJSQN2eFzoaZE5wtK8_rdteKVZCGv0u">';
-                    inlineHtml += '<p>Complete the new lead generation learning module.</p>'
+                    inlineHtml += '<p>Complete the new lead generation learning module.</p>';
+                    inlineHtml += '<div style=" text-align: right;"><a class="btn btn-sm" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px" target="_blank" href="https://1048144.app.netsuite.com/core/media/media.nl?id=6699161&c=1048144&h=OS-O_tP1tmSA6eIJ_ocVHSGDDKrBb3yf5xkBnDwkYpYTOkh3&_xt=.pdf">View Training Module</a></div>';
                     startergyCompleted = true;
                 } else {
                     inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
                     inlineHtml += '<p>Complete the new lead generation learning module.</p>'
-                    inlineHtml += '<div style=" text-align: right;"><button class="btn btn-sm" id="complete_module" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Complete Module</button></div>';
+                    inlineHtml += '<div style=" text-align: right;"><a class="btn btn-sm" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px" id="complete_module" target="_blank" href="https://1048144.app.netsuite.com/core/media/media.nl?id=6699161&c=1048144&h=OS-O_tP1tmSA6eIJ_ocVHSGDDKrBb3yf5xkBnDwkYpYTOkh3&_xt=.pdf">Complete Module</a></div>';
                 }
 
                 inlineHtml += '</li>';
@@ -506,8 +507,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                 inlineHtml += '<div class="col-xs-3"></div>'
                 inlineHtml += '<div class="col-xs-6">'
                 inlineHtml += '<article class="card">';
-                inlineHtml += '<h2 style="text-align:center;">Essentials for Success </h2>';
-                inlineHtml += '<small style="text-align:center;">There are a few things that are essential to succeed in the competitive and growing parcels market. Your MailPlus franchise needs the basics as outlined below: </small>';
+                inlineHtml += '<h2 style="text-align:center;">MailPlus Standard Practice </h2>';
+                inlineHtml += '<small style="text-align:center;">A quick sense check to ensure you have the necessary operational tools in place to maintain high industry standards: </small>';
                 inlineHtml += '<ul>';
 
                 inlineHtml += '<li>';
@@ -519,9 +520,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                 inlineHtml += '</li>';
 
                 inlineHtml += '<li>';
-                
+
                 inlineHtml += '<img src="https://1048144.app.netsuite.com/core/media/media.nl?id=6513332&c=1048144&h=Vabzg-Sb95cGUEQcNDUiI04lCM2MBy_WuezJAzgpSWK2uElv">';
-                
+
                 inlineHtml += '<p>Compliant Uniform</p>'
                 inlineHtml += '<div style=" text-align: right;"><button class="btn btn-sm" id="uniform" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Order Uniform</button></div>';
                 inlineHtml += '</li>';
@@ -553,6 +554,14 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
 
                 form.addField({
+                    id: 'custpage_zee',
+                    type: ui.FieldType.TEXT,
+                    label: 'Table CSV'
+                }).updateDisplayType({
+                    displayType: ui.FieldDisplayType.HIDDEN
+                }).defaultValue = zee;
+
+                form.addField({
                     id: 'custpage_total_items',
                     type: ui.FieldType.TEXT,
                     label: 'Table CSV'
@@ -569,6 +578,14 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                 }).defaultValue = completedItems;
 
                 form.addField({
+                    id: 'custpage_completed_module',
+                    type: ui.FieldType.TEXT,
+                    label: 'Completed Module'
+                }).updateDisplayType({
+                    displayType: ui.FieldDisplayType.HIDDEN
+                }).defaultValue = leadGenerationTraining;
+
+                form.addField({
                     id: 'preview_table',
                     label: 'inlinehtml',
                     type: 'inlinehtml'
@@ -576,9 +593,34 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                     layoutType: ui.FieldLayoutType.STARTROW
                 }).defaultValue = inlineHtml;
 
+                form.addSubmitButton({
+                    label: 'SAVE'
+                });
+
 
                 form.clientScriptFileId = 6644242;
                 context.response.writePage(form);
+            } else {
+                var zeeId = parseInt(context.request.parameters.custpage_zee);
+                var leadTrainingCompleted = context.request.parameters.custpage_completed_module;
+
+                //Load Partner Record & Save the main details
+                var zeeRecord = record.load({
+                    type: record.Type.PARTNER,
+                    id: zeeId
+                });
+                zeeRecord.setValue({
+                    fieldId: 'custentity_lead_generation_training',
+                    value: leadTrainingCompleted
+                })
+                var zeeRecordId = zeeRecord.save({
+                    ignoreMandatoryFields: true
+                });
+
+                redirect.toSuitelet({
+                    scriptId: 'customscript_sl2_zee_scorecard',
+                    deploymentId: 'customdeploy1',
+                });
             }
 
 

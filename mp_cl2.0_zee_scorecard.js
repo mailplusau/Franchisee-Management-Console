@@ -147,6 +147,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             $("#NS_MENU_ID0-item0 a").css("background-color", "#CFE0CE");
             $("#body").css("background-color", "#CFE0CE");
 
+            $('#tbl_submitter').css('display', 'none');
+
             setZeeStateAndSalesRepEmail();
 
             // portlet.resize();
@@ -173,7 +175,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
                 $("#myModal").show();
 
-                $("#myModal .modal-body").text(sales_rep_name + ' has received a notification that you want to improve your scorecard. They will reach out to you with the next steps directly.');
+                $("#myModal .modal-body").text(sales_rep_name + ' has received your notification that you want to book a training session and will contact you directly with the next steps.');
 
                 var emailBody =
                     'Hi Team, \n \nBelow franchisee is enquiring about the Prospecting Masterclass.\n Franchisee Name: ' +
@@ -187,6 +189,24 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     cc: ['luke.forbes@mailplus.com.au'],
                     relatedRecords: { entityId: userId },
                 });
+            });
+
+            $("#complete_module").click(function () {
+
+                var url =
+                    'https://1048144.app.netsuite.com/core/media/media.nl?id=6699161&c=1048144&h=OS-O_tP1tmSA6eIJ_ocVHSGDDKrBb3yf5xkBnDwkYpYTOkh3&_xt=.pdf'
+
+                window.open(
+                    url,
+                    '_blank' // <- This is what makes it open in a new window.
+                );
+
+                val1.setValue({
+                    fieldId: 'custpage_completed_module',
+                    value: 1
+                });
+
+                document.getElementById('submitter').click();
             });
 
             $("#lodgement_locations").click(function () {
@@ -317,7 +337,7 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     body: emailBody,
                     recipients: sales_rep_email,
                     subject: 'LPO Project Enquiry - ' + userName,
-                    cc: ['luke.forbes@mailplus.com.au'],
+                    cc: ['luke.forbes@mailplus.com.au', 'michael.mcdaid@mailplus.com.au'],
                     relatedRecords: { entityId: userId },
                 });
             });
@@ -385,7 +405,10 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
         }
 
-        function saveRecord() { }
+        function saveRecord() {
+
+            return true;
+        }
 
         function pad(s) {
             return (s < 10) ? '0' + s : s;
