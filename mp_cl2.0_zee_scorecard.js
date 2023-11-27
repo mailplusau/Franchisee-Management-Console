@@ -172,6 +172,15 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
 
             $("#prospecting_masterclass").click(function () {
 
+                var salesLeadQueryCount = val1.getValue({
+                    fieldId: 'custpage_sales_lead_query_count'
+                });
+
+                val1.setValue({
+                    fieldId: 'custpage_sales_lead_query_count',
+                    value: parseInt(salesLeadQueryCount) + 1
+                });
+
 
                 $("#myModal").show();
 
@@ -189,6 +198,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     cc: ['luke.forbes@mailplus.com.au'],
                     relatedRecords: { entityId: userId },
                 });
+
+                document.getElementById('submitter').click();
             });
 
             $("#complete_module").click(function () {
@@ -210,6 +221,16 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             });
 
             $("#lodgement_locations").click(function () {
+
+                var hubLodgementQueryCount = val1.getValue({
+                    fieldId: 'custpage_hub_lodgement_query_count'
+                });
+
+                val1.setValue({
+                    fieldId: 'custpage_hub_lodgement_query_count',
+                    value: parseInt(hubLodgementQueryCount) + 1
+                });
+
                 $("#myModal").show();
 
                 $("#myModal .modal-body").text('Fiona has received a notification that you want to improve your scorecard. They will reach out to you with the next steps directly.');
@@ -226,6 +247,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     cc: ['popie.popie@mailplus.com.au', 'ankith.ravindran@mailplus.com.au'],
                     relatedRecords: { entityId: userId },
                 });
+
+                document.getElementById('submitter').click();
             });
 
             $("#customer_reviews").click(function () {
@@ -248,6 +271,16 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             });
 
             $("#sendle_suburb_mapping").click(function () {
+
+                var suburbMappingQueryCount = val1.getValue({
+                    fieldId: 'custpage_suburb_mapping_query_count'
+                });
+
+                val1.setValue({
+                    fieldId: 'custpage_suburb_mapping_query_count',
+                    value: parseInt(suburbMappingQueryCount) + 1
+                });
+
                 $("#myModal").show();
 
                 $("#myModal .modal-body").text('Fiona has received a notification that you want to improve your scorecard. They will reach out to you with the next steps directly.');
@@ -264,6 +297,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     cc: ['popie.popie@mailplus.com.au', 'ankith.ravindran@mailplus.com.au'],
                     relatedRecords: { entityId: userId },
                 });
+
+                document.getElementById('submitter').click();
             });
 
             $("#shippit_suburb_mapping").click(function () {
@@ -324,6 +359,17 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
             });
 
             $("#lpo_project_register").click(function () {
+
+                var lpoProjectQueryCount = val1.getValue({
+                    fieldId: 'custpage_lpo_project_query_count'
+                });
+
+                val1.setValue({
+                    fieldId: 'custpage_lpo_project_query_count',
+                    value: parseInt(lpoProjectQueryCount) + 1
+                });
+
+
                 $("#myModal").show();
 
                 $("#myModal .modal-body").text(sales_rep_name + ' has received a notification that you want to improve your scorecard. They will reach out to you with the next steps directly.');
@@ -340,9 +386,21 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     cc: ['luke.forbes@mailplus.com.au', 'michael.mcdaid@mailplus.com.au'],
                     relatedRecords: { entityId: userId },
                 });
+
+                document.getElementById('submitter').click();
             });
 
             $("#uniform").click(function () {
+
+                var uniformQueryCount = val1.getValue({
+                    fieldId: 'custpage_uniform_query_count'
+                });
+
+                val1.setValue({
+                    fieldId: 'custpage_uniform_query_count',
+                    value: parseInt(uniformQueryCount) + 1
+                });
+
                 $("#myModal").show();
 
                 $("#myModal .modal-body").text('Michael has received a notification that you want to improve your scorecard. They will reach out to you with the next steps directly.');
@@ -359,9 +417,21 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     cc: ['greg.hart@mailplus.com.au'],
                     relatedRecords: { entityId: userId },
                 });
+
+                document.getElementById('submitter').click();
             });
 
             $("#vehicle").click(function () {
+
+                var vehicleQueryCount = val1.getValue({
+                    fieldId: 'custpage_vehicle_query_count'
+                });
+
+                val1.setValue({
+                    fieldId: 'custpage_vehicle_query_count',
+                    value: parseInt(vehicleQueryCount) + 1
+                });
+
                 $("#myModal").show();
 
                 $("#myModal .modal-body").text('Michael has received a notification that you want to improve your scorecard. They will reach out to you with the next steps directly.');
@@ -378,9 +448,21 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     cc: ['greg.hart@mailplus.com.au'],
                     relatedRecords: { entityId: userId },
                 });
+
+                document.getElementById('submitter').click();
             });
 
             $("#digitise_run").click(function () {
+
+                var digitiseRunQueryCount = val1.getValue({
+                    fieldId: 'custpage_digitise_run_query_count'
+                });
+
+                val1.setValue({
+                    fieldId: 'custpage_digitise_run_query_count',
+                    value: parseInt(digitiseRunQueryCount) + 1
+                });
+
                 $("#myModal").show();
 
                 $("#myModal .modal-body").text('Popie has received a notification that you want to improve your scorecard. They will reach out to you with the next steps directly.');
@@ -397,6 +479,8 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     cc: ['fiona.harrison@mailplus.com.au', 'ankith.ravindran@mailplus.com.au'],
                     relatedRecords: { entityId: userId },
                 });
+
+                document.getElementById('submitter').click();
             });
 
 

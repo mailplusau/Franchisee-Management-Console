@@ -28,6 +28,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var prospectingMasterclass = null;
         var customerReviews = null;
         var leadGenerationTraining = null;
+        var salesLeadQueryCount = 0;
+        var hubLodgementQueryCount = 0;
+        var suburbMappingQueryCount = 0;
+        var lpoProjectQueryCount = 0;
+        var vehicleQueryCount = 0;
+        var uniformQueryCount = 0;
+        var digitiseRunQueryCount = 0;
         var mpProjects = null;
 
 
@@ -126,6 +133,42 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                         'custentity_lead_generation_training');
                     mpProjects = searchResultZees.getValue(
                         'custentity_mp_projects');
+
+                    salesLeadQueryCount = searchResultZees.getValue(
+                        'custentity_sales_leads_query_count');
+                    if (isNullorEmpty(salesLeadQueryCount)) {
+                        salesLeadQueryCount = 0;
+                    }
+                    hubLodgementQueryCount = searchResultZees.getValue(
+                        'custentity_hub_lodgement_query_count');
+                    if (isNullorEmpty(hubLodgementQueryCount)) {
+                        hubLodgementQueryCount = 0;
+                    }
+                    suburbMappingQueryCount = searchResultZees.getValue(
+                        'custentity_suburb_mapping_query_count');
+                    if (isNullorEmpty(suburbMappingQueryCount)) {
+                        suburbMappingQueryCount = 0;
+                    }
+                    lpoProjectQueryCount = searchResultZees.getValue(
+                        'custentity_lpo_query_count ');
+                    if (isNullorEmpty(lpoProjectQueryCount)) {
+                        lpoProjectQueryCount = 0;
+                    }
+                    vehicleQueryCount = searchResultZees.getValue(
+                        'custentity_vehicle_query_count');
+                    if (isNullorEmpty(vehicleQueryCount)) {
+                        vehicleQueryCount = 0;
+                    }
+                    uniformQueryCount = searchResultZees.getValue(
+                        'custentity_uniform_query_count');
+                    if (isNullorEmpty(uniformQueryCount)) {
+                        uniformQueryCount = 0;
+                    }
+                    digitiseRunQueryCount = searchResultZees.getValue(
+                        'custentity_digitise_run_query_count');
+                    if (isNullorEmpty(digitiseRunQueryCount)) {
+                        digitiseRunQueryCount = 0;
+                    }
 
                     return true;
                 });
@@ -586,6 +629,56 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                 }).defaultValue = leadGenerationTraining;
 
                 form.addField({
+                    id: 'custpage_sales_lead_query_count',
+                    type: ui.FieldType.TEXT,
+                    label: 'Digitise Run'
+                }).updateDisplayType({
+                    displayType: ui.FieldDisplayType.HIDDEN
+                }).defaultValue = salesLeadQueryCount;
+                form.addField({
+                    id: 'custpage_hub_lodgement_query_count',
+                    type: ui.FieldType.TEXT,
+                    label: 'Digitise Run'
+                }).updateDisplayType({
+                    displayType: ui.FieldDisplayType.HIDDEN
+                }).defaultValue = hubLodgementQueryCount;
+                form.addField({
+                    id: 'custpage_suburb_mapping_query_count',
+                    type: ui.FieldType.TEXT,
+                    label: 'Digitise Run'
+                }).updateDisplayType({
+                    displayType: ui.FieldDisplayType.HIDDEN
+                }).defaultValue = suburbMappingQueryCount;
+                form.addField({
+                    id: 'custpage_lpo_project_query_count',
+                    type: ui.FieldType.TEXT,
+                    label: 'Digitise Run'
+                }).updateDisplayType({
+                    displayType: ui.FieldDisplayType.HIDDEN
+                }).defaultValue = lpoProjectQueryCount;
+                form.addField({
+                    id: 'custpage_vehicle_query_count',
+                    type: ui.FieldType.TEXT,
+                    label: 'Digitise Run'
+                }).updateDisplayType({
+                    displayType: ui.FieldDisplayType.HIDDEN
+                }).defaultValue = vehicleQueryCount;
+                form.addField({
+                    id: 'custpage_uniform_query_count',
+                    type: ui.FieldType.TEXT,
+                    label: 'Digitise Run'
+                }).updateDisplayType({
+                    displayType: ui.FieldDisplayType.HIDDEN
+                }).defaultValue = uniformQueryCount;
+                form.addField({
+                    id: 'custpage_digitise_run_query_count',
+                    type: ui.FieldType.TEXT,
+                    label: 'Digitise Run'
+                }).updateDisplayType({
+                    displayType: ui.FieldDisplayType.HIDDEN
+                }).defaultValue = digitiseRunQueryCount;
+
+                form.addField({
                     id: 'preview_table',
                     label: 'inlinehtml',
                     type: 'inlinehtml'
@@ -603,6 +696,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             } else {
                 var zeeId = parseInt(context.request.parameters.custpage_zee);
                 var leadTrainingCompleted = context.request.parameters.custpage_completed_module;
+                var salesLeadQueryCount = context.request.parameters.custpage_sales_lead_query_count;
+                var hubLodgementQueryCount = context.request.parameters.custpage_hub_lodgement_query_count;
+                var suburbMappingQueryCount = context.request.parameters.custpage_suburb_mapping_query_count;
+                var lpoProjectQueryCount = context.request.parameters.custpage_lpo_project_query_count;
+                var vehicleQueryCount = context.request.parameters.custpage_vehicle_query_count;
+                var uniformQueryCount = context.request.parameters.custpage_uniform_query_count;
+                var digitiseRunQueryCount = context.request.parameters.custpage_digitise_run_query_count;
 
                 //Load Partner Record & Save the main details
                 var zeeRecord = record.load({
@@ -612,7 +712,37 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                 zeeRecord.setValue({
                     fieldId: 'custentity_lead_generation_training',
                     value: leadTrainingCompleted
-                })
+                });
+
+                zeeRecord.setValue({
+                    fieldId: 'custentity_sales_leads_query_count',
+                    value: salesLeadQueryCount
+                });
+                zeeRecord.setValue({
+                    fieldId: 'custentity_hub_lodgement_query_count',
+                    value: hubLodgementQueryCount
+                });
+                zeeRecord.setValue({
+                    fieldId: 'custentity_suburb_mapping_query_count',
+                    value: suburbMappingQueryCount
+                });
+                zeeRecord.setValue({
+                    fieldId: 'custentity_lpo_query_count',
+                    value: lpoProjectQueryCount
+                });
+                zeeRecord.setValue({
+                    fieldId: 'custentity_vehicle_query_count',
+                    value: vehicleQueryCount
+                });
+                zeeRecord.setValue({
+                    fieldId: 'custentity_uniform_query_count',
+                    value: uniformQueryCount
+                });
+                zeeRecord.setValue({
+                    fieldId: 'custentity_digitise_run_query_count',
+                    value: digitiseRunQueryCount
+                });
+
                 var zeeRecordId = zeeRecord.save({
                     ignoreMandatoryFields: true
                 });
