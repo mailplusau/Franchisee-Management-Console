@@ -368,6 +368,10 @@ define(['N/email', 'N/runtime', 'N/search', 'N/record', 'N/http', 'N/log',
                     fieldId: 'custpage_lpo_project_query_count',
                     value: parseInt(lpoProjectQueryCount) + 1
                 });
+                val1.setValue({
+                    fieldId: 'custpage_lpo_project_query_date',
+                    value: getDate()
+                });
 
 
                 $("#myModal").show();

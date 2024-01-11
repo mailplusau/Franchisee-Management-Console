@@ -32,6 +32,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var hubLodgementQueryCount = 0;
         var suburbMappingQueryCount = 0;
         var lpoProjectQueryCount = 0;
+        var lpoProjectQueryDate;
         var vehicleQueryCount = 0;
         var uniformQueryCount = 0;
         var digitiseRunQueryCount = 0;
@@ -150,7 +151,9 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                         suburbMappingQueryCount = 0;
                     }
                     lpoProjectQueryCount = searchResultZees.getValue(
-                        'custentity_lpo_query_count ');
+                        'custentity_lpo_query_count');
+                    lpoProjectQueryDate = searchResultZees.getValue(
+                        'custentity_date_lpo_program_interest');
                     if (isNullorEmpty(lpoProjectQueryCount)) {
                         lpoProjectQueryCount = 0;
                     }
@@ -533,7 +536,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
                 inlineHtml += '</ul>';
                 if (isNullorEmpty(mpProjectsArray) || (mpProjectsArray.indexOf("5") == -1)) {
-                    inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="lpo_project_register" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Register Your Interest</button></div>';
+
+                    if (!isNullorEmpty(lpoProjectQueryDate) || !isNullorEmpty(lpoProjectQueryCount)) {
+                        inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="lpo_project_register" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px" readonly disabled>You have registered your interest</button></div>';
+                    } else {
+                        inlineHtml += '<div style=" text-align: center;"><button class="btn btn-sm" id="lpo_project_register" style="background-color: #095C7B;color: white;text-align:center;align-items: center;border-radius: 30px">Register Your Interest</button></div>';
+                    }
+
                 }
                 inlineHtml += '</article>';
                 inlineHtml += '</div>';
@@ -657,6 +666,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                     displayType: ui.FieldDisplayType.HIDDEN
                 }).defaultValue = lpoProjectQueryCount;
                 form.addField({
+                    id: 'custpage_lpo_project_query_date',
+                    type: ui.FieldType.TEXT,
+                    label: 'Digitise Run'
+                }).updateDisplayType({
+                    displayType: ui.FieldDisplayType.HIDDEN
+                }).defaultValue = lpoProjectQueryDate;
+                form.addField({
                     id: 'custpage_vehicle_query_count',
                     type: ui.FieldType.TEXT,
                     label: 'Digitise Run'
@@ -700,6 +716,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                 var hubLodgementQueryCount = context.request.parameters.custpage_hub_lodgement_query_count;
                 var suburbMappingQueryCount = context.request.parameters.custpage_suburb_mapping_query_count;
                 var lpoProjectQueryCount = context.request.parameters.custpage_lpo_project_query_count;
+                var lpoProjectQueryDate = context.request.parameters.custpage_lpo_project_query_date;
                 var vehicleQueryCount = context.request.parameters.custpage_vehicle_query_count;
                 var uniformQueryCount = context.request.parameters.custpage_uniform_query_count;
                 var digitiseRunQueryCount = context.request.parameters.custpage_digitise_run_query_count;
@@ -729,6 +746,10 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                 zeeRecord.setValue({
                     fieldId: 'custentity_lpo_query_count',
                     value: lpoProjectQueryCount
+                });
+                zeeRecord.setValue({
+                    fieldId: 'custentity_date_lpo_program_interest',
+                    value: lpoProjectQueryDate
                 });
                 zeeRecord.setValue({
                     fieldId: 'custentity_vehicle_query_count',
