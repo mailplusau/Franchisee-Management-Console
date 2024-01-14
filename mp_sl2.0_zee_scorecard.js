@@ -9,10 +9,10 @@
 
 
 define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
-    'N/http', 'N/log', 'N/redirect'
+    'N/http', 'N/log', 'N/redirect', 'N/format'
 ],
 
-    function (ui, email, runtime, search, record, http, log, redirect) {
+    function (ui, email, runtime, search, record, http, log, redirect, format) {
         var role = 0;
         var zee = 0;
 
@@ -749,7 +749,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                 });
                 zeeRecord.setValue({
                     fieldId: 'custentity_date_lpo_program_interest',
-                    value: lpoProjectQueryDate
+                    value: getDateToday()
                 });
                 zeeRecord.setValue({
                     fieldId: 'custentity_vehicle_query_count',
@@ -845,6 +845,21 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
         function pad(s) {
             return (s < 10) ? '0' + s : s;
+        }
+
+        function getDateToday() {
+            var date = new Date();
+            log.debug({
+                title: 'date',
+                details: date
+            })
+            format.format({
+                value: date,
+                type: format.Type.DATE,
+                timezone: format.Timezone.AUSTRALIA_SYDNEY
+            })
+
+            return date;
         }
 
         function isNullorEmpty(val) {
