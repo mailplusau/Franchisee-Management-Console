@@ -42,7 +42,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
     var franchiseeStdSuburbs = "";
     var franchiseeExpressSuburbs = "";
     var franchiseePartnershipSuburbs = "";
-
+    var franchiseePremiumSuburbs = ""
+    var mpprmLodgementPointString = null;
     var mpexLodgementPointsString = null;
     var mpstdLodgementPointsString = null;
     var sendleexpLodgementPointsString = null;
@@ -982,66 +983,135 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         //ADD/UPDATE OPREATOR DETAILS
         if (!isNullorEmpty(operatoridsArrys)) {
           for (var y = 0; y < operatoridsArrys.length; y++) {
-            var operatorRecord = record.load({
-              type: 'customrecord_operator',
-              id: operatoridsArrys[y]
-            });
+            if (role != 1000) {
+              var operatorRecord = record.load({
+                type: 'customrecord_operator',
+                id: operatoridsArrys[y]
+              });
 
-            var spliName = operatornameArrys[y].split(" ");
+              var spliName = operatornameArrys[y].split(" ");
 
-            operatorRecord.setValue({
-              fieldId: 'custrecord_operator_givennames',
-              value: spliName[0]
-            })
-            operatorRecord.setValue({
-              fieldId: 'custrecord_operator_surname',
-              value: spliName[1]
-            })
-
-            operatorRecord.setValue({
-              fieldId: 'name',
-              value: operatornameArrys[y]
-            })
-            operatorRecord.setValue({
-              fieldId: 'custrecord_operator_email',
-              value: operatoremailArrys[y]
-            })
-            operatorRecord.setValue({
-              fieldId: 'custrecord_operator_date_reviewed',
-              value: getDateToday()
-            })
-            operatorRecord.setValue({
-              fieldId: 'custrecord_operator_phone',
-              value: operatormobileArrys[y]
-            })
-            operatorRecord.setValue({
-              fieldId: 'custrecord_operator_role',
-              value: operatorroleArrys[y]
-            })
-            operatorRecord.setValue({
-              fieldId: 'custrecord_operator_employment',
-              value: operatoremploymentypeArrys[y]
-            })
-            operatorRecord.setValue({
-              fieldId: 'custrecord_dds_operator',
-              value: operatorddsArrys[y]
-            })
-            operatorRecord.setValue({
-              fieldId: 'custrecord_primary_operator',
-              value: operatorprimaryArrys[y]
-            })
-            operatorRecord.setValue({
-              fieldId: 'custrecord_compliant_uniform',
-              value: operatorcompliantuniformArrys[y]
-            })
-            if (!isNullorEmpty(operatormobiledevArrys[y])) {
               operatorRecord.setValue({
-                fieldId: 'custrecord_operator_mobdev_platform',
-                value: operatormobiledevArrys[y]
+                fieldId: 'custrecord_operator_givennames',
+                value: spliName[0]
               })
-            }
+              operatorRecord.setValue({
+                fieldId: 'custrecord_operator_surname',
+                value: spliName[1]
+              })
 
-            operatorRecord.save()
+              operatorRecord.setValue({
+                fieldId: 'name',
+                value: operatornameArrys[y]
+              })
+              operatorRecord.setValue({
+                fieldId: 'custrecord_operator_email',
+                value: operatoremailArrys[y]
+              })
+              operatorRecord.setValue({
+                fieldId: 'custrecord_operator_date_reviewed',
+                value: getDateToday()
+              })
+              operatorRecord.setValue({
+                fieldId: 'custrecord_operator_phone',
+                value: operatormobileArrys[y]
+              })
+              operatorRecord.setValue({
+                fieldId: 'custrecord_operator_role',
+                value: operatorroleArrys[y]
+              })
+              operatorRecord.setValue({
+                fieldId: 'custrecord_operator_employment',
+                value: operatoremploymentypeArrys[y]
+              })
+              operatorRecord.setValue({
+                fieldId: 'custrecord_dds_operator',
+                value: operatorddsArrys[y]
+              })
+              operatorRecord.setValue({
+                fieldId: 'custrecord_primary_operator',
+                value: operatorprimaryArrys[y]
+              })
+              operatorRecord.setValue({
+                fieldId: 'custrecord_compliant_uniform',
+                value: operatorcompliantuniformArrys[y]
+              })
+              if (!isNullorEmpty(operatormobiledevArrys[y])) {
+                operatorRecord.setValue({
+                  fieldId: 'custrecord_operator_mobdev_platform',
+                  value: operatormobiledevArrys[y]
+                })
+              }
+
+              operatorRecord.save()
+            } else {
+              var operatorRecord = record.load({
+                type: 'customrecord_operator',
+                id: operatoridsArrys[y]
+              });
+
+              var operatorName = operatorRecord.getValue({
+                fieldId: 'name'
+              })
+              var operatorEmail = operatorRecord.getValue({
+                fieldId: 'custrecord_operator_email'
+              })
+              var operatorPhone = operatorRecord.getValue({
+                fieldId: 'custrecord_operator_phone'
+              })
+
+              if (operatorName != operatornameArrys[y] || operatorEmail != operatoremailArrys[y] || operatorPhone != operatormobileArrys[y]) {
+                var emailSubject = zeeName + ' - Franchisee Management Console - Update Operator';
+
+                var emailBody = 'Date: ' + getDateToday() + '</br> Operator NS ID: ' + operatoridsArrys[y] +
+                  '</br> Operator Name: ' + operatornameArrys[y] +
+                  '</br> Operator Email: ' + operatoremailArrys[y] +
+                  '</br> Operator Mobile: ' + operatormobileArrys[y] +
+                  '</br> Franchisee NS ID: ' + zeeRecordId +
+                  '</br> Franchisee Name: ' + zeeName;
+
+                email.send({
+                  author: 112209,
+                  recipients: ['mailplusit@mailplus.com.au'],
+                  subject: emailSubject,
+                  body: emailBody,
+                  cc: [
+                    'ankith.ravindran@mailplus.com.au',
+                  ]
+                });
+
+              }
+
+              operatorRecord.setValue({
+                fieldId: 'custrecord_operator_role',
+                value: operatorroleArrys[y]
+              })
+              operatorRecord.setValue({
+                fieldId: 'custrecord_operator_employment',
+                value: operatoremploymentypeArrys[y]
+              })
+              operatorRecord.setValue({
+                fieldId: 'custrecord_dds_operator',
+                value: operatorddsArrys[y]
+              })
+              operatorRecord.setValue({
+                fieldId: 'custrecord_primary_operator',
+                value: operatorprimaryArrys[y]
+              })
+              operatorRecord.setValue({
+                fieldId: 'custrecord_compliant_uniform',
+                value: operatorcompliantuniformArrys[y]
+              })
+              if (!isNullorEmpty(operatormobiledevArrys[y])) {
+                operatorRecord.setValue({
+                  fieldId: 'custrecord_operator_mobdev_platform',
+                  value: operatormobiledevArrys[y]
+                })
+              }
+
+              operatorRecord.save()
+
+            }
           }
         }
 
@@ -1143,21 +1213,20 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
             var operatorIdNew = operatorRecord.save()
 
-            var email_body = ' New Operator NS ID: ' + operatorIdNew +
-              '</br> New Operator Name: ' + newoperatornameArrys[y] +
-              '</br> New Operator Email: ' + newoperatoremailArrys[y] +
-              '</br> New Operator Mobile: ' + newoperatormobileArrys[y] +
-              '</br> Franchisee NS ID: ' + zeeRecordId;
+            var emailBody = 'Date: ' + getDateToday() + '</br> Operator NS ID: ' + operatoridsArrys[y] +
+              '</br> Operator Name: ' + operatornameArrys[y] +
+              '</br> Operator Email: ' + operatoremailArrys[y] +
+              '</br> Operator Mobile: ' + operatormobileArrys[y] +
+              '</br> Franchisee NS ID: ' + zeeRecordId +
+              '</br> Franchisee Name: ' + zeeName;
 
             email.send({
               author: 112209,
-              recipients: ['mailplussupport@protechly.com'],
+              recipients: ['mailplusit@mailplus.com.au'],
               subject: 'MP Operator Access - New Operator',
               body: email_body,
-              cc: ['raine.giderson@mailplus.com.au',
-                'ankith.ravindran@mailplus.com.au',
-                'fiona.harrison@mailplus.com.au',
-                'popie.popie@mailplus.com.au'
+              cc: [
+                'ankith.ravindran@mailplus.com.au'
               ]
             });
 
@@ -1166,48 +1235,64 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
         if (!isNullorEmpty(operatoridsdeleteArrys)) {
           for (var y = 0; y < operatoridsdeleteArrys.length; y++) {
-            var deleteOperatorRecord = record.load({
-              type: 'customrecord_operator',
-              id: operatoridsdeleteArrys[y]
-            });
+            if (role != 1000) {
+              var deleteOperatorRecord = record.load({
+                type: 'customrecord_operator',
+                id: operatoridsdeleteArrys[y]
+              });
 
-            deleteOperatorRecord.setValue({
-              fieldId: 'isinactive',
-              value: true
-            })
-            deleteOperatorRecord.setValue({
-              fieldId: 'custrecord_operator_status',
-              value: 3
-            })
+              deleteOperatorRecord.setValue({
+                fieldId: 'isinactive',
+                value: true
+              })
+              deleteOperatorRecord.setValue({
+                fieldId: 'custrecord_operator_status',
+                value: 3
+              })
 
-            var getOperatorEmail = deleteOperatorRecord.getValue({
-              fieldId: 'custrecord_operator_email'
-            })
-            var getOperatorName = deleteOperatorRecord.getValue({
-              fieldId: 'name'
-            })
+              var getOperatorEmail = deleteOperatorRecord.getValue({
+                fieldId: 'custrecord_operator_email'
+              })
+              var getOperatorName = deleteOperatorRecord.getValue({
+                fieldId: 'name'
+              })
 
-            deleteOperatorRecord.save();
+              deleteOperatorRecord.save();
 
-            var email_body = ' Delete Operator NS ID: ' +
-              operatoridsdeleteArrys[y] +
-              '</br> Franchisee NS ID: ' + zeeRecordId +
-              '</br> Operator Name: ' + getOperatorName +
-              '</br> Operator Email: ' + getOperatorEmail;
+              var email_body = ' Delete Operator NS ID: ' +
+                operatoridsdeleteArrys[y] +
+                '</br> Franchisee NS ID: ' + zeeRecordId +
+                '</br> Franchisee Name: ' + zeeName +
+                '</br> Operator Name: ' + getOperatorName +
+                '</br> Operator Email: ' + getOperatorEmail;
 
-            email.send({
-              author: 112209,
-              recipients: ['mailplussupport@protechly.com'],
-              subject: 'MP Operator Access - Delete/Inactive Operator',
-              body: email_body,
-              cc: ['raine.giderson@mailplus.com.au',
-                'ankith.ravindran@mailplus.com.au',
-                'fiona.harrison@mailplus.com.au',
-                'popie.popie@mailplus.com.au'
-              ]
-            });
+              email.send({
+                author: 112209,
+                recipients: ['mailplussupport@protechly.com'],
+                subject: 'MP Operator Access - Delete/Inactive Operator',
+                body: email_body,
+                cc: [
+                  'ankith.ravindran@mailplus.com.au', 'mailplusit@mailplus.com.au'
+                ]
+              });
+            } else {
+              var email_body = ' Delete Operator NS ID: ' +
+                operatoridsdeleteArrys[y] +
+                '</br> Franchisee NS ID: ' + zeeRecordId +
+                '</br> Franchisee Name: ' + zeeName +
+                '</br> Operator Name: ' + getOperatorName +
+                '</br> Operator Email: ' + getOperatorEmail;
 
-
+              email.send({
+                author: 112209,
+                recipients: ['mailplusit@mailplus.com.au'],
+                subject: 'MP Operator Access - Delete/Inactive Operator',
+                body: email_body,
+                cc: [
+                  'ankith.ravindran@mailplus.com.au',
+                ]
+              });
+            }
           }
         }
 
@@ -1537,6 +1622,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       inlineHtml += '</div>';
 
       inlineHtml += '<div role="tabpanel" class="tab-pane " id="tollMPEX">';
+      inlineHtml += franchiseeStarTrackPremium(zee, resultSetOperators)
       inlineHtml += franchiseeTOLLMPEX(zee, resultSetOperators)
       inlineHtml += franchiseeStd(zee, resultSetOperators)
       inlineHtml += franchiseeAdhoc(zee, resultSetOperators)
@@ -1669,6 +1755,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           'custentity__toll_pickup_dx_no');
         franchiseeTOLLLodgementDX = searchResultZees.getText(
           'custentity_toll_lodge_dx_no');
+        franchiseePremiumSuburbs = searchResultZees.getValue(
+          'custentity_startrack_suburb');
         franchiseeExpressSuburbs = searchResultZees.getValue(
           'custentity_zee_territory');
         franchiseeStdSuburbs = searchResultZees.getValue(
@@ -1698,6 +1786,8 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           'custentity_mp_std_lodgement_point');
         sendleexpLodgementPointsString = searchResultZees.getValue(
           'custentity_sendle_exp_lodgement_point');
+        mpprmLodgementPointString = searchResultZees.getValue(
+          'custentity_startrack_lodgement_point');
 
         masterclass = searchResultZees.getValue(
           'custentity_zee_prospect_masterclass');
@@ -2089,6 +2179,145 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
       if (!isNullorEmpty(mpexLodgementPointsString)) {
         mpexLodgementPointsJSON = JSON.parse(mpexLodgementPointsString);
         var data = mpexLodgementPointsJSON.data;
+
+
+        for (var x = 0; x < data.length; x++) {
+          inlineHtml += '<tr>';
+          // inlineHtml +=
+          //   '<td style="text-align: center;"><button class="btn btn-danger btn-sm remove_class glyphicon glyphicon-trash" type="button" data-toggle="tooltip" data-placement="right" title="Delete" data-id="' + data[x].ncl_id + '" ></button><input type="text" class="ncl_id" value="' + data[x].ncl_id + '" hidden/></td>';
+          // inlineHtml +=
+          //   '<td><input type="text" class="form-control" value="MailPlus Express" readonly/></td>'
+          inlineHtml += '<td class="col-xs-2"><input type="text" class="form-control tableNCLName" value="' +
+            data[x].ncl_name + '" readonly /></td><td class="col-xs-4"><input type="text" class="form-control tableNCLAddress" value="' + data[x].ncl_address +
+            '" readonly /></td><td class="col-xs-1"><input type="text" class="form-control tableNCLType" value="' + data[x].ncl_type +
+            '" readonly /></td>';
+          inlineHtml +=
+            '<td><select class="form-control tableOpSelect" data-zeeid="' + zee + '">';
+          // var operatorSearch = search.load({
+          //   id: 'customsearch_rta_operator_load',
+          //   type: 'customrecord_operator'
+          // });
+
+          // if (!isNullorEmpty(zee)) {
+          //   operatorSearch.filters.push(search.createFilter({
+          //     name: 'custrecord_operator_franchisee2',
+          //     join: null,
+          //     operator: search.Operator.ANYOF,
+          //     values: zee_array[0]
+          //   }));
+          // }
+
+          // var resultSetOperatorSearch = operatorSearch.run();
+
+          resultSetOperators.each(function (searchResultOperators) {
+
+            var operator_id = searchResultOperators.getValue('internalid');
+            var operator_name = searchResultOperators.getValue('name');
+
+            if (data[x].op_primary_id == operator_id) {
+              inlineHtml += '<option value="' + operator_id +
+                '" selected="selected">' + operator_name + '</option>';
+            } else {
+
+              inlineHtml += '<option value="' + operator_id + '">' +
+                operator_name + '</option>';
+            }
+
+            return true;
+          });
+
+
+          // var operatorSearch = nlapiLoadSearch('customrecord_operator',
+          //   'customsearch_rta_operator_load');
+          // var newFilters = new Array();
+          // newFilters[newFilters.length] = new nlobjSearchFilter(
+          //   'custrecord_operator_franchisee2', null, 'anyof', zee_array[0]);
+          // operatorSearch.addFilters(newFilters);
+          // var operatorSet = operatorSearch.runSearch();
+
+          // operatorSet.forEachResult(function (operatorResult) {
+          //   var operator_id = operatorResult.getValue("internalid", null,
+          //     "GROUP");
+          //   var operator_name = operatorResult.getValue("name", null, "GROUP");
+
+          //   if (data[x].op_primary_id == operator_id) {
+          //     inlineQty += '<option value="' + operator_id +
+          //       '" selected="selected">' + operator_name + '</option>';
+          //   } else {
+
+          //     inlineQty += '<option value="' + operator_id + '">' +
+          //       operator_name + '</option>';
+          //   }
+
+          //   return true;
+          // });
+          if (data[x].op_primary_name == 'All') {
+            inlineHtml += '<option value="0" selected="selected">All</option>';
+          } else {
+            inlineHtml += '<option value="0">All</option>';
+          }
+          inlineHtml += '</select></td>';
+
+          inlineHtml += '</tr>';
+        }
+      }
+      inlineHtml += '</tbody></table></div></div>';
+      // inlineHtml += '</div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      return inlineHtml;
+    }
+
+    /*
+     * PURPOSE : MP PREMIUM RELATED DATA.
+     *  PARAMS :
+     * RETURNS : INLINEHTML
+     *   NOTES :
+     */
+    function franchiseeStarTrackPremium(zee, resultSetOperators) {
+      var inlineHtml =
+        '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-12 heading1"><h4><span class="label label-default col-xs-12" style="background-color: #103D39;">MP PREMIUM - STARTRACK</span></h4></div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+
+      // inlineHtml += '<div class="form-group container">';
+      // inlineHtml += '<div class="row">';
+      // inlineHtml +=
+      //   '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">TOLL Account Number</span><input id="franchiseeTOLLAccountNumber" class="form-control franchiseeTOLLAccountNumber" value="' +
+      //   franchiseeTOLLAccountNumber + '" readonly/></div></div>';
+      // inlineHtml += '</div>';
+      // inlineHtml += '</div>';
+      // inlineHtml += '<div class="form-group container">';
+      // inlineHtml += '<div class="row">';
+      // inlineHtml +=
+      //   '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">TOLL Pickup DX </span><input id="franchiseeTOLLPickupDX" class="form-control franchiseeTOLLPickupDX" readonly value="' +
+      //   franchiseeTOLLPickupDX + '" /></div></div>';
+      // inlineHtml +=
+      //   '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">TOLL Lodgement DX </span><input id="franchiseeTOLLLodgementDX" class="form-control franchiseeTOLLLodgementDX" readonly value="' +
+      //   franchiseeTOLLLodgementDX + '" /></div></div>';
+      // inlineHtml += '</div>';
+      // inlineHtml += '</div>';
+
+      inlineHtml += '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-6 name_section"><div class="input-group"><span class="input-group-addon">Premium Suburbs</span><textarea rows="10" id="franchiseePremiumSuburbs" class="form-control franchiseePremiumSuburbs" value="' +
+        franchiseePremiumSuburbs + '" readonly>' + franchiseePremiumSuburbs + '</textarea></div></div>';
+      inlineHtml += '</div>';
+      inlineHtml += '</div>';
+      inlineHtml += '<div class="form-group container">';
+      inlineHtml += '<div class="row">';
+      inlineHtml +=
+        '<div class="col-xs-12 name_section">';
+      inlineHtml +=
+        '<div class="table-responsive"><table border="1" cellpadding="10" id="table_ncl" cellspacing="0" class="table text-centered" style="width: 100%;"><thead style="color: white;background-color: #095c7b;"><tr><th style="text-align: center;"><b>NAME</b></th><th style="text-align: center;"><b>ADDRESS</b></th><th style="text-align: center;"><b>TYPE</b></th><th style="text-align: center;"><b>PRIMARY OPERATOR</b></th></tr></thead><tbody><tr></tr>';
+      if (!isNullorEmpty(mpprmLodgementPointString)) {
+        mpprmLodgementPointsJSON = JSON.parse(mpprmLodgementPointString);
+        var data = mpprmLodgementPointsJSON.data;
 
 
         for (var x = 0; x < data.length; x++) {

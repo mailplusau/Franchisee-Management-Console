@@ -288,8 +288,9 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         $('.city_state_postcode').addClass('hide')
         $('.saveaddress_section').addClass('hide')
         $('.row_operator_details').addClass('hide');
-        $('.operatorRole').addClass('hide');
+        // $('.operatorRole').addClass('hide');
         $('.saveoperator_section').addClass('hide');
+        $('.row_operatorRole').addClass('hide');
         $('.row_fleet_details').addClass('hide');
         $('.row_fleet_details2').addClass('hide');
         $('.row_fleet_details3').addClass('hide');
@@ -366,6 +367,23 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
 
       //On click of Add Operator, unhide the fields
       $(document).on("click", "#addOperator", function (e) {
+
+        //Populate the fields from the values got from the row of the table
+        $('.operatorName').val('');
+        $('.operatorEmail').val('');
+        $('.operatorMobile').val('');
+        $('.operatorRole').val(0);
+        $('.operatorRoleID').val(0);
+        $('.operatorEmploymentType').val(0);
+        $('.operatorEmploymentTypeID').val(0);
+        
+        $('.operatorContingency').val(0);
+        $('.operatorContingencyID').val(0);
+        $('.operatorMobileDev').val(0);
+        $('.operatorMobileDevID').val(0);
+        $('.operatorMobileDev').val(0);
+        $('.operatorCompliantUniformID').val(0);
+
         $('.row_operator_details').removeClass('hide');
         $('.row_operatorRole').removeClass('hide');
         $('.saveoperator_section').removeClass('hide');
