@@ -1072,7 +1072,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
                 email.send({
                   author: 112209,
-                  recipients: ['mailplusit@mailplus.com.au'],
+                  recipients: ['dispatcher@mailplus.com.au'],
                   subject: emailSubject,
                   body: emailBody,
                   cc: [
@@ -1222,7 +1222,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
             email.send({
               author: 112209,
-              recipients: ['mailplusit@mailplus.com.au'],
+              recipients: ['dispatcher@mailplus.com.au'],
               subject: 'MP Operator Access - New Operator',
               body: email_body,
               cc: [
@@ -1272,7 +1272,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
                 subject: 'MP Operator Access - Delete/Inactive Operator',
                 body: email_body,
                 cc: [
-                  'ankith.ravindran@mailplus.com.au', 'mailplusit@mailplus.com.au'
+                  'ankith.ravindran@mailplus.com.au', 'dispatcher@mailplus.com.au'
                 ]
               });
             } else {
@@ -1285,7 +1285,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
 
               email.send({
                 author: 112209,
-                recipients: ['mailplusit@mailplus.com.au'],
+                recipients: ['dispatcher@mailplus.com.au'],
                 subject: 'MP Operator Access - Delete/Inactive Operator',
                 body: email_body,
                 cc: [

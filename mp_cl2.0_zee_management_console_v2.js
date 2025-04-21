@@ -376,7 +376,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         $('.operatorRoleID').val(0);
         $('.operatorEmploymentType').val(0);
         $('.operatorEmploymentTypeID').val(0);
-        
+
         $('.operatorContingency').val(0);
         $('.operatorContingencyID').val(0);
         $('.operatorMobileDev').val(0);
@@ -889,6 +889,8 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
             $('#operatorTable tr:last').after(inlineHtml);
           }
 
+          alert('Email notification has been sent out to the MailPlus IT Team to update the Operator details in the system. The changes will be reflected in the system once the IT Team has updated the details.')
+
           //Blank out all the fields
           $('.operatorName').val("");
           $('.operatorEmail').val("");
@@ -1134,6 +1136,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
               fieldId: 'custpage_operatorids_delete',
               value: deleteOperatorArray.toString()
             });
+            alert('Email notification has been sent out to the MailPlus IT Team to delete the Operator details in the system. The changes will be reflected in the system once the IT Team has updated the details.')
           }
           $(this).closest("tr").remove();
         }
