@@ -493,6 +493,13 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         }).updateDisplayType({
           displayType: ui.FieldDisplayType.HIDDEN
         });
+        form.addField({
+          id: 'custpage_oldoperator',
+          type: ui.FieldType.TEXT,
+          label: 'Day'
+        }).updateDisplayType({
+          displayType: ui.FieldDisplayType.HIDDEN
+        });
 
         //New Fleet DETAILS
         form.addField({
@@ -660,7 +667,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var postcode = context.request.parameters.custpage_postcode;
         var listforsale = context.request.parameters.custpage_listforsale;
 
-        log.debug({
+        log.audit({
           title: 'addressids',
           details: addressids
         })
@@ -684,6 +691,11 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var operatorprimary = context.request.parameters.custpage_operatorprimary;
         var operatormobiledev = context.request.parameters.custpage_operatormobiledev;
         var operatorcompliantuniform = context.request.parameters.custpage_operatorcompliantuniform;
+
+        log.audit({
+          title: 'operatorids',
+          details: operatorids
+        })
 
         var operatoridsArrys = operatorids.split(',')
         var operatoridsdeleteArrys = operatorids_delete.split(',')
@@ -710,6 +722,11 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var newoperatormobiledev = context.request.parameters.custpage_new_operatormobiledev;
         var newoperatorcompliantuniform = context.request.parameters.custpage_new_operatorcompliantuniform;
 
+        log.audit({
+          title: 'newoperatorids',
+          details: newoperatorids
+        })
+
         var newoperatoridsArrys = newoperatorids.split(',')
         var newoperatoridsdeleteArrys = newoperatorids_delete.split(',')
         var newoperatornameArrys = newoperatorname.split(',')
@@ -734,6 +751,12 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var caregocage = context.request.parameters.custpage_caregocage;
         var owner = context.request.parameters.custpage_owner;
         var operator = context.request.parameters.custpage_operator;
+        var old_operator = context.request.parameters.custpage_oldoperator;
+
+        log.audit({
+          title: 'fleetids',
+          details: fleetids
+        })
 
         var fleetidsArrys = fleetids.split(',')
         var fleetidsdeleteArrys = fleetids_delete.split(',')
@@ -746,6 +769,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var caregocageArrys = caregocage.split(',')
         var ownerArrys = owner.split(',')
         var operatorArrys = operator.split(',')
+        var oldOperatorArrys = old_operator.split(',')
 
         //New Fleet details
         var newfleetids = context.request.parameters.custpage_new_fleetids;
@@ -759,6 +783,11 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         var newcaregocage = context.request.parameters.custpage_new_caregocage;
         var newowner = context.request.parameters.custpage_new_owner;
         var newoperator = context.request.parameters.custpage_new_operator;
+
+        log.audit({
+          title: 'newfleetids',
+          details: newfleetids
+        })
 
         var newfleetidsArrys = newfleetids.split(',')
         var newfleetidsdeleteArrys = newfleetids_delete.split(',')
@@ -804,11 +833,11 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         });
 
         log.debug({
-          title: 'dobArray',
-          details: dobArray
+          title: 'FranchiseeDOB',
+          details: FranchiseeDOB
         })
 
-        if (!isNullorEmpty(dobArray)) {
+        if (!isNullorEmpty(FranchiseeDOB)) {
           var dobArray = FranchiseeDOB.split('-')
           var dobString = dobArray[1] + '/' + dobArray[2] + '/' + dobArray[0]
           zeeRecord.setValue({
@@ -876,12 +905,6 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             cc: ['ankith.ravindran@mailplus.com.au']
           });
         }
-
-        log.debug({
-          title: 'isDynamic',
-          details: zeeRecord.isDynamic
-        })
-
 
         //ADD/UPDATE ADDRESS
         if (!isNullorEmptyExcZero(addressidsArrays)) {
@@ -1355,6 +1378,18 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
             operatorRecord.setValue({
               fieldId: 'custrecord_operator_vehicle',
               value: newFleetID
+            })
+            operatorRecord.save();
+
+            //REMOVE FLEET DETAILS ON THE OPERATOR RECORD
+            var operatorRecord = record.load({
+              type: 'customrecord_operator',
+              id: oldOperatorArrys[w]
+            });
+
+            operatorRecord.setValue({
+              fieldId: 'custrecord_operator_vehicle',
+              value: null
             })
             operatorRecord.save();
 
@@ -3405,6 +3440,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
         return true;
       });
       inlineHtml += '</select></div></div>';
+      inlineHtml += '<input id="oldVehicleOperator" value="" type="hidden"/>'
       inlineHtml += '</div>';
       inlineHtml += '</div>';
 
@@ -3505,7 +3541,7 @@ define(['N/ui/serverWidget', 'N/email', 'N/runtime', 'N/search', 'N/record',
           vehicleOwnerID + '" type="hidden"/></td>'
         inlineHtml += '<td><input value="' + vehicleOperatorName +
           '" readonly class="form-control vehicleOperatorNameTable"/><input id="vehicleOperatorID" class="vehicleOperatorID" value="' +
-          vehicleOperatorInternalID + '" type="hidden"/></td>'
+          vehicleOperatorInternalID + '" type="hidden"/><input id="" class="oldVehicleOperatorTable" value="" type="hidden"/></td>'
         inlineHtml += '</tr>';
 
         return true;

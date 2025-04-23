@@ -24,6 +24,8 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
     var deleteOperatorArray = [];
     var deleteFleetArray = [];
 
+    var previousVehicleOperator = '';
+
     var startPosition
 
     var search_markers_array = [];
@@ -316,6 +318,13 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         window.location.href = url;
       });
 
+      $(document).on("focus click", "#vehicleOperator", function (e) {
+        previousVehicleOperator = this.value; // Old value 
+      });
+      $(document).on("change", "#vehicleOperator", function (e) {
+        $('#oldVehicleOperator').val(previousVehicleOperator);
+      });
+
       //Redirect page to the Franchise Service Network Page
       $(document).on("click", "#serviceNetwork", function (e) {
         var zee = $('#zee_dropdown').val();
@@ -446,6 +455,8 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         $('.vehicleYear').val(vehicleYear);
         if (vehicleSignageID == "true") {
           $('.vehicleSignage').val("1");
+        } else {
+          $('.vehicleSignage').val("2");
         }
         $('.vehicleCargoCage').val(vehicleCargoCageID);
         $('.vehicleOwner').val(vehicleOwnerID);
@@ -1020,6 +1031,8 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
               "vehicleOperatorNameTable");
             var vehicle_operatorid_elem = document.getElementsByClassName(
               "vehicleOperatorID");
+            var vehicle_oldoperatorid_elem = document.getElementsByClassName(
+              "oldVehicleOperatorTable");
 
 
             for (var i = 0; i < edit_fleet_elem.length; ++i) {
@@ -1042,9 +1055,11 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
                   vehicleOwnerID;
                 vehicle_operator_elem[i].value = vehicleOperator;
                 vehicle_operatorid_elem[i].value = vehicleOperatorID;
+                vehicle_oldoperatorid_elem[i].value = $('#oldVehicleOperator').val();
               }
             }
           } else {
+            $('#oldVehicleOperator').val('0');
             //Create a new row in the table with the values from the field
             var inlineHtml = '';
             inlineHtml += '<tr>'
@@ -1375,6 +1390,8 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
           "vehicleOperatorNameTable");
         var vehicle_operatorid_elem = document.getElementsByClassName(
           "vehicleOperatorID");
+        var vehicle_oldoperatorid_elem = document.getElementsByClassName(
+          "oldVehicleOperatorTable");
 
         var vehicleIdsArray = []
         var vehicleRegoArray = []
@@ -1386,6 +1403,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         var vehicleCargoCageArray = []
         var vehicleOwnerArray = []
         var vehicleOperatorArray = []
+        var vehicleOldOperatorArray = []
 
         var vehicleNewIdsArray = []
         var vehicleNewRegoArray = []
@@ -1428,6 +1446,8 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
                 vehicle_ownerid_elem[i].value
               vehicleOperatorArray[vehicleOperatorArray.length] =
                 vehicle_operatorid_elem[i].value
+              vehicleOldOperatorArray[vehicleOldOperatorArray.length] =
+                vehicle_oldoperatorid_elem[i].value
             }
           } else {
             vehicleNewIdsArray[vehicleNewIdsArray.length] =
@@ -1658,6 +1678,10 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
           myRecord.setValue({
             fieldId: 'custpage_operator',
             value: vehicleOperatorArray.toString()
+          });
+          myRecord.setValue({
+            fieldId: 'custpage_oldoperator',
+            value: vehicleOldOperatorArray.toString()
           });
 
           //New Fleet Details
