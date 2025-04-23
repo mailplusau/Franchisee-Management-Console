@@ -285,7 +285,7 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
       }
 
       //On click of the cancel button, hide all the fields
-      $(document).on('focus', '#cancel', function (event) {
+      $(document).on('click', '#cancel', function (event) {
         $('.row_address1').addClass('hide')
         $('.city_state_postcode').addClass('hide')
         $('.saveaddress_section').addClass('hide')
