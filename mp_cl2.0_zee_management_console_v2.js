@@ -2548,11 +2548,13 @@ define(['SuiteScripts/jQuery Plugins/Moment JS/moment.min', 'N/email',
         errorMessage += 'Please Select Vaccination Status</br>';
       }
 
-      if (isNullorEmpty(masterclass)) {
-        errorMessage += 'Please Select Prospecting Masterclass Status</br>';
-      }
-      if (isNullorEmpty(reviews)) {
-        errorMessage += 'Please Select Customer Reviews Status</br>';
+      if (role != 1000) {
+        if (isNullorEmpty(masterclass)) {
+          errorMessage += 'Please Select Prospecting Masterclass Status</br>';
+        }
+        if (isNullorEmpty(reviews)) {
+          errorMessage += 'Please Select Customer Reviews Status</br>';
+        }
       }
 
       if (isNullorEmpty(franchiseeNextOfKinName)) {
